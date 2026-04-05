@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>DarkPlay</title>
+<title>DarkPlay Ultra</title>
 
 <style>
 body{
 margin:0;
-font-family:sans-serif;
+font-family:Arial;
 background:linear-gradient(-45deg,#000,#1a0000,#330000,#000);
 background-size:400% 400%;
 animation:bg 10s infinite;
@@ -22,23 +22,23 @@ display:flex;
 
 /* SIDEBAR */
 .sidebar{
-width:220px;
+width:200px;
 background:#0a0a0a;
-padding:15px;
-transition:0.3s;
+padding:12px;
 }
 
 .sidebar h2{
 color:#ff1a1a;
+font-size:18px;
 text-shadow:0 0 10px red;
 }
 
 .menu{
-padding:10px;
-margin:5px 0;
-cursor:pointer;
-border-radius:8px;
+padding:8px;
+font-size:12px;
 font-weight:bold;
+cursor:pointer;
+border-radius:6px;
 }
 
 .menu:hover{background:#222;}
@@ -47,119 +47,112 @@ font-weight:bold;
 /* MAIN */
 .main{
 flex:1;
-padding:20px;
+padding:15px;
 }
 
 /* HEADER */
 header{
-font-size:30px;
+font-size:22px;
 color:#ff1a1a;
-text-shadow:0 0 20px red;
+text-shadow:0 0 15px red;
 margin-bottom:10px;
 }
 
 /* SEARCH */
 .search{
-padding:10px;
+padding:8px;
 border:none;
-border-radius:10px;
-width:250px;
+border-radius:8px;
+width:200px;
 background:#111;
 color:white;
+font-size:12px;
 margin-bottom:10px;
 }
 
 /* GRID */
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
-gap:15px;
+grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+gap:12px;
 }
 
 /* CARD */
 .card{
 background:#121212;
-border-radius:12px;
+border-radius:10px;
 overflow:hidden;
 cursor:pointer;
-transition:0.3s;
-position:relative;
+transition:0.25s;
 }
 
 .card:hover{
-transform:scale(1.06);
-box-shadow:0 0 25px red;
+transform:scale(1.05);
+box-shadow:0 0 20px red;
 }
 
+/* THUMBNAIL FIX */
 .card img{
 width:100%;
-height:120px;
+height:100px;
 object-fit:cover;
+background:#000;
 border-bottom:2px solid red;
 }
 
-/* fallback fix */
-.card img{
-background:#000;
-}
-
+/* SMALL TEXT */
 .card p{
-margin:10px;
-font-size:14px;
+margin:6px;
+font-size:11px;
 font-weight:bold;
-text-shadow:0 0 10px red;
+text-shadow:0 0 6px red;
 }
 
 .card span{
-font-size:12px;
+font-size:10px;
 color:#aaa;
-margin-bottom:10px;
+margin-bottom:6px;
 display:block;
 }
 
 /* PLAYER */
 iframe{
 width:100%;
-height:500px;
+height:450px;
 border:none;
-margin-top:20px;
-border-radius:10px;
+margin-top:15px;
+border-radius:8px;
 }
 
-/* BUTTONS */
+/* BUTTON */
 button{
-padding:8px 12px;
-margin:5px;
+padding:6px 10px;
+font-size:11px;
 background:red;
 border:none;
 color:white;
-border-radius:8px;
+border-radius:6px;
 cursor:pointer;
-}
-
-.hidden{
-width:0;
-padding:0;
-overflow:hidden;
+margin:5px 0;
 }
 </style>
 
 <script>
 
+const fallback = "https://via.placeholder.com/300x150/000000/FFFFFF?text=Game";
+
 const games = [
 
-["Drive Mad","driving","https://www.crazygames.com/embed/drive-mad","https://images.crazygames.com/drive-mad/cover-1650877078857.png"],
-["Slope","arcade","https://www.crazygames.com/embed/slope","https://images.crazygames.com/slope/cover-1581699869287.png"],
-["Run 3","arcade","https://www.crazygames.com/embed/run-3","https://images.crazygames.com/run-3/cover-1581699869340.png"],
-["Moto X3M","driving","https://www.crazygames.com/embed/moto-x3m","https://images.crazygames.com/moto-x3m/cover-1581699869344.png"],
-["Stickman Hook","action","https://www.crazygames.com/embed/stickman-hook","https://images.crazygames.com/stickman-hook/cover-1581699869492.png"],
-["Tunnel Rush","arcade","https://www.crazygames.com/embed/tunnel-rush","https://images.crazygames.com/tunnel-rush/cover-1581699869171.png"],
-["Basket Random","fun","https://www.crazygames.com/embed/basket-random","https://images.crazygames.com/basket-random/cover-1598526430633.png"],
-["Rooftop Snipers","action","https://www.crazygames.com/embed/rooftop-snipers","https://images.crazygames.com/rooftop-snipers/cover-1581699869555.png"],
-["Crossy Road","arcade","https://www.crazygames.com/embed/crossy-road","https://images.crazygames.com/crossy-road/cover.png"],
-["Paper.io 2","arcade","https://www.crazygames.com/embed/paper-io-2","https://images.crazygames.com/paper-io-2/cover.png"],
-["Smash Karts","action","https://www.crazygames.com/embed/smash-karts","https://images.crazygames.com/smash-karts/cover.png"],
-["Drift Hunters","driving","https://www.crazygames.com/embed/drift-hunters","https://images.crazygames.com/drift-hunters/cover.png"]
+["Drive Mad","driving","https://www.crazygames.com/embed/drive-mad","https://img.crazygames.com/games/drive-mad/cover-1650877078857.png"],
+["Slope","arcade","https://www.crazygames.com/embed/slope","https://img.crazygames.com/games/slope/cover-1581699869019.png"],
+["Run 3","arcade","https://www.crazygames.com/embed/run-3","https://img.crazygames.com/games/run-3/cover-1581699869340.png"],
+["Moto X3M","driving","https://www.crazygames.com/embed/moto-x3m","https://img.crazygames.com/games/moto-x3m/cover-1581699869483.png"],
+["Stickman Hook","action","https://www.crazygames.com/embed/stickman-hook","https://img.crazygames.com/games/stickman-hook/cover-1598526430789.png"],
+["Tunnel Rush","arcade","https://img.crazygames.com/games/tunnel-rush/cover-1581699869171.png","https://www.crazygames.com/embed/tunnel-rush"],
+["Basket Random","fun","https://www.crazygames.com/embed/basket-random","https://img.crazygames.com/games/basket-random/cover-1598526430633.png"],
+["Rooftop Snipers","action","https://www.crazygames.com/embed/rooftop-snipers","https://img.crazygames.com/games/rooftop-snipers/cover-1581699869555.png"],
+["Drift Hunters","driving","https://www.crazygames.com/embed/drift-hunters","https://img.crazygames.com/games/drift-hunters/cover.png"],
+["Smash Karts","action","https://www.crazygames.com/embed/smash-karts","https://img.crazygames.com/games/smash-karts/cover.png"]
 
 ];
 
@@ -167,8 +160,17 @@ function loadGame(url){
 document.getElementById("game").src=url;
 }
 
-function toggleSidebar(){
-document.getElementById("sidebar").classList.toggle("hidden");
+function display(list){
+let html="";
+list.forEach(g=>{
+html+=`
+<div class="card" onclick="loadGame('${g[2]}')">
+<img src="${g[3]}" onerror="this.onerror=null;this.src='${fallback}'">
+<p>${g[0]}</p>
+<span>play</span>
+</div>`;
+});
+document.getElementById("games").innerHTML=html;
 }
 
 function filter(cat,el){
@@ -176,19 +178,6 @@ document.querySelectorAll(".menu").forEach(m=>m.classList.remove("active"));
 if(el) el.classList.add("active");
 
 display(cat==="all"?games:games.filter(g=>g[1]===cat));
-}
-
-function display(list){
-let html="";
-list.forEach(g=>{
-html+=`
-<div class="card" onclick="loadGame('${g[2]}')">
-<img src="${g[3]}" onerror="this.src='https://via.placeholder.com/300x150?text=Game'">
-<p>${g[0]}</p>
-<span>Click to Play</span>
-</div>`;
-});
-document.getElementById("games").innerHTML=html;
 }
 
 function searchGames(text){
@@ -204,25 +193,25 @@ window.onload=()=>display(games);
 
 <body>
 
-<div class="sidebar" id="sidebar">
-<h2>DarkPlay</h2>
+<div class="sidebar">
+<h2>darkplay</h2>
 
-<div class="menu active" onclick="filter('all',this)">All</div>
-<div class="menu" onclick="filter('action',this)">Action</div>
-<div class="menu" onclick="filter('arcade',this)">Arcade</div>
-<div class="menu" onclick="filter('driving',this)">Driving</div>
-<div class="menu" onclick="filter('fun',this)">Fun</div>
+<div class="menu active" onclick="filter('all',this)">all</div>
+<div class="menu" onclick="filter('action',this)">action</div>
+<div class="menu" onclick="filter('arcade',this)">arcade</div>
+<div class="menu" onclick="filter('driving',this)">driving</div>
+<div class="menu" onclick="filter('fun',this)">fun</div>
 
 </div>
 
 <div class="main">
 
-<header>Play Games</header>
+<header>play games</header>
 
-<input class="search" placeholder="Search..." onkeyup="searchGames(this.value)">
+<input class="search" placeholder="search..." onkeyup="searchGames(this.value)">
 
 <br>
-<button onclick="toggleSidebar()">Toggle Menu</button>
+<button onclick="filter('all')">refresh</button>
 
 <div class="grid" id="games"></div>
 
