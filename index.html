@@ -1,232 +1,266 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>DarkPlay</title>
+<title>DarkPlay V5</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0a0a0a;color:white}
-
-/* TOP */
-.topbar{
-display:flex;justify-content:space-between;
-padding:10px 20px;background:#111
-}
-.search{
-padding:10px;border-radius:20px;border:none;
-width:250px;background:#222;color:white
+body {
+margin:0;
+font-family:sans-serif;
+background:linear-gradient(135deg,#0f0f0f,#1a0000);
+color:white;
 }
 
-/* LAYOUT */
-.container{display:flex}
+/* HEADER */
+header {
+padding:20px;
+font-size:28px;
+background:#000;
+font-weight:bold;
+letter-spacing:2px;
+color:#ff4d4d;
+text-shadow:0 0 10px #ff0000;
+}
 
 /* SIDEBAR */
-.sidebar{
-width:210px;background:#111;height:100vh;
-padding:15px
+.sidebar {
+position:fixed;
+top:0;
+left:0;
+width:200px;
+height:100%;
+background:#050505;
+padding-top:20px;
 }
 
-.section-title{
-font-size:12px;
-opacity:0.5;
-margin:15px 0 5px;
+.tab {
+display:block;
+padding:15px;
+font-weight:bold;
+cursor:pointer;
+color:#bbb;
+}
+
+.tab:hover {
+color:#fff;
+background:#111;
+}
+
+/* MAIN */
+.main {
+margin-left:200px;
+padding:20px;
+}
+
+/* CATEGORY TITLE */
+.title {
+font-size:32px;
+margin-bottom:10px;
+color:#ff4d4d;
+text-shadow:0 0 10px red;
+}
+
+/* GRID */
+.grid {
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:20px;
+}
+
+/* GAME CARD */
+.card {
+background:#111;
+border-radius:15px;
+overflow:hidden;
+cursor:pointer;
+transition:0.2s;
+text-align:center;
+}
+
+.card:hover {
+transform:scale(1.05);
+box-shadow:0 0 15px red;
+}
+
+/* THUMBNAIL */
+.card img {
+width:100%;
+height:120px;
+object-fit:cover;
+}
+
+/* GAME NAME */
+.card p {
+margin:10px;
+font-size:14px;
 font-weight:bold;
 }
 
-/* TABS */
-.menu{
-padding:10px;
-border-radius:10px;
-margin-bottom:6px;
-cursor:pointer;
-font-weight:bold; /* BOLD */
-transition:0.2s;
-}
-
-.menu:hover{background:#222}
-.active{background:#ff3c3c}
-
-/* MAIN */
-.main{flex:1;padding:20px}
-
-/* HERO */
-.hero{
-background:#1a1a1a;
-padding:30px;
-border-radius:15px;
-margin-bottom:20px
-}
-.hero h1{font-size:36px;margin:0}
-
-/* GRID */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-gap:15px
-}
-
-.card{
-background:#1a1a1a;
-border-radius:10px;
-overflow:hidden;
-cursor:pointer;
-transition:0.2s
-}
-.card:hover{transform:scale(1.05)}
-
-.card img{
-width:100%;
-height:100px;
-object-fit:cover
-}
-
-.card p{
-text-align:center;
-font-size:12px;
-padding:5px
-}
-
 /* PLAYER */
-iframe{
+iframe {
 width:100%;
-height:450px;
+height:500px;
 border:none;
+margin-top:20px;
 border-radius:10px;
-margin-bottom:15px
 }
 
-/* BUTTONS */
-.btn{
-padding:8px 12px;
+/* BUTTON */
+button {
+margin-top:10px;
+padding:10px;
+background:red;
 border:none;
-border-radius:8px;
-background:#ff3c3c;
 color:white;
+font-weight:bold;
 cursor:pointer;
-margin:5px;
+border-radius:8px;
 }
 </style>
+
+<script>
+function loadGame(url){
+document.getElementById("player").src = url;
+window.scrollTo(0,500);
+}
+
+function showCategory(cat){
+let sections = document.querySelectorAll(".section");
+sections.forEach(s=>s.style.display="none");
+document.getElementById(cat).style.display="block";
+}
+
+function fullscreen(){
+let iframe = document.getElementById("player");
+if(iframe.requestFullscreen){
+iframe.requestFullscreen();
+}
+}
+</script>
 
 </head>
 
 <body>
 
-<div class="topbar">
-<input class="search" placeholder="Search..." onkeyup="searchGames(this.value)">
-</div>
-
-<div class="container">
+<header>DarkPlay</header>
 
 <div class="sidebar">
-
-<div class="section-title">MENU</div>
-<div class="menu active" onclick="show('all',this)">Home</div>
-<div class="menu" onclick="show('popular',this)">Popular</div>
-<div class="menu" onclick="show('new',this)">New</div>
-
-<div class="section-title">CATEGORIES</div>
-<div class="menu" onclick="show('action',this)">Action</div>
-<div class="menu" onclick="show('arcade',this)">Arcade</div>
-<div class="menu" onclick="show('racing',this)">Driving</div>
-<div class="menu" onclick="show('multiplayer',this)">Multiplayer</div>
-
-<div class="section-title">WEBSITES</div>
-<div class="menu" onclick="openSite('https://poki.com')">Poki</div>
-<div class="menu" onclick="openSite('https://crazygames.com')">CrazyGames</div>
-<div class="menu" onclick="openSite('https://coolmathgames.com')">CoolMath</div>
-
+<div class="tab" onclick="showCategory('all')">All</div>
+<div class="tab" onclick="showCategory('action')">Action</div>
+<div class="tab" onclick="showCategory('driving')">Driving</div>
+<div class="tab" onclick="showCategory('arcade')">Arcade</div>
+<div class="tab" onclick="showCategory('sites')">Websites</div>
 </div>
 
 <div class="main">
 
-<div class="hero">
-<h1>Play 1000+ Games</h1>
-<p>Clean. Fast. Unblocked.</p>
+<button onclick="fullscreen()">Fullscreen</button>
+
+<!-- ALL -->
+<div id="all" class="section">
+
+<div class="title">All Games</div>
+
+<div class="grid">
+
+<div class="card" onclick="loadGame('https://www.crazygames.com/embed/drive-mad')">
+<img src="https://img.crazygames.com/games/drive-mad/cover-1650877078857.png">
+<p>Drive Mad</p>
 </div>
 
-<div>
-<button class="btn" onclick="fullscreen()">Fullscreen</button>
-<button class="btn" onclick="clearGame()">Close</button>
+<div class="card" onclick="loadGame('https://www.crazygames.com/embed/slope')">
+<img src="https://img.crazygames.com/games/slope/cover-1581699869019.png">
+<p>Slope</p>
 </div>
 
-<iframe id="game"></iframe>
+<div class="card" onclick="loadGame('https://www.crazygames.com/embed/moto-x3m')">
+<img src="https://img.crazygames.com/games/moto-x3m/cover-1581699869483.png">
+<p>Moto X3M</p>
+</div>
 
-<div class="grid" id="games"></div>
+<div class="card" onclick="loadGame('https://www.crazygames.com/embed/stickman-hook')">
+<img src="https://img.crazygames.com/games/stickman-hook/cover-1598526430789.png">
+<p>Stickman Hook</p>
+</div>
+
+<div class="card" onclick="loadGame('https://www.crazygames.com/embed/space-waves')">
+<img src="https://img.crazygames.com/games/space-waves/cover-1683290454083.png">
+<p>Space Waves</p>
+</div>
 
 </div>
 </div>
 
-<script>
+<!-- ACTION -->
+<div id="action" class="section" style="display:none;">
+<div class="title">Action Games</div>
 
-const games = [
+<div class="grid">
 
-/* POPULAR */
-["Drive Mad","popular","https://www.crazygames.com/embed/drive-mad","https://images.crazygames.com/games/drive-mad/cover.png"],
-["Slope","popular","https://www.crazygames.com/embed/slope","https://images.crazygames.com/games/slope/cover.png"],
-["Run 3","popular","https://www.crazygames.com/embed/run-3","https://images.crazygames.com/games/run-3/cover.png"],
+<div class="card" onclick="loadGame('https://www.crazygames.com/embed/stickman-hook')">
+<img src="https://img.crazygames.com/games/stickman-hook/cover-1598526430789.png">
+<p>Stickman Hook</p>
+</div>
 
-/* ACTION */
-["Stickman Hook","action","https://www.crazygames.com/embed/stickman-hook","https://images.crazygames.com/games/stickman-hook/cover.png"],
-["OvO","action","https://www.crazygames.com/embed/ovo","https://images.crazygames.com/games/ovo/cover.png"],
-["1v1.LOL","multiplayer","https://www.crazygames.com/embed/1v1-lol","https://images.crazygames.com/games/1v1-lol/cover.png"],
+<div class="card" onclick="loadGame('https://www.crazygames.com/embed/slope')">
+<img src="https://img.crazygames.com/games/slope/cover-1581699869019.png">
+<p>Slope</p>
+</div>
 
-/* ARCADE */
-["Tunnel Rush","arcade","https://www.crazygames.com/embed/tunnel-rush","https://images.crazygames.com/games/tunnel-rush/cover.png"],
-["Crossy Road","arcade","https://www.crazygames.com/embed/crossy-road","https://images.crazygames.com/games/crossy-road/cover.png"],
-["Helix Jump","arcade","https://www.crazygames.com/embed/helix-jump","https://images.crazygames.com/games/helix-jump/cover.png"],
+</div>
+</div>
 
-/* RACING */
-["Moto X3M","racing","https://www.crazygames.com/embed/moto-x3m","https://images.crazygames.com/games/moto-x3m/cover.png"],
-["Drift Hunters","racing","https://www.crazygames.com/embed/drift-hunters","https://images.crazygames.com/games/drift-hunters/cover.png"],
-["Madalin Cars","racing","https://www.crazygames.com/embed/madalin-stunt-cars-2","https://images.crazygames.com/games/madalin-stunt-cars-2/cover.png"]
+<!-- DRIVING -->
+<div id="driving" class="section" style="display:none;">
+<div class="title">Driving Games</div>
 
-];
+<div class="grid">
 
-function load(url){
-document.getElementById("game").src=url;
-}
+<div class="card" onclick="loadGame('https://www.crazygames.com/embed/drive-mad')">
+<img src="https://img.crazygames.com/games/drive-mad/cover-1650877078857.png">
+<p>Drive Mad</p>
+</div>
 
-function openSite(url){
-window.open(url,"_blank");
-}
+<div class="card" onclick="loadGame('https://www.crazygames.com/embed/moto-x3m')">
+<img src="https://img.crazygames.com/games/moto-x3m/cover-1581699869483.png">
+<p>Moto X3M</p>
+</div>
 
-function fullscreen(){
-let iframe=document.getElementById("game");
-if(iframe.requestFullscreen) iframe.requestFullscreen();
-}
+</div>
+</div>
 
-function clearGame(){
-document.getElementById("game").src="";
-}
+<!-- ARCADE -->
+<div id="arcade" class="section" style="display:none;">
+<div class="title">Arcade Games</div>
 
-function display(list){
-let html="";
-list.forEach(g=>{
-html+=`<div class="card" onclick="load('${g[2]}')">
-<img src="${g[3]}">
-<p>${g[0]}</p>
-</div>`;
-});
-document.getElementById("games").innerHTML=html;
-}
+<div class="grid">
 
-function show(type,el){
-document.querySelectorAll(".menu").forEach(m=>m.classList.remove("active"));
-if(el) el.classList.add("active");
+<div class="card" onclick="loadGame('https://www.crazygames.com/embed/space-waves')">
+<img src="https://img.crazygames.com/games/space-waves/cover-1683290454083.png">
+<p>Space Waves</p>
+</div>
 
-if(type==="all"){display(games);}
-else{display(games.filter(g=>g[1]===type));}
+</div>
+</div>
 
-window.scrollTo({top:300,behavior:"smooth"});
-}
+<!-- WEBSITES -->
+<div id="sites" class="section" style="display:none;">
+<div class="title">Game Websites</div>
 
-function searchGames(text){
-text=text.toLowerCase();
-display(games.filter(g=>g[0].toLowerCase().includes(text)));
-}
+<div class="grid">
 
-display(games);
+<div class="card" onclick="loadGame('https://example.com')">
+<img src="https://via.placeholder.com/300x150">
+<p>More Games Site</p>
+</div>
 
-</script>
+</div>
+</div>
+
+<!-- PLAYER -->
+<iframe id="player"></iframe>
+
+</div>
 
 </body>
 </html>
