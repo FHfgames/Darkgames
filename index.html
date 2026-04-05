@@ -20,7 +20,7 @@ header {
 
 .grid {
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
   gap:15px;
   padding:20px;
 }
@@ -72,16 +72,16 @@ const gameList = [
   {name:"Moto X3M", url:"https://www.crazygames.com/embed/moto-x3m"},
   {name:"Tunnel Rush", url:"https://www.crazygames.com/embed/tunnel-rush"},
   {name:"OvO", url:"https://www.crazygames.com/embed/ovo"},
-  {name:"Spend Money", url:"https://neal.fun/spend/"}
+  {name:"Stickman Hook", url:"https://www.crazygames.com/embed/stickman-hook"},
+  {name:"Basketball Stars", url:"https://www.crazygames.com/embed/basketball-stars"},
+  {name:"Shell Shockers", url:"https://www.crazygames.com/embed/shellshockersio"},
+  {name:"1v1.LOL", url:"https://www.crazygames.com/embed/1v1-lol"},
+  {name:"Krunker", url:"https://www.crazygames.com/embed/krunker"},
+  {name:"Subway Surfers", url:"https://poki.com/en/g/subway-surfers"},
+  {name:"Temple Run 2", url:"https://poki.com/en/g/temple-run-2"},
+  {name:"Retro Bowl", url:"https://poki.com/en/g/retro-bowl"},
+  {name:"Monkey Mart", url:"https://poki.com/en/g/monkey-mart"}
 ];
-
-// auto generate MANY games (fake expansion but works)
-for (let i = 0; i < 200; i++) {
-  gameList.push({
-    name: "Game " + (i+1),
-    url: "https://www.crazygames.com/"
-  });
-}
 
 function load(url) {
   document.getElementById("gameFrame").src = url;
