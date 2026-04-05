@@ -2,13 +2,13 @@
 
 <html>
 <head>
-<title>DarkPlay Clean</title>
+<title>DarkPlay</title>
 
 <style>
 body{
 margin:0;
-font-family:sans-serif;
-background:#140000;
+font-family:Arial, sans-serif;
+background:#111;
 color:white;
 display:flex;
 }
@@ -16,34 +16,29 @@ display:flex;
 /* SIDEBAR */
 .sidebar{
 width:220px;
-background:#0a0000;
+background:#000;
 padding:15px;
 display:flex;
 flex-direction:column;
-gap:10px;
-border-right:1px solid #300;
 }
 
 .logo{
-font-size:18px;
+font-size:20px;
+font-weight:bold;
 color:red;
-text-align:center;
-margin-bottom:10px;
-text-shadow:0 0 10px red;
+margin-bottom:15px;
 }
 
 .tab{
 padding:10px;
-border-radius:8px;
+font-size:14px;
 cursor:pointer;
-font-size:13px;
-font-weight:bold;
-transition:0.2s;
+border-radius:6px;
+margin-bottom:5px;
 }
 
 .tab:hover{
-background:#200000;
-color:red;
+background:#222;
 }
 
 .active{
@@ -60,70 +55,69 @@ flex-direction:column;
 
 /* HEADER */
 header{
-background:#0a0000;
+background:#000;
 padding:10px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-border-bottom:1px solid #300;
+border-bottom:1px solid #222;
 }
 
 input{
-padding:6px;
-border:none;
+padding:8px;
+width:220px;
 border-radius:6px;
-width:200px;
+border:none;
 }
 
 /* GRID */
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
 gap:15px;
 padding:15px;
 }
 
 /* CARD */
 .card{
-background:#111;
+background:#1a1a1a;
 border-radius:10px;
 overflow:hidden;
 cursor:pointer;
-transition:0.25s;
+transition:0.2s;
 }
 
 .card:hover{
-transform:scale(1.05);
-box-shadow:0 0 15px red;
+transform:translateY(-5px);
 }
 
+/* IMAGE */
 .card img{
 width:100%;
-height:110px;
+height:130px;
 object-fit:cover;
 }
 
 /* TITLE */
 .title{
-font-size:12px;
-text-align:center;
-padding:6px;
+padding:8px;
+font-size:14px;
+font-weight:bold;
 }
 
 /* PLAYER */
 iframe{
 width:100%;
-height:420px;
+height:450px;
 border:none;
 background:black;
 }
 
-/* BUTTON */
 button{
+padding:8px;
 background:red;
 border:none;
 color:white;
-padding:6px 10px;
 border-radius:6px;
 cursor:pointer;
 }
@@ -142,16 +136,18 @@ let games=[
 {title:"Shell Shockers",cat:"Multiplayer",url:"https://www.crazygames.com/embed/shellshockers",img:"https://img.crazygames.com/games/shellshockers/cover-1637149020922.png"}
 ];
 
-/* ADD MORE */
+/* MORE GAMES */
 for(let i=0;i<40;i++){
 games.push(games[i%8]);
 }
 
+/* ACTIVE TAB */
 function setActive(el){
 document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
 el.classList.add("active");
 }
 
+/* RENDER */
 function render(cat="All"){
 let grid=document.getElementById("grid");
 grid.innerHTML="";
@@ -160,30 +156,31 @@ games.forEach(g=>{
 if(cat==="All"||g.cat===cat){
 grid.innerHTML+=`
 <div class="card" onclick="play('${g.url}')">
-<img src="${g.img}" onerror="this.src='https://via.placeholder.com/300x150/000/ff0000?text=Game'">
+<img src="${g.img}" onerror="this.src='https://via.placeholder.com/300x150/111/ff0000?text=Game'">
 <div class="title">${g.title}</div>
 </div>`;
 }
 });
 }
 
+/* PLAY */
 function play(url){
 document.getElementById("game").src=url;
 }
 
+/* SEARCH */
 function search(){
 let val=document.getElementById("search").value.toLowerCase();
+let filtered=games.filter(g=>g.title.toLowerCase().includes(val));
 let grid=document.getElementById("grid");
 grid.innerHTML="";
 
-games.forEach(g=>{
-if(g.title.toLowerCase().includes(val)){
+filtered.forEach(g=>{
 grid.innerHTML+=`
 <div class="card" onclick="play('${g.url}')">
 <img src="${g.img}">
 <div class="title">${g.title}</div>
 </div>`;
-}
 });
 }
 
@@ -196,7 +193,7 @@ grid.innerHTML+=`
 <div class="sidebar">
 <div class="logo">DarkPlay</div>
 
-<div class="tab active" onclick="setActive(this);render('All')">All</div>
+<div class="tab active" onclick="setActive(this);render()">All Games</div>
 <div class="tab" onclick="setActive(this);render('Action')">Action</div>
 <div class="tab" onclick="setActive(this);render('Driving')">Driving</div>
 <div class="tab" onclick="setActive(this);render('Arcade')">Arcade</div>
