@@ -1,27 +1,81 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <title>DarkPlay</title>
+
 <style>
-body{margin:0;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center}
-header{padding:20px;font-size:30px;background:#020617}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px}
-.card{background:#1e293b;padding:15px;border-radius:10px;cursor:pointer}
-.card:hover{background:#334155}
-iframe{width:100%;height:400px;border:none}
+body {
+  margin:0;
+  background:#0f172a;
+  color:#fff;
+  font-family:sans-serif;
+  text-align:center;
+}
+
+header {
+  padding:20px;
+  font-size:30px;
+  background:#020617;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+  padding:20px;
+}
+
+.card {
+  background:#1e293b;
+  padding:15px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.card:hover {
+  background:#334155;
+}
+
+iframe {
+  width:100%;
+  height:400px;
+  border:none;
+}
 </style>
+
 </head>
+
 <body>
-<header>DarkPlay</header>
+
+<header>DarkPlay 🎮</header>
+
 <div class="grid">
-<div class="card" onclick="load('https://www.crazygames.com/embed/drive-mad')">Drive</div>
-<div class="card" onclick="load('https://www.crazygames.com/embed/space-waves')">Space</div>
-<div class="card" onclick="load('https://neal.fun/spend/')">Fun</div>
+
+<div class="card" onclick="load('https://www.crazygames.com/embed/drive-mad')">Drive Mad</div>
+
+<div class="card" onclick="load('https://www.crazygames.com/embed/space-waves')">Space Waves</div>
+
+<div class="card" onclick="load('https://neal.fun/spend/')">Spend Money</div>
+
+<div class="card" onclick="load('https://www.crazygames.com/embed/slope')">Slope</div>
+
+<div class="card" onclick="load('https://www.crazygames.com/embed/run-3')">Run 3</div>
+
+<div class="card" onclick="load('https://www.crazygames.com/embed/moto-x3m')">Moto X3M</div>
+
+<div class="card" onclick="load('https://www.crazygames.com/embed/tunnel-rush')">Tunnel Rush</div>
+
+<div class="card" onclick="load('https://www.crazygames.com/embed/ovo')">OvO</div>
+
 </div>
-<iframe id="f"></iframe>
+
+<iframe id="gameFrame"></iframe>
+
 <script>
-function load(u){document.getElementById('f').src=u}
+function load(url) {
+  document.getElementById("gameFrame").src = url;
+}
 </script>
+
 </body>
 </html>
