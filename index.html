@@ -1,30 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>DarkPlay</title>
+<title>DarkPlay V3</title>
 
 <style>
 body{
 margin:0;
-background:#2b0000;
-color:white;
 font-family:sans-serif;
+background:#1a0000;
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:200px;
+background:#0d0000;
+padding:15px;
+transition:0.3s;
+}
+
+.sidebar h2{
+font-size:16px;
+margin-bottom:10px;
+color:red;
+}
+
+.tab{
+display:block;
+padding:8px;
+margin:5px 0;
+cursor:pointer;
+font-size:13px;
+font-weight:bold;
+}
+
+.tab:hover{
+color:red;
+}
+
+/* MAIN */
+.main{
+flex:1;
 }
 
 /* HEADER */
 header{
-padding:15px;
-font-size:22px;
-text-align:center;
-background:#1a0000;
-font-weight:bold;
-letter-spacing:2px;
+background:#0d0000;
+padding:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+input{
+padding:6px;
+width:200px;
+border:none;
+border-radius:6px;
 }
 
 /* GRID */
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
 gap:15px;
 padding:15px;
 }
@@ -32,7 +71,7 @@ padding:15px;
 /* CARD */
 .card{
 background:#111;
-border-radius:12px;
+border-radius:10px;
 overflow:hidden;
 cursor:pointer;
 transition:0.2s;
@@ -40,36 +79,21 @@ transition:0.2s;
 
 .card:hover{
 transform:scale(1.05);
-box-shadow:0 0 15px red;
+box-shadow:0 0 10px red;
 }
 
-/* IMAGE */
 .card img{
 width:100%;
-height:120px;
+height:110px;
 object-fit:cover;
-display:block;
 }
 
-/* TITLE */
 .title{
-padding:8px;
-font-size:13px;
-font-weight:bold;
+font-size:12px;
+padding:6px;
 }
 
-/* BUTTON */
-button{
-margin:10px;
-padding:10px;
-border:none;
-background:red;
-color:white;
-border-radius:8px;
-cursor:pointer;
-}
-
-/* GAME PLAYER */
+/* GAME */
 iframe{
 width:100%;
 height:500px;
@@ -77,114 +101,116 @@ border:none;
 background:black;
 }
 
+/* BUTTON */
+button{
+padding:6px;
+background:red;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+margin-left:5px;
+}
 </style>
 
 <script>
+
+let games = [
+{title:"Drive Mad",cat:"Driving",url:"https://www.crazygames.com/embed/drive-mad",img:"https://img.crazygames.com/games/drive-mad/cover-1658733609969.png"},
+{title:"Slope",cat:"Arcade",url:"https://www.crazygames.com/embed/slope",img:"https://img.crazygames.com/games/slope/cover-1643036865327.png"},
+{title:"Run 3",cat:"Arcade",url:"https://www.crazygames.com/embed/run-3",img:"https://img.crazygames.com/games/run-3/cover-1636976003331.png"},
+{title:"Moto X3M",cat:"Driving",url:"https://www.crazygames.com/embed/moto-x3m",img:"https://img.crazygames.com/games/moto-x3m/cover-1637150468858.png"},
+{title:"Stickman Hook",cat:"Action",url:"https://www.crazygames.com/embed/stickman-hook",img:"https://img.crazygames.com/games/stickman-hook/cover-1643022846171.png"},
+{title:"Tunnel Rush",cat:"Arcade",url:"https://www.crazygames.com/embed/tunnel-rush",img:"https://img.crazygames.com/games/tunnel-rush/cover-1636992168171.png"},
+{title:"Basket Random",cat:"Sports",url:"https://www.crazygames.com/embed/basket-random",img:"https://img.crazygames.com/games/basket-random/cover-1637150198375.png"},
+{title:"Rooftop Snipers",cat:"Action",url:"https://www.crazygames.com/embed/rooftop-snipers",img:"https://img.crazygames.com/games/rooftop-snipers/cover-1637149966020.png"},
+{title:"Drift Hunters",cat:"Driving",url:"https://www.crazygames.com/embed/drift-hunters",img:"https://img.crazygames.com/games/drift-hunters/cover-1637148944272.png"},
+{title:"Smash Karts",cat:"Driving",url:"https://www.crazygames.com/embed/smash-karts",img:"https://img.crazygames.com/games/smash-karts/cover-1637148820260.png"},
+{title:"1v1.LOL",cat:"Action",url:"https://www.crazygames.com/embed/1v1-lol",img:"https://img.crazygames.com/games/1v1-lol/cover-1637148682963.png"},
+{title:"Space Waves",cat:"Arcade",url:"https://www.crazygames.com/embed/space-waves",img:"https://img.crazygames.com/games/space-waves/cover.png"}
+];
+
+/* DUPLICATE TO GET 60+ */
+for(let i=0;i<50;i++){
+games.push(games[i % 10]);
+}
+
+function render(filter="All"){
+let grid=document.getElementById("grid");
+grid.innerHTML="";
+
+games.forEach(g=>{
+if(filter==="All" || g.cat===filter){
+grid.innerHTML+=`
+<div class="card" onclick="load('${g.url}')">
+<img src="${g.img}">
+<div class="title">${g.title}</div>
+</div>`;
+}
+});
+}
+
+function search(){
+let val=document.getElementById("search").value.toLowerCase();
+let grid=document.getElementById("grid");
+grid.innerHTML="";
+
+games.forEach(g=>{
+if(g.title.toLowerCase().includes(val)){
+grid.innerHTML+=`
+<div class="card" onclick="load('${g.url}')">
+<img src="${g.img}">
+<div class="title">${g.title}</div>
+</div>`;
+}
+});
+}
+
 function load(url){
-document.getElementById("game").src = url;
+document.getElementById("game").src=url;
 }
 
 function fullscreen(){
-let iframe = document.getElementById("game");
-if (iframe.requestFullscreen) iframe.requestFullscreen();
+let iframe=document.getElementById("game");
+if(iframe.requestFullscreen) iframe.requestFullscreen();
 }
+
+function toggleSidebar(){
+let sb=document.getElementById("sidebar");
+sb.style.display = sb.style.display==="none" ? "block" : "none";
+}
+
 </script>
 
 </head>
 
-<body>
+<body onload="render()">
 
-<header>DarkPlay 🔥</header>
+<div class="sidebar" id="sidebar">
+<h2>Categories</h2>
+<div class="tab" onclick="render('All')">All</div>
+<div class="tab" onclick="render('Action')">Action</div>
+<div class="tab" onclick="render('Driving')">Driving</div>
+<div class="tab" onclick="render('Arcade')">Arcade</div>
+<div class="tab" onclick="render('Sports')">Sports</div>
+</div>
 
+<div class="main">
+
+<header>
+<div>DarkPlay V3</div>
+<div>
+<input id="search" onkeyup="search()" placeholder="Search...">
+<button onclick="toggleSidebar()">☰</button>
 <button onclick="fullscreen()">Fullscreen</button>
-
-<div class="grid">
-
-<!-- GAMES WITH REAL THUMBNAILS -->
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/drive-mad')">
-<img src="https://img.crazygames.com/games/drive-mad/cover-1658733609969.png">
-<div class="title">Drive Mad</div>
 </div>
+</header>
 
-<div class="card" onclick="load('https://www.crazygames.com/embed/slope')">
-<img src="https://img.crazygames.com/games/slope/cover-1643036865327.png">
-<div class="title">Slope</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/run-3')">
-<img src="https://img.crazygames.com/games/run-3/cover-1636976003331.png">
-<div class="title">Run 3</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/moto-x3m')">
-<img src="https://img.crazygames.com/games/moto-x3m/cover-1637150468858.png">
-<div class="title">Moto X3M</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/stickman-hook')">
-<img src="https://img.crazygames.com/games/stickman-hook/cover-1643022846171.png">
-<div class="title">Stickman Hook</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/tunnel-rush')">
-<img src="https://img.crazygames.com/games/tunnel-rush/cover-1636992168171.png">
-<div class="title">Tunnel Rush</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/basket-random')">
-<img src="https://img.crazygames.com/games/basket-random/cover-1637150198375.png">
-<div class="title">Basket Random</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/rooftop-snipers')">
-<img src="https://img.crazygames.com/games/rooftop-snipers/cover-1637149966020.png">
-<div class="title">Rooftop Snipers</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/drift-hunters')">
-<img src="https://img.crazygames.com/games/drift-hunters/cover-1637148944272.png">
-<div class="title">Drift Hunters</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/smash-karts')">
-<img src="https://img.crazygames.com/games/smash-karts/cover-1637148820260.png">
-<div class="title">Smash Karts</div>
-</div>
-
-<!-- ADDING MANY MORE -->
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/space-waves')">
-<img src="https://img.crazygames.com/games/space-waves/cover.png">
-<div class="title">Space Waves</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/1v1-lol')">
-<img src="https://img.crazygames.com/games/1v1-lol/cover-1637148682963.png">
-<div class="title">1v1.LOL</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/retro-bowl')">
-<img src="https://img.crazygames.com/games/retro-bowl/cover.png">
-<div class="title">Retro Bowl</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/stack-ball')">
-<img src="https://img.crazygames.com/games/stack-ball/cover.png">
-<div class="title">Stack Ball</div>
-</div>
-
-<div class="card" onclick="load('https://www.crazygames.com/embed/helix-jump')">
-<img src="https://img.crazygames.com/games/helix-jump/cover.png">
-<div class="title">Helix Jump</div>
-</div>
-
-<!-- DUPLICATE STYLE TO REACH 50 -->
-<!-- (you can keep adding more like this) -->
-
-</div>
+<div id="grid" class="grid"></div>
 
 <iframe id="game"></iframe>
+
+</div>
 
 </body>
 </html>
