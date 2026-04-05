@@ -4,172 +4,140 @@
 <title>DarkPlay</title>
 
 <style>
-/* BACKGROUND ANIMATION */
-body {
+body{
 margin:0;
 font-family:sans-serif;
-background:linear-gradient(-45deg,#000000,#1a0000,#330000,#000000);
+background:linear-gradient(-45deg,#000,#1a0000,#330000,#000);
 background-size:400% 400%;
-animation:bgMove 10s ease infinite;
+animation:bg 10s infinite;
 color:white;
 display:flex;
 }
 
-@keyframes bgMove {
-0% {background-position:0% 50%;}
-50% {background-position:100% 50%;}
-100% {background-position:0% 50%;}
+@keyframes bg{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 }
 
 /* SIDEBAR */
-.sidebar {
+.sidebar{
 width:220px;
 background:#0a0a0a;
-padding:20px;
+padding:15px;
 transition:0.3s;
 }
 
-.sidebar h2 {
+.sidebar h2{
 color:#ff1a1a;
 text-shadow:0 0 10px red;
 }
 
-.sidebar button {
-display:block;
-width:100%;
-margin:5px 0;
+.menu{
 padding:10px;
-background:#111;
-border:none;
-color:white;
+margin:5px 0;
 cursor:pointer;
+border-radius:8px;
 font-weight:bold;
-transition:0.2s;
 }
 
-.sidebar button:hover {
-background:#ff1a1a;
-box-shadow:0 0 20px red;
-}
+.menu:hover{background:#222;}
+.active{background:#ff1a1a;}
 
 /* MAIN */
-.main {
+.main{
 flex:1;
 padding:20px;
 }
 
 /* HEADER */
-header {
-font-size:32px;
+header{
+font-size:30px;
 color:#ff1a1a;
-text-shadow:
-0 0 5px red,
-0 0 20px red,
-0 0 40px red;
-animation: glowPulse 2s infinite;
+text-shadow:0 0 20px red;
+margin-bottom:10px;
 }
 
-@keyframes glowPulse {
-0% { text-shadow:0 0 5px red; }
-50% { text-shadow:0 0 30px red; }
-100% { text-shadow:0 0 5px red; }
+/* SEARCH */
+.search{
+padding:10px;
+border:none;
+border-radius:10px;
+width:250px;
+background:#111;
+color:white;
+margin-bottom:10px;
 }
 
 /* GRID */
-.grid {
+.grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
 gap:15px;
 }
 
 /* CARD */
-.card {
+.card{
 background:#121212;
 border-radius:12px;
-cursor:pointer;
 overflow:hidden;
+cursor:pointer;
 transition:0.3s;
 position:relative;
-transform-style:preserve-3d;
 }
 
-.card:hover {
-transform:rotateX(5deg) rotateY(5deg) scale(1.07);
-box-shadow:
-0 0 10px red,
-0 0 25px red,
-0 0 50px red;
+.card:hover{
+transform:scale(1.06);
+box-shadow:0 0 25px red;
 }
 
-/* SHINE EFFECT */
-.card::before {
-content:"";
-position:absolute;
-top:0;
-left:-100%;
-width:100%;
-height:100%;
-background:linear-gradient(120deg,transparent,rgba(255,255,255,0.2),transparent);
-transition:0.5s;
-}
-
-.card:hover::before {
-left:100%;
-}
-
-/* IMAGE */
-.card img {
+.card img{
 width:100%;
 height:120px;
 object-fit:cover;
 border-bottom:2px solid red;
-box-shadow:0 0 10px red;
 }
 
-/* TEXT */
-.card p {
+/* fallback fix */
+.card img{
+background:#000;
+}
+
+.card p{
 margin:10px;
 font-size:14px;
 font-weight:bold;
 text-shadow:0 0 10px red;
 }
 
-.card span {
+.card span{
 font-size:12px;
 color:#aaa;
-display:block;
 margin-bottom:10px;
+display:block;
 }
 
 /* PLAYER */
-iframe {
+iframe{
 width:100%;
 height:500px;
 border:none;
 margin-top:20px;
 border-radius:10px;
-transition:0.3s;
 }
 
 /* BUTTONS */
-.topbar button {
-padding:10px;
+button{
+padding:8px 12px;
 margin:5px;
-background:#ff1a1a;
+background:red;
 border:none;
 color:white;
-cursor:pointer;
 border-radius:8px;
-box-shadow:0 0 10px red;
+cursor:pointer;
 }
 
-.topbar button:hover {
-transform:scale(1.1);
-box-shadow:0 0 30px red;
-}
-
-/* HIDE SIDEBAR */
-.hidden {
+.hidden{
 width:0;
 padding:0;
 overflow:hidden;
@@ -177,115 +145,86 @@ overflow:hidden;
 </style>
 
 <script>
+
+const games = [
+
+["Drive Mad","driving","https://www.crazygames.com/embed/drive-mad","https://images.crazygames.com/drive-mad/cover-1650877078857.png"],
+["Slope","arcade","https://www.crazygames.com/embed/slope","https://images.crazygames.com/slope/cover-1581699869287.png"],
+["Run 3","arcade","https://www.crazygames.com/embed/run-3","https://images.crazygames.com/run-3/cover-1581699869340.png"],
+["Moto X3M","driving","https://www.crazygames.com/embed/moto-x3m","https://images.crazygames.com/moto-x3m/cover-1581699869344.png"],
+["Stickman Hook","action","https://www.crazygames.com/embed/stickman-hook","https://images.crazygames.com/stickman-hook/cover-1581699869492.png"],
+["Tunnel Rush","arcade","https://www.crazygames.com/embed/tunnel-rush","https://images.crazygames.com/tunnel-rush/cover-1581699869171.png"],
+["Basket Random","fun","https://www.crazygames.com/embed/basket-random","https://images.crazygames.com/basket-random/cover-1598526430633.png"],
+["Rooftop Snipers","action","https://www.crazygames.com/embed/rooftop-snipers","https://images.crazygames.com/rooftop-snipers/cover-1581699869555.png"],
+["Crossy Road","arcade","https://www.crazygames.com/embed/crossy-road","https://images.crazygames.com/crossy-road/cover.png"],
+["Paper.io 2","arcade","https://www.crazygames.com/embed/paper-io-2","https://images.crazygames.com/paper-io-2/cover.png"],
+["Smash Karts","action","https://www.crazygames.com/embed/smash-karts","https://images.crazygames.com/smash-karts/cover.png"],
+["Drift Hunters","driving","https://www.crazygames.com/embed/drift-hunters","https://images.crazygames.com/drift-hunters/cover.png"]
+
+];
+
 function loadGame(url){
-let frame = document.getElementById("game");
-frame.style.opacity="0";
-
-setTimeout(()=>{
-frame.src=url;
-frame.style.opacity="1";
-},300);
-}
-
-function filter(category){
-let cards=document.querySelectorAll(".card");
-cards.forEach(card=>{
-if(category=="all" || card.dataset.cat==category){
-card.style.display="block";
-}else{
-card.style.display="none";
-}
-});
+document.getElementById("game").src=url;
 }
 
 function toggleSidebar(){
 document.getElementById("sidebar").classList.toggle("hidden");
 }
 
-function fullscreen(){
-let iframe=document.getElementById("game");
-if(iframe.requestFullscreen) iframe.requestFullscreen();
+function filter(cat,el){
+document.querySelectorAll(".menu").forEach(m=>m.classList.remove("active"));
+if(el) el.classList.add("active");
+
+display(cat==="all"?games:games.filter(g=>g[1]===cat));
 }
+
+function display(list){
+let html="";
+list.forEach(g=>{
+html+=`
+<div class="card" onclick="loadGame('${g[2]}')">
+<img src="${g[3]}" onerror="this.src='https://via.placeholder.com/300x150?text=Game'">
+<p>${g[0]}</p>
+<span>Click to Play</span>
+</div>`;
+});
+document.getElementById("games").innerHTML=html;
+}
+
+function searchGames(text){
+text=text.toLowerCase();
+display(games.filter(g=>g[0].toLowerCase().includes(text)));
+}
+
+window.onload=()=>display(games);
+
 </script>
 
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
 <h2>DarkPlay</h2>
 
-<button onclick="filter('all')">All</button>
-<button onclick="filter('action')">Action</button>
-<button onclick="filter('driving')">Driving</button>
-<button onclick="filter('arcade')">Arcade</button>
-<button onclick="filter('fun')">Fun</button>
+<div class="menu active" onclick="filter('all',this)">All</div>
+<div class="menu" onclick="filter('action',this)">Action</div>
+<div class="menu" onclick="filter('arcade',this)">Arcade</div>
+<div class="menu" onclick="filter('driving',this)">Driving</div>
+<div class="menu" onclick="filter('fun',this)">Fun</div>
+
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
 <header>Play Games</header>
 
-<div class="topbar">
+<input class="search" placeholder="Search..." onkeyup="searchGames(this.value)">
+
+<br>
 <button onclick="toggleSidebar()">Toggle Menu</button>
-<button onclick="fullscreen()">Fullscreen</button>
-</div>
 
-<div class="grid">
-
-<!-- GAMES -->
-
-<div class="card" data-cat="driving" onclick="loadGame('https://www.crazygames.com/embed/drive-mad')">
-<img src="https://images.crazygames.com/drive-mad/cover-1650877078857.png" onerror="this.src='https://via.placeholder.com/300x150'">
-<p>Drive Mad</p>
-<span>Click to Play</span>
-</div>
-
-<div class="card" data-cat="arcade" onclick="loadGame('https://www.crazygames.com/embed/slope')">
-<img src="https://images.crazygames.com/slope/cover-1581699869287.png" onerror="this.src='https://via.placeholder.com/300x150'">
-<p>Slope</p>
-<span>Click to Play</span>
-</div>
-
-<div class="card" data-cat="driving" onclick="loadGame('https://www.crazygames.com/embed/moto-x3m')">
-<img src="https://images.crazygames.com/moto-x3m/cover-1581699869344.png" onerror="this.src='https://via.placeholder.com/300x150'">
-<p>Moto X3M</p>
-<span>Click to Play</span>
-</div>
-
-<div class="card" data-cat="action" onclick="loadGame('https://www.crazygames.com/embed/stickman-hook')">
-<img src="https://images.crazygames.com/stickman-hook/cover-1581699869492.png" onerror="this.src='https://via.placeholder.com/300x150'">
-<p>Stickman Hook</p>
-<span>Click to Play</span>
-</div>
-
-<div class="card" data-cat="arcade" onclick="loadGame('https://www.crazygames.com/embed/run-3')">
-<img src="https://images.crazygames.com/run-3/cover-1581699869340.png" onerror="this.src='https://via.placeholder.com/300x150'">
-<p>Run 3</p>
-<span>Click to Play</span>
-</div>
-
-<div class="card" data-cat="arcade" onclick="loadGame('https://www.crazygames.com/embed/tunnel-rush')">
-<img src="https://images.crazygames.com/tunnel-rush/cover-1581699869171.png" onerror="this.src='https://via.placeholder.com/300x150'">
-<p>Tunnel Rush</p>
-<span>Click to Play</span>
-</div>
-
-<div class="card" data-cat="fun" onclick="loadGame('https://www.crazygames.com/embed/basket-random')">
-<img src="https://images.crazygames.com/basket-random/cover-1598526430633.png" onerror="this.src='https://via.placeholder.com/300x150'">
-<p>Basket Random</p>
-<span>Click to Play</span>
-</div>
-
-<div class="card" data-cat="action" onclick="loadGame('https://www.crazygames.com/embed/rooftop-snipers')">
-<img src="https://images.crazygames.com/rooftop-snipers/cover-1581699869555.png" onerror="this.src='https://via.placeholder.com/300x150'">
-<p>Rooftop Snipers</p>
-<span>Click to Play</span>
-</div>
-
-</div>
+<div class="grid" id="games"></div>
 
 <iframe id="game"></iframe>
 
