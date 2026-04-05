@@ -2,105 +2,131 @@
 
 <html>
 <head>
-<title>DarkPlay NEXT</title>
+<title>DarkPlay Clean</title>
 
 <style>
 body{
 margin:0;
 font-family:sans-serif;
-background:#120000;
+background:#140000;
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:220px;
+background:#0a0000;
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
+border-right:1px solid #300;
+}
+
+.logo{
+font-size:18px;
+color:red;
+text-align:center;
+margin-bottom:10px;
+text-shadow:0 0 10px red;
+}
+
+.tab{
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+font-size:13px;
+font-weight:bold;
+transition:0.2s;
+}
+
+.tab:hover{
+background:#200000;
+color:red;
+}
+
+.active{
+background:red;
 color:white;
 }
 
-/* LOGIN */
-#loginScreen{
-position:fixed;
-width:100%;
-height:100%;
-background:black;
+/* MAIN */
+.main{
+flex:1;
 display:flex;
-align-items:center;
-justify-content:center;
 flex-direction:column;
 }
 
-input{
-padding:8px;
-margin:5px;
-border:none;
-border-radius:6px;
-}
-
-button{
-padding:8px;
-background:red;
-border:none;
-color:white;
-border-radius:6px;
-cursor:pointer;
-}
-
-/* APP */
-#app{display:none;}
-
+/* HEADER */
 header{
 background:#0a0000;
 padding:10px;
 display:flex;
 justify-content:space-between;
+align-items:center;
+border-bottom:1px solid #300;
+}
+
+input{
+padding:6px;
+border:none;
+border-radius:6px;
+width:200px;
 }
 
 /* GRID */
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-gap:12px;
-padding:10px;
+grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+gap:15px;
+padding:15px;
 }
 
+/* CARD */
 .card{
 background:#111;
 border-radius:10px;
 overflow:hidden;
 cursor:pointer;
+transition:0.25s;
+}
+
+.card:hover{
+transform:scale(1.05);
+box-shadow:0 0 15px red;
 }
 
 .card img{
 width:100%;
-height:100px;
+height:110px;
 object-fit:cover;
 }
 
+/* TITLE */
 .title{
-font-size:11px;
+font-size:12px;
 text-align:center;
-padding:5px;
+padding:6px;
 }
 
-/* MODAL */
-.modal{
-position:fixed;
-top:0;
-left:0;
+/* PLAYER */
+iframe{
 width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
-display:none;
-flex-direction:column;
-}
-
-.modal iframe{
-flex:1;
+height:420px;
 border:none;
+background:black;
 }
 
-.close{
+/* BUTTON */
+button{
 background:red;
-padding:10px;
-text-align:center;
+border:none;
+color:white;
+padding:6px 10px;
+border-radius:6px;
 cursor:pointer;
 }
-
 </style>
 
 <script>
@@ -108,96 +134,87 @@ cursor:pointer;
 let games=[
 {title:"Drive Mad",cat:"Driving",url:"https://www.crazygames.com/embed/drive-mad",img:"https://img.crazygames.com/games/drive-mad/cover-1658733609969.png"},
 {title:"Slope",cat:"Arcade",url:"https://www.crazygames.com/embed/slope",img:"https://img.crazygames.com/games/slope/cover-1643036865327.png"},
-{title:"Run 3",cat:"Arcade",url:"https://www.crazygames.com/embed/run-3",img:"https://img.crazygames.com/games/run-3/cover-1636976003331.png"}
+{title:"Run 3",cat:"Arcade",url:"https://www.crazygames.com/embed/run-3",img:"https://img.crazygames.com/games/run-3/cover-1636976003331.png"},
+{title:"Moto X3M",cat:"Driving",url:"https://www.crazygames.com/embed/moto-x3m",img:"https://img.crazygames.com/games/moto-x3m/cover-1637150468858.png"},
+{title:"Stickman Hook",cat:"Action",url:"https://www.crazygames.com/embed/stickman-hook",img:"https://img.crazygames.com/games/stickman-hook/cover-1643022846171.png"},
+{title:"Smash Karts",cat:"Multiplayer",url:"https://www.crazygames.com/embed/smash-karts",img:"https://img.crazygames.com/games/smash-karts/cover-1637148820260.png"},
+{title:"1v1.LOL",cat:"Multiplayer",url:"https://www.crazygames.com/embed/1v1-lol",img:"https://img.crazygames.com/games/1v1-lol/cover-1637148682963.png"},
+{title:"Shell Shockers",cat:"Multiplayer",url:"https://www.crazygames.com/embed/shellshockers",img:"https://img.crazygames.com/games/shellshockers/cover-1637149020922.png"}
 ];
 
-/* DUPLICATE */
-for(let i=0;i<50;i++){games.push(games[i%3]);}
-
-/* AUTH */
-function login(){
-let user=document.getElementById("user").value;
-if(user){
-localStorage.setItem("user",user);
-start();
-}
+/* ADD MORE */
+for(let i=0;i<40;i++){
+games.push(games[i%8]);
 }
 
-function start(){
-document.getElementById("loginScreen").style.display="none";
-document.getElementById("app").style.display="block";
-render();
+function setActive(el){
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+el.classList.add("active");
 }
 
-/* RENDER */
-function render(list=games){
+function render(cat="All"){
 let grid=document.getElementById("grid");
 grid.innerHTML="";
-list.forEach(g=>{
+
+games.forEach(g=>{
+if(cat==="All"||g.cat===cat){
 grid.innerHTML+=`
 <div class="card" onclick="play('${g.url}')">
-<img src="${g.img}" onerror="this.src='https://via.placeholder.com/300x150/000/ff0000?text=DarkPlay'">
+<img src="${g.img}" onerror="this.src='https://via.placeholder.com/300x150/000/ff0000?text=Game'">
 <div class="title">${g.title}</div>
 </div>`;
+}
 });
 }
 
-/* PLAY */
 function play(url){
-document.getElementById("modal").style.display="flex";
-document.getElementById("player").src=url;
+document.getElementById("game").src=url;
 }
 
-/* CLOSE */
-function closeGame(){
-document.getElementById("modal").style.display="none";
-document.getElementById("player").src="";
-}
-
-/* SEARCH */
 function search(){
 let val=document.getElementById("search").value.toLowerCase();
-let filtered=games.filter(g=>g.title.toLowerCase().includes(val));
-render(filtered);
-}
+let grid=document.getElementById("grid");
+grid.innerHTML="";
 
-/* AUTO LOGIN */
-window.onload=()=>{
-if(localStorage.getItem("user")) start();
-};
+games.forEach(g=>{
+if(g.title.toLowerCase().includes(val)){
+grid.innerHTML+=`
+<div class="card" onclick="play('${g.url}')">
+<img src="${g.img}">
+<div class="title">${g.title}</div>
+</div>`;
+}
+});
+}
 
 </script>
 
 </head>
 
-<body>
+<body onload="render()">
 
-<!-- LOGIN -->
+<div class="sidebar">
+<div class="logo">DarkPlay</div>
 
-<div id="loginScreen">
-<h2>DarkPlay Login</h2>
-<input id="user" placeholder="Enter username">
-<button onclick="login()">Enter</button>
+<div class="tab active" onclick="setActive(this);render('All')">All</div>
+<div class="tab" onclick="setActive(this);render('Action')">Action</div>
+<div class="tab" onclick="setActive(this);render('Driving')">Driving</div>
+<div class="tab" onclick="setActive(this);render('Arcade')">Arcade</div>
+<div class="tab" onclick="setActive(this);render('Multiplayer')">Multiplayer</div>
+
 </div>
 
-<!-- APP -->
-
-<div id="app">
+<div class="main">
 
 <header>
-<div>DarkPlay</div>
 <input id="search" onkeyup="search()" placeholder="Search games...">
+<button onclick="document.getElementById('game').requestFullscreen()">Fullscreen</button>
 </header>
 
 <div id="grid" class="grid"></div>
 
-</div>
+<iframe id="game"></iframe>
 
-<!-- MODAL -->
-
-<div id="modal" class="modal">
-<div class="close" onclick="closeGame()">Close</div>
-<iframe id="player"></iframe>
 </div>
 
 </body>
