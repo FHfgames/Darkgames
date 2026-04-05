@@ -4,42 +4,220 @@
 <title>DarkPlay</title>
 
 <style>
-body {margin:0;background:#0f172a;color:white;font-family:sans-serif;text-align:center;}
-header {padding:20px;font-size:30px;background:#020617;}
-.grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;padding:20px;}
-.card {background:#1e293b;padding:10px;border-radius:10px;cursor:pointer;}
-.card:hover {background:#334155;}
-iframe {width:100%;height:500px;border:none;}
-button {padding:10px;margin:10px;border:none;border-radius:8px;background:#2563eb;color:white;}
-</style>
+body {
+  margin:0;
+  background:#0b1220;
+  color:#fff;
+  font-family:Arial;
+}
 
-<script>
-function load(url){
-document.getElementById("game").src = url;
+/* Header */
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 20px;
+  background:#020617;
+  font-size:22px;
 }
-function fullscreen(){
-let iframe = document.getElementById("game");
-if (iframe.requestFullscreen) iframe.requestFullscreen();
+
+.logo {
+  font-weight:bold;
 }
-</script>
+
+/* Search */
+.search {
+  padding:8px;
+  border-radius:8px;
+  border:none;
+  width:200px;
+}
+
+/* Layout */
+.container {
+  display:flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width:200px;
+  background:#020617;
+  height:100vh;
+  padding:10px;
+}
+
+.sidebar div {
+  padding:10px;
+  cursor:pointer;
+  border-radius:8px;
+}
+
+.sidebar div:hover {
+  background:#1e293b;
+}
+
+/* Main */
+.main {
+  flex:1;
+  overflow:auto;
+}
+
+/* Game Player */
+.player {
+  padding:10px;
+}
+
+iframe {
+  width:100%;
+  height:500px;
+  border:none;
+  border-radius:10px;
+}
+
+/* Controls */
+.controls {
+  margin:10px;
+}
+
+button {
+  padding:8px 12px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+}
+
+/* Grid */
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:15px;
+  padding:20px;
+}
+
+.card {
+  background:#1e293b;
+  border-radius:10px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.card:hover {
+  transform:scale(1.05);
+}
+
+.card img {
+  width:100%;
+  height:110px;
+  object-fit:cover;
+}
+
+.card p {
+  text-align:center;
+  padding:6px;
+  font-size:14px;
+}
+
+</style>
 
 </head>
 
 <body>
 
-<header>DarkPlay</header>
+<header>
+  <div class="logo">DarkPlay</div>
+  <input class="search" placeholder="Search..." onkeyup="searchGames(this.value)">
+</header>
 
-<button onclick="fullscreen()">Fullscreen</button>
+<div class="container">
 
-<div class="grid">
-<div class="card" onclick="load('https://www.crazygames.com/embed/drive-mad')">Drive Mad</div>
-<div class="card" onclick="load('https://www.crazygames.com/embed/slope')">Slope</div>
-<div class="card" onclick="load('https://www.crazygames.com/embed/moto-x3m')">Moto X3M</div>
-<div class="card" onclick="load('https://www.crazygames.com/embed/stickman-hook')">Stickman Hook</div>
-<div class="card" onclick="load('https://www.crazygames.com/embed/space-waves')">Space Waves</div>
+<div class="sidebar">
+  <div onclick="show('all')">All Games</div>
+  <div onclick="show('popular')">Popular</div>
+  <div onclick="show('action')">Action</div>
+  <div onclick="show('arcade')">Arcade</div>
 </div>
 
-<iframe id="game"></iframe>
+<div class="main">
+
+<div class="player">
+  <div class="controls">
+    <button onclick="fullscreen()">Fullscreen</button>
+    <button onclick="clearGame()">Close</button>
+  </div>
+  <iframe id="game"></iframe>
+</div>
+
+<div class="grid" id="games"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const games = [
+["Drive Mad","popular","https://www.crazygames.com/embed/drive-mad","https://images.crazygames.com/games/drive-mad/cover.png"],
+["Slope","popular","https://www.crazygames.com/embed/slope","https://images.crazygames.com/games/slope/cover.png"],
+["Run 3","popular","https://www.crazygames.com/embed/run-3","https://images.crazygames.com/games/run-3/cover.png"],
+["Moto X3M","popular","https://www.crazygames.com/embed/moto-x3m","https://images.crazygames.com/games/moto-x3m/cover.png"],
+["Tunnel Rush","popular","https://www.crazygames.com/embed/tunnel-rush","https://images.crazygames.com/games/tunnel-rush/cover.png"],
+
+["OvO","action","https://www.crazygames.com/embed/ovo","https://images.crazygames.com/games/ovo/cover.png"],
+["Stickman Hook","action","https://www.crazygames.com/embed/stickman-hook","https://images.crazygames.com/games/stickman-hook/cover.png"],
+["Basketball Stars","action","https://www.crazygames.com/embed/basketball-stars","https://images.crazygames.com/games/basketball-stars/cover.png"],
+["1v1.LOL","action","https://www.crazygames.com/embed/1v1-lol","https://images.crazygames.com/games/1v1-lol/cover.png"],
+["Krunker","action","https://www.crazygames.com/embed/krunker","https://images.crazygames.com/games/krunker/cover.png"],
+
+["Smash Karts","arcade","https://www.crazygames.com/embed/smash-karts","https://images.crazygames.com/games/smash-karts/cover.png"],
+["Paper.io 2","arcade","https://www.crazygames.com/embed/paper-io-2","https://images.crazygames.com/games/paper-io-2/cover.png"],
+["Helix Jump","arcade","https://www.crazygames.com/embed/helix-jump","https://images.crazygames.com/games/helix-jump/cover.png"],
+["Color Switch","arcade","https://www.crazygames.com/embed/color-switch","https://images.crazygames.com/games/color-switch/cover.png"],
+["Stack Ball","arcade","https://www.crazygames.com/embed/stack-ball","https://images.crazygames.com/games/stack-ball/cover.png"]
+];
+
+function load(url){
+document.getElementById("game").src=url;
+}
+
+function fullscreen(){
+let iframe=document.getElementById("game");
+if (iframe.requestFullscreen) iframe.requestFullscreen();
+}
+
+function clearGame(){
+document.getElementById("game").src="";
+}
+
+function display(list){
+let html="";
+list.forEach(g=>{
+html+=`<div class="card" onclick="load('${g[2]}')">
+<img src="${g[3]}">
+<p>${g[0]}</p>
+</div>`;
+});
+document.getElementById("games").innerHTML=html;
+}
+
+function show(type){
+if(type==="all"){display(games);}
+else{
+display(games.filter(g=>g[1]===type));
+}
+}
+
+function searchGames(text){
+text=text.toLowerCase();
+display(games.filter(g=>g[0].toLowerCase().includes(text)));
+}
+
+display(games);
+
+</script>
 
 </body>
 </html>
