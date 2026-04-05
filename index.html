@@ -2,150 +2,103 @@
 
 <html>
 <head>
-<title>DarkPlay ULTRA</title>
+<title>DarkPlay NEXT</title>
 
 <style>
 body{
 margin:0;
 font-family:sans-serif;
-background:#140000;
+background:#120000;
 color:white;
+}
+
+/* LOGIN */
+#loginScreen{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
 display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
 }
 
-/* SIDEBAR */
-.sidebar{
-width:200px;
-background:#0a0000;
-padding:15px;
-transition:0.3s;
-}
-
-.tab{
-font-size:12px;
-font-weight:bold;
+input{
 padding:8px;
+margin:5px;
+border:none;
+border-radius:6px;
+}
+
+button{
+padding:8px;
+background:red;
+border:none;
+color:white;
+border-radius:6px;
 cursor:pointer;
 }
 
-.tab:hover{
-color:red;
-text-shadow:0 0 8px red;
-}
+/* APP */
+#app{display:none;}
 
-/* MAIN */
-.main{flex:1}
-
-/* HEADER */
 header{
 background:#0a0000;
 padding:10px;
 display:flex;
 justify-content:space-between;
-align-items:center;
-}
-
-input{
-padding:6px;
-border-radius:6px;
-border:none;
 }
 
 /* GRID */
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-gap:15px;
-padding:15px;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:12px;
+padding:10px;
 }
 
-/* CARD */
 .card{
-position:relative;
-border-radius:12px;
+background:#111;
+border-radius:10px;
 overflow:hidden;
 cursor:pointer;
-background:#111;
-transition:0.3s;
 }
 
-/* IMAGE */
 .card img{
 width:100%;
-height:120px;
+height:100px;
 object-fit:cover;
-transition:0.3s;
 }
 
-/* HOVER EFFECT */
-.card:hover img{
-transform:scale(1.1);
-filter:brightness(1.2);
+.title{
+font-size:11px;
+text-align:center;
+padding:5px;
 }
 
-.card:hover{
-box-shadow:0 0 20px red;
-}
-
-/* OVERLAY */
-.overlay{
-position:absolute;
+/* MODAL */
+.modal{
+position:fixed;
 top:0;
 left:0;
 width:100%;
 height:100%;
-background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-display:flex;
-align-items:flex-end;
-padding:8px;
-opacity:0;
-transition:0.3s;
+background:rgba(0,0,0,0.9);
+display:none;
+flex-direction:column;
 }
 
-.card:hover .overlay{
-opacity:1;
-}
-
-/* PLAY BUTTON */
-.play{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-background:red;
-padding:8px 12px;
-border-radius:20px;
-font-size:12px;
-opacity:0;
-transition:0.3s;
-}
-
-.card:hover .play{
-opacity:1;
-}
-
-/* TITLE */
-.title{
-font-size:11px;
-}
-
-/* GAME */
-iframe{
-width:100%;
-height:500px;
+.modal iframe{
+flex:1;
 border:none;
-background:black;
 }
 
-/* BUTTON */
-button{
+.close{
 background:red;
-border:none;
-color:white;
-padding:6px;
-border-radius:6px;
+padding:10px;
+text-align:center;
 cursor:pointer;
-margin-left:5px;
 }
 
 </style>
@@ -155,109 +108,96 @@ margin-left:5px;
 let games=[
 {title:"Drive Mad",cat:"Driving",url:"https://www.crazygames.com/embed/drive-mad",img:"https://img.crazygames.com/games/drive-mad/cover-1658733609969.png"},
 {title:"Slope",cat:"Arcade",url:"https://www.crazygames.com/embed/slope",img:"https://img.crazygames.com/games/slope/cover-1643036865327.png"},
-{title:"Run 3",cat:"Arcade",url:"https://www.crazygames.com/embed/run-3",img:"https://img.crazygames.com/games/run-3/cover-1636976003331.png"},
-{title:"Moto X3M",cat:"Driving",url:"https://www.crazygames.com/embed/moto-x3m",img:"https://img.crazygames.com/games/moto-x3m/cover-1637150468858.png"},
-{title:"Stickman Hook",cat:"Action",url:"https://www.crazygames.com/embed/stickman-hook",img:"https://img.crazygames.com/games/stickman-hook/cover-1643022846171.png"},
-{title:"Tunnel Rush",cat:"Arcade",url:"https://www.crazygames.com/embed/tunnel-rush",img:"https://img.crazygames.com/games/tunnel-rush/cover-1636992168171.png"},
-{title:"Basket Random",cat:"Sports",url:"https://www.crazygames.com/embed/basket-random",img:"https://img.crazygames.com/games/basket-random/cover-1637150198375.png"},
-{title:"Rooftop Snipers",cat:"Action",url:"https://www.crazygames.com/embed/rooftop-snipers",img:"https://img.crazygames.com/games/rooftop-snipers/cover-1637149966020.png"},
-{title:"Drift Hunters",cat:"Driving",url:"https://www.crazygames.com/embed/drift-hunters",img:"https://img.crazygames.com/games/drift-hunters/cover-1637148944272.png"},
-{title:"Smash Karts",cat:"Driving",url:"https://www.crazygames.com/embed/smash-karts",img:"https://img.crazygames.com/games/smash-karts/cover-1637148820260.png"}
+{title:"Run 3",cat:"Arcade",url:"https://www.crazygames.com/embed/run-3",img:"https://img.crazygames.com/games/run-3/cover-1636976003331.png"}
 ];
 
-/* ADD MANY GAMES */
-for(let i=0;i<70;i++){
-games.push(games[i%10]);
+/* DUPLICATE */
+for(let i=0;i<50;i++){games.push(games[i%3]);}
+
+/* AUTH */
+function login(){
+let user=document.getElementById("user").value;
+if(user){
+localStorage.setItem("user",user);
+start();
+}
+}
+
+function start(){
+document.getElementById("loginScreen").style.display="none";
+document.getElementById("app").style.display="block";
+render();
 }
 
 /* RENDER */
-function render(filter="All"){
+function render(list=games){
 let grid=document.getElementById("grid");
 grid.innerHTML="";
-
-games.forEach(g=>{
-if(filter==="All"||g.cat===filter){
+list.forEach(g=>{
 grid.innerHTML+=`
 <div class="card" onclick="play('${g.url}')">
-
-<img src="${g.img}" 
-onerror="this.src='https://via.placeholder.com/300x150/000000/ff0000?text=DarkPlay'">
-
-<div class="play">PLAY</div>
-
-<div class="overlay">
+<img src="${g.img}" onerror="this.src='https://via.placeholder.com/300x150/000/ff0000?text=DarkPlay'">
 <div class="title">${g.title}</div>
-</div>
-
 </div>`;
-}
 });
 }
 
 /* PLAY */
 function play(url){
-document.getElementById("game").src=url;
+document.getElementById("modal").style.display="flex";
+document.getElementById("player").src=url;
+}
+
+/* CLOSE */
+function closeGame(){
+document.getElementById("modal").style.display="none";
+document.getElementById("player").src="";
 }
 
 /* SEARCH */
 function search(){
 let val=document.getElementById("search").value.toLowerCase();
-let grid=document.getElementById("grid");
-grid.innerHTML="";
-
-games.forEach(g=>{
-if(g.title.toLowerCase().includes(val)){
-grid.innerHTML+=`
-<div class="card" onclick="play('${g.url}')">
-<img src="${g.img}" onerror="this.src='https://via.placeholder.com/300x150/000/ff0000?text=DarkPlay'">
-<div class="play">PLAY</div>
-<div class="overlay"><div class="title">${g.title}</div></div>
-</div>`;
-}
-});
+let filtered=games.filter(g=>g.title.toLowerCase().includes(val));
+render(filtered);
 }
 
-/* FULLSCREEN */
-function fullscreen(){
-let iframe=document.getElementById("game");
-if(iframe.requestFullscreen) iframe.requestFullscreen();
-}
-
-/* SIDEBAR */
-function toggleSidebar(){
-let s=document.getElementById("sidebar");
-s.style.display=s.style.display==="none"?"block":"none";
-}
+/* AUTO LOGIN */
+window.onload=()=>{
+if(localStorage.getItem("user")) start();
+};
 
 </script>
 
 </head>
 
-<body onload="render()">
+<body>
 
-<div class="sidebar" id="sidebar">
-<div class="tab" onclick="render()">All</div>
-<div class="tab" onclick="render('Action')">Action</div>
-<div class="tab" onclick="render('Driving')">Driving</div>
-<div class="tab" onclick="render('Arcade')">Arcade</div>
-<div class="tab" onclick="render('Sports')">Sports</div>
+<!-- LOGIN -->
+
+<div id="loginScreen">
+<h2>DarkPlay Login</h2>
+<input id="user" placeholder="Enter username">
+<button onclick="login()">Enter</button>
 </div>
 
-<div class="main">
+<!-- APP -->
+
+<div id="app">
 
 <header>
-<div style="color:red;text-shadow:0 0 10px red;">DarkPlay ULTRA</div>
-<div>
+<div>DarkPlay</div>
 <input id="search" onkeyup="search()" placeholder="Search games...">
-<button onclick="toggleSidebar()">☰</button>
-<button onclick="fullscreen()">Full</button>
-</div>
 </header>
 
 <div id="grid" class="grid"></div>
 
-<iframe id="game"></iframe>
+</div>
 
+<!-- MODAL -->
+
+<div id="modal" class="modal">
+<div class="close" onclick="closeGame()">Close</div>
+<iframe id="player"></iframe>
 </div>
 
 </body>
