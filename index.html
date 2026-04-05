@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>DarkPlay</title>
+<style>
+body{margin:0;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center}
+header{padding:20px;font-size:30px;background:#020617}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px}
+.card{background:#1e293b;padding:15px;border-radius:10px;cursor:pointer}
+.card:hover{background:#334155}
+iframe{width:100%;height:400px;border:none}
+</style>
+</head>
+<body>
+<header>DarkPlay</header>
+<div class="grid">
+<div class="card" onclick="load('https://www.crazygames.com/embed/drive-mad')">Drive</div>
+<div class="card" onclick="load('https://www.crazygames.com/embed/space-waves')">Space</div>
+<div class="card" onclick="load('https://neal.fun/spend/')">Fun</div>
+</div>
+<iframe id="f"></iframe>
+<script>
+function load(u){document.getElementById('f').src=u}
+</script>
+</body>
+</html>
