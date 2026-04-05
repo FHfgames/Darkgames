@@ -5,23 +5,103 @@
 
 <style>
 body {margin:0;background:#1a0000;color:#fff;font-family:Arial;}
-header {display:flex;justify-content:space-between;align-items:center;padding:10px 15px;background:#330000;font-size:18px;}
+
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 15px;
+  background:#330000;
+  font-size:18px;
+}
+
 .logo {font-weight:bold;}
-.search {padding:6px;border-radius:6px;border:none;width:180px;font-size:12px;}
+
+.search {
+  padding:6px;
+  border-radius:6px;
+  border:none;
+  width:180px;
+  font-size:12px;
+}
+
 .container {display:flex;}
-.sidebar {width:170px;background:#220000;height:100vh;padding:8px;font-size:13px;}
-.sidebar div {padding:8px;cursor:pointer;border-radius:6px;}
-.sidebar div:hover {background:#440000;}
+
+.sidebar {
+  width:170px;
+  background:#220000;
+  height:100vh;
+  padding:8px;
+  font-size:13px;
+}
+
+/* tabs */
+.tab {
+  padding:8px;
+  cursor:pointer;
+  border-radius:6px;
+  transition:0.2s;
+}
+
+.tab:hover {background:#440000;}
+
+.tab.active {
+  background:#ff1a1a;
+  font-weight:bold;
+}
+
 .main {flex:1;}
+
 .player {padding:8px;}
-iframe {width:100%;height:480px;border:none;border-radius:8px;}
+
+iframe {
+  width:100%;
+  height:480px;
+  border:none;
+  border-radius:8px;
+}
+
 .controls {margin:8px;}
-button {padding:6px 10px;margin:4px;border:none;border-radius:6px;background:#ff1a1a;color:white;font-size:12px;cursor:pointer;}
-.grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;padding:15px;}
-.card {background:#330000;border-radius:8px;overflow:hidden;cursor:pointer;transition:0.2s;}
+
+button {
+  padding:6px 10px;
+  margin:4px;
+  border:none;
+  border-radius:6px;
+  background:#ff1a1a;
+  color:white;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:12px;
+  padding:15px;
+}
+
+.card {
+  background:#330000;
+  border-radius:8px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.2s;
+}
+
 .card:hover {transform:scale(1.04);}
-.card img {width:100%;height:90px;object-fit:cover;}
-.card p {text-align:center;padding:5px;font-size:12px;}
+
+.card img {
+  width:100%;
+  height:90px;
+  object-fit:cover;
+}
+
+.card p {
+  text-align:center;
+  padding:5px;
+  font-size:12px;
+}
 </style>
 
 </head>
@@ -36,11 +116,11 @@ button {padding:6px 10px;margin:4px;border:none;border-radius:6px;background:#ff
 <div class="container">
 
 <div class="sidebar">
-  <div onclick="show('all')">All</div>
-  <div onclick="show('popular')">Popular</div>
-  <div onclick="show('action')">Action</div>
-  <div onclick="show('arcade')">Arcade</div>
-  <div onclick="show('racing')">Racing</div>
+  <div class="tab active" onclick="show('all', this)">All</div>
+  <div class="tab" onclick="show('popular', this)">Popular</div>
+  <div class="tab" onclick="show('action', this)">Action</div>
+  <div class="tab" onclick="show('arcade', this)">Arcade</div>
+  <div class="tab" onclick="show('racing', this)">Racing</div>
 </div>
 
 <div class="main">
@@ -62,7 +142,7 @@ button {padding:6px 10px;margin:4px;border:none;border-radius:6px;background:#ff
 
 const games = [
 
-/* POPULAR */
+/* Popular */
 ["Drive Mad","popular","https://www.crazygames.com/embed/drive-mad","https://images.crazygames.com/games/drive-mad/cover.png"],
 ["Slope","popular","https://www.crazygames.com/embed/slope","https://images.crazygames.com/games/slope/cover.png"],
 ["Run 3","popular","https://www.crazygames.com/embed/run-3","https://images.crazygames.com/games/run-3/cover.png"],
@@ -70,36 +150,43 @@ const games = [
 ["Tunnel Rush","popular","https://www.crazygames.com/embed/tunnel-rush","https://images.crazygames.com/games/tunnel-rush/cover.png"],
 ["Stickman Hook","popular","https://www.crazygames.com/embed/stickman-hook","https://images.crazygames.com/games/stickman-hook/cover.png"],
 
-/* ACTION */
+/* Action */
 ["OvO","action","https://www.crazygames.com/embed/ovo","https://images.crazygames.com/games/ovo/cover.png"],
 ["Basketball Stars","action","https://www.crazygames.com/embed/basketball-stars","https://images.crazygames.com/games/basketball-stars/cover.png"],
 ["1v1.LOL","action","https://www.crazygames.com/embed/1v1-lol","https://images.crazygames.com/games/1v1-lol/cover.png"],
 ["Krunker","action","https://www.crazygames.com/embed/krunker","https://images.crazygames.com/games/krunker/cover.png"],
 ["Shell Shockers","action","https://www.crazygames.com/embed/shellshockersio","https://images.crazygames.com/games/shellshockersio/cover.png"],
 ["Zombs Royale","action","https://www.crazygames.com/embed/zombsroyaleio","https://images.crazygames.com/games/zombsroyaleio/cover.png"],
-["Pixel Gun","action","https://www.crazygames.com/embed/pixel-gun-survival","https://images.crazygames.com/games/pixel-gun-survival/cover.png"],
 
-/* ARCADE */
+/* Arcade */
 ["Smash Karts","arcade","https://www.crazygames.com/embed/smash-karts","https://images.crazygames.com/games/smash-karts/cover.png"],
 ["Paper.io 2","arcade","https://www.crazygames.com/embed/paper-io-2","https://images.crazygames.com/games/paper-io-2/cover.png"],
 ["Helix Jump","arcade","https://www.crazygames.com/embed/helix-jump","https://images.crazygames.com/games/helix-jump/cover.png"],
 ["Color Switch","arcade","https://www.crazygames.com/embed/color-switch","https://images.crazygames.com/games/color-switch/cover.png"],
 ["Stack Ball","arcade","https://www.crazygames.com/embed/stack-ball","https://images.crazygames.com/games/stack-ball/cover.png"],
 ["Crossy Road","arcade","https://www.crazygames.com/embed/crossy-road","https://images.crazygames.com/games/crossy-road/cover.png"],
-["Subway Surfers","arcade","https://www.crazygames.com/embed/subway-surfers","https://images.crazygames.com/games/subway-surfers/cover.png"],
 
-/* RACING */
-["Madalin Stunt Cars","racing","https://www.crazygames.com/embed/madalin-stunt-cars-2","https://images.crazygames.com/games/madalin-stunt-cars-2/cover.png"],
+/* Racing */
 ["Drift Hunters","racing","https://www.crazygames.com/embed/drift-hunters","https://images.crazygames.com/games/drift-hunters/cover.png"],
+["Madalin Stunt Cars","racing","https://www.crazygames.com/embed/madalin-stunt-cars-2","https://images.crazygames.com/games/madalin-stunt-cars-2/cover.png"],
 ["Car Simulator Arena","racing","https://www.crazygames.com/embed/car-simulator-arena","https://images.crazygames.com/games/car-simulator-arena/cover.png"],
 ["Highway Racer","racing","https://www.crazygames.com/embed/highway-racer","https://images.crazygames.com/games/highway-racer/cover.png"],
 ["Burnout Drift","racing","https://www.crazygames.com/embed/burnout-drift","https://images.crazygames.com/games/burnout-drift/cover.png"]
 
 ];
 
-function load(url){document.getElementById("game").src=url;}
-function fullscreen(){let i=document.getElementById("game"); if(i.requestFullscreen)i.requestFullscreen();}
-function clearGame(){document.getElementById("game").src="";}
+function load(url){
+document.getElementById("game").src=url;
+}
+
+function fullscreen(){
+let iframe=document.getElementById("game");
+if (iframe.requestFullscreen) iframe.requestFullscreen();
+}
+
+function clearGame(){
+document.getElementById("game").src="";
+}
 
 function display(list){
 let html="";
@@ -112,9 +199,20 @@ html+=`<div class="card" onclick="load('${g[2]}')">
 document.getElementById("games").innerHTML=html;
 }
 
-function show(type){
-if(type==="all"){display(games);}
-else{display(games.filter(g=>g[1]===type));}
+function show(type, el){
+
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+if(el) el.classList.add("active");
+
+if(type==="all"){
+display(games);
+}else{
+display(games.filter(g=>g[1]===type));
+}
+
+document.getElementById("games").scrollIntoView({
+behavior:"smooth"
+});
 }
 
 function searchGames(text){
