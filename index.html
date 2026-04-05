@@ -1,60 +1,9 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <title>DarkPlay</title>
 
 <style>
-body{margin:0;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center}
-header{padding:20px;font-size:30px;background:#020617}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;padding:20px}
-.card{background:#1e293b;padding:10px;border-radius:10px;cursor:pointer}
-.card:hover{background:#334155}
-input{padding:10px;width:80%;margin:10px;border-radius:10px;border:none}
-</style>
-
-</head>
-<body>
-
-<header>DarkPlay 🎮</header>
-
-<input placeholder="Search games..." onkeyup="searchGames(this.value)">
-
-<div class="grid" id="games"></div>
-
-<script>
-
-const games = [
-"Drive Mad","Slope","Run 3","Moto X3M","Tunnel Rush","OvO",
-"Stickman Hook","Basketball Stars","1v1.LOL","Krunker",
-"Shell Shockers","Vex 6","Vex 7","Fireboy and Watergirl",
-"Temple Run","Subway Surfers","Retro Bowl","Monkey Mart"
-];
-
-// generate MANY names
-for(let i=0;i<500;i++){
-  games.push("Game "+(i+1));
-}
-
-function play(name){
-  let url = "https://www.google.com/search?q=" + name + " game";
-  window.open(url,"_blank");
-}
-
-function display(list){
-  let html="";
-  list.forEach(g=>{
-    html+=`<div class="card" onclick="play('${g}')">${g}</div>`;
-  });
-  document.getElementById("games").innerHTML=html;
-}
-
-function searchGames(text){
-  display(games.filter(g=>g.toLowerCase().includes(text.toLowerCase())));
-}
-
-display(games);
-
-</script>
-
-</body>
-</html>
+body {margin:0;background:#0f172a;color:white;font-family:sans-serif;text-align:center;}
+header {padding:20px;font-size:30px;background:#020617;}
+.grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr
