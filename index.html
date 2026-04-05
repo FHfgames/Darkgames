@@ -4,87 +4,64 @@
 <title>DarkPlay</title>
 
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:#0a0a0a;
-color:white;
-}
+body{margin:0;font-family:Arial;background:#0a0a0a;color:white}
 
-/* TOP BAR */
+/* TOP */
 .topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:10px 20px;
-background:#111;
+display:flex;justify-content:space-between;
+padding:10px 20px;background:#111
+}
+.search{
+padding:10px;border-radius:20px;border:none;
+width:250px;background:#222;color:white
 }
 
-.search{
-padding:10px;
-border-radius:20px;
-border:none;
-width:250px;
-background:#222;
-color:white;
-}
+/* LAYOUT */
+.container{display:flex}
 
 /* SIDEBAR */
-.container{display:flex;}
-
 .sidebar{
-width:200px;
-background:#111;
-height:100vh;
-padding:15px;
+width:210px;background:#111;height:100vh;
+padding:15px
 }
 
+.section-title{
+font-size:12px;
+opacity:0.5;
+margin:15px 0 5px;
+font-weight:bold;
+}
+
+/* TABS */
 .menu{
 padding:10px;
 border-radius:10px;
-margin-bottom:8px;
+margin-bottom:6px;
 cursor:pointer;
+font-weight:bold; /* BOLD */
 transition:0.2s;
 }
 
-.menu:hover{background:#222;}
-.active{background:#ff3c3c;}
+.menu:hover{background:#222}
+.active{background:#ff3c3c}
 
 /* MAIN */
-.main{flex:1;padding:20px;}
+.main{flex:1;padding:20px}
 
 /* HERO */
 .hero{
 background:#1a1a1a;
 padding:30px;
 border-radius:15px;
-margin-bottom:20px;
+margin-bottom:20px
 }
-
-.hero h1{
-font-size:40px;
-margin:0;
-}
-
-.hero p{
-opacity:0.7;
-}
-
-.hero button{
-padding:10px 15px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-background:#ff3c3c;
-color:white;
-cursor:pointer;
-}
+.hero h1{font-size:36px;margin:0}
 
 /* GRID */
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-gap:15px;
+grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+gap:15px
 }
 
 .card{
@@ -92,21 +69,20 @@ background:#1a1a1a;
 border-radius:10px;
 overflow:hidden;
 cursor:pointer;
-transition:0.2s;
+transition:0.2s
 }
-
-.card:hover{transform:scale(1.05);}
+.card:hover{transform:scale(1.05)}
 
 .card img{
 width:100%;
 height:100px;
-object-fit:cover;
+object-fit:cover
 }
 
 .card p{
 text-align:center;
-font-size:13px;
-padding:5px;
+font-size:12px;
+padding:5px
 }
 
 /* PLAYER */
@@ -115,7 +91,7 @@ width:100%;
 height:450px;
 border:none;
 border-radius:10px;
-margin-bottom:15px;
+margin-bottom:15px
 }
 
 /* BUTTONS */
@@ -135,29 +111,36 @@ margin:5px;
 <body>
 
 <div class="topbar">
-<input class="search" placeholder="Search games..." onkeyup="searchGames(this.value)">
-<div>
-<button class="btn">Submit</button>
-<button class="btn">Sign In</button>
-</div>
+<input class="search" placeholder="Search..." onkeyup="searchGames(this.value)">
 </div>
 
 <div class="container">
 
 <div class="sidebar">
+
+<div class="section-title">MENU</div>
 <div class="menu active" onclick="show('all',this)">Home</div>
 <div class="menu" onclick="show('popular',this)">Popular</div>
+<div class="menu" onclick="show('new',this)">New</div>
+
+<div class="section-title">CATEGORIES</div>
 <div class="menu" onclick="show('action',this)">Action</div>
 <div class="menu" onclick="show('arcade',this)">Arcade</div>
 <div class="menu" onclick="show('racing',this)">Driving</div>
+<div class="menu" onclick="show('multiplayer',this)">Multiplayer</div>
+
+<div class="section-title">WEBSITES</div>
+<div class="menu" onclick="openSite('https://poki.com')">Poki</div>
+<div class="menu" onclick="openSite('https://crazygames.com')">CrazyGames</div>
+<div class="menu" onclick="openSite('https://coolmathgames.com')">CoolMath</div>
+
 </div>
 
 <div class="main">
 
 <div class="hero">
 <h1>Play 1000+ Games</h1>
-<p>Free games. No downloads. Fullscreen ready.</p>
-<button onclick="show('popular')">Popular Now</button>
+<p>Clean. Fast. Unblocked.</p>
 </div>
 
 <div>
@@ -176,21 +159,34 @@ margin:5px;
 
 const games = [
 
+/* POPULAR */
 ["Drive Mad","popular","https://www.crazygames.com/embed/drive-mad","https://images.crazygames.com/games/drive-mad/cover.png"],
 ["Slope","popular","https://www.crazygames.com/embed/slope","https://images.crazygames.com/games/slope/cover.png"],
 ["Run 3","popular","https://www.crazygames.com/embed/run-3","https://images.crazygames.com/games/run-3/cover.png"],
-["Moto X3M","racing","https://www.crazygames.com/embed/moto-x3m","https://images.crazygames.com/games/moto-x3m/cover.png"],
-["Tunnel Rush","arcade","https://www.crazygames.com/embed/tunnel-rush","https://images.crazygames.com/games/tunnel-rush/cover.png"],
+
+/* ACTION */
 ["Stickman Hook","action","https://www.crazygames.com/embed/stickman-hook","https://images.crazygames.com/games/stickman-hook/cover.png"],
 ["OvO","action","https://www.crazygames.com/embed/ovo","https://images.crazygames.com/games/ovo/cover.png"],
-["Basketball Stars","action","https://www.crazygames.com/embed/basketball-stars","https://images.crazygames.com/games/basketball-stars/cover.png"],
-["Smash Karts","arcade","https://www.crazygames.com/embed/smash-karts","https://images.crazygames.com/games/smash-karts/cover.png"],
-["Drift Hunters","racing","https://www.crazygames.com/embed/drift-hunters","https://images.crazygames.com/games/drift-hunters/cover.png"]
+["1v1.LOL","multiplayer","https://www.crazygames.com/embed/1v1-lol","https://images.crazygames.com/games/1v1-lol/cover.png"],
+
+/* ARCADE */
+["Tunnel Rush","arcade","https://www.crazygames.com/embed/tunnel-rush","https://images.crazygames.com/games/tunnel-rush/cover.png"],
+["Crossy Road","arcade","https://www.crazygames.com/embed/crossy-road","https://images.crazygames.com/games/crossy-road/cover.png"],
+["Helix Jump","arcade","https://www.crazygames.com/embed/helix-jump","https://images.crazygames.com/games/helix-jump/cover.png"],
+
+/* RACING */
+["Moto X3M","racing","https://www.crazygames.com/embed/moto-x3m","https://images.crazygames.com/games/moto-x3m/cover.png"],
+["Drift Hunters","racing","https://www.crazygames.com/embed/drift-hunters","https://images.crazygames.com/games/drift-hunters/cover.png"],
+["Madalin Cars","racing","https://www.crazygames.com/embed/madalin-stunt-cars-2","https://images.crazygames.com/games/madalin-stunt-cars-2/cover.png"]
 
 ];
 
 function load(url){
 document.getElementById("game").src=url;
+}
+
+function openSite(url){
+window.open(url,"_blank");
 }
 
 function fullscreen(){
@@ -214,15 +210,11 @@ document.getElementById("games").innerHTML=html;
 }
 
 function show(type,el){
-
 document.querySelectorAll(".menu").forEach(m=>m.classList.remove("active"));
 if(el) el.classList.add("active");
 
-if(type==="all"){
-display(games);
-}else{
-display(games.filter(g=>g[1]===type));
-}
+if(type==="all"){display(games);}
+else{display(games.filter(g=>g[1]===type));}
 
 window.scrollTo({top:300,behavior:"smooth"});
 }
