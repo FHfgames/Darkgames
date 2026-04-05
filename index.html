@@ -9,24 +9,59 @@ margin:0;
 background:#0a0a0a;
 color:white;
 font-family:sans-serif;
-text-align:center;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+width:220px;
+background:#111;
+padding:20px;
+transition:0.3s;
+}
+
+.sidebar h2 {
+color:red;
+margin-bottom:20px;
+}
+
+.sidebar button {
+display:block;
+width:100%;
+margin:5px 0;
+padding:10px;
+background:#1a1a1a;
+border:none;
+color:white;
+cursor:pointer;
+font-weight:bold;
+}
+
+.sidebar button:hover {
+background:red;
+}
+
+/* MAIN */
+.main {
+flex:1;
+padding:20px;
 }
 
 header {
-padding:20px;
 font-size:28px;
-background:#111;
 color:red;
 text-shadow:0 0 10px red;
+margin-bottom:10px;
 }
 
+/* GRID */
 .grid {
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
 gap:15px;
-padding:20px;
 }
 
+/* CARD */
 .card {
 background:#121212;
 border-radius:12px;
@@ -58,25 +93,36 @@ margin-bottom:10px;
 .card:hover {
 transform:scale(1.07);
 box-shadow:0 0 20px red;
-background:#181818;
 }
 
+/* PLAYER */
 iframe {
-width:95%;
+width:100%;
 height:500px;
 border:none;
-margin-bottom:20px;
-border-radius:12px;
+margin-top:20px;
+border-radius:10px;
 }
 
-button {
-padding:10px;
-margin:10px;
-border:none;
-border-radius:8px;
+/* BUTTONS */
+.topbar {
+margin-bottom:10px;
+}
+
+.topbar button {
+margin-right:10px;
+padding:8px 12px;
 background:red;
+border:none;
 color:white;
 cursor:pointer;
+}
+
+/* HIDE SIDEBAR */
+.hidden {
+width:0;
+padding:0;
+overflow:hidden;
 }
 </style>
 
@@ -85,9 +131,20 @@ function loadGame(url){
 document.getElementById("game").src = url;
 }
 
-function fullscreen(){
-let iframe = document.getElementById("game");
-if (iframe.requestFullscreen) iframe.requestFullscreen();
+function filter(category){
+let cards = document.querySelectorAll(".card");
+cards.forEach(card=>{
+if(category=="all" || card.dataset.cat==category){
+card.style.display="block";
+}else{
+card.style.display="none";
+}
+});
+}
+
+function toggleSidebar(){
+let side = document.getElementById("sidebar");
+side.classList.toggle("hidden");
 }
 </script>
 
@@ -95,36 +152,82 @@ if (iframe.requestFullscreen) iframe.requestFullscreen();
 
 <body>
 
-<header>DarkPlay</header>
-
-<div style="margin-bottom:20px;color:#bbb;">
-Play high quality browser games instantly. No downloads.
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+<h2>Menu</h2>
+<button onclick="filter('all')">All</button>
+<button onclick="filter('action')">Action</button>
+<button onclick="filter('driving')">Driving</button>
+<button onclick="filter('arcade')">Arcade</button>
+<button onclick="filter('fun')">Fun</button>
 </div>
 
-<button onclick="fullscreen()">Fullscreen</button>
+<!-- MAIN -->
+<div class="main">
+
+<header>DarkPlay</header>
+
+<div class="topbar">
+<button onclick="toggleSidebar()">Toggle Menu</button>
+</div>
 
 <div class="grid">
 
-<!-- GAME -->
-<div class="card" onclick="loadGame('https://www.crazygames.com/embed/drive-mad')">
-<img src="https://images.crazygames.com/drive-mad/cover-1650877078857.png"
-onerror="this.src='https://via.placeholder.com/300x150?text=Game'">
+<!-- GAMES -->
+
+<div class="card" data-cat="driving" onclick="loadGame('https://www.crazygames.com/embed/drive-mad')">
+<img src="https://images.crazygames.com/drive-mad/cover-1650877078857.png" onerror="this.src='https://via.placeholder.com/300x150'">
 <p>Drive Mad</p>
 <span>Click to Play</span>
 </div>
 
-<div class="card" onclick="loadGame('https://www.crazygames.com/embed/slope')">
-<img src="https://images.crazygames.com/slope/cover-1581699869287.png"
-onerror="this.src='https://via.placeholder.com/300x150'">
+<div class="card" data-cat="arcade" onclick="loadGame('https://www.crazygames.com/embed/slope')">
+<img src="https://images.crazygames.com/slope/cover-1581699869287.png" onerror="this.src='https://via.placeholder.com/300x150'">
 <p>Slope</p>
 <span>Click to Play</span>
 </div>
 
-<div class="card" onclick="loadGame('https://www.crazygames.com/embed/moto-x3m')">
-<img src="https://images.crazygames.com/moto-x3m/cover-1581699869344.png"
-onerror="this.src='https://via.placeholder.com/300x150'">
+<div class="card" data-cat="driving" onclick="loadGame('https://www.crazygames.com/embed/moto-x3m')">
+<img src="https://images.crazygames.com/moto-x3m/cover-1581699869344.png" onerror="this.src='https://via.placeholder.com/300x150'">
 <p>Moto X3M</p>
 <span>Click to Play</span>
 </div>
 
-<div class="card" onclick="load
+<div class="card" data-cat="action" onclick="loadGame('https://www.crazygames.com/embed/stickman-hook')">
+<img src="https://images.crazygames.com/stickman-hook/cover-1581699869492.png" onerror="this.src='https://via.placeholder.com/300x150'">
+<p>Stickman Hook</p>
+<span>Click to Play</span>
+</div>
+
+<div class="card" data-cat="arcade" onclick="loadGame('https://www.crazygames.com/embed/run-3')">
+<img src="https://images.crazygames.com/run-3/cover-1581699869340.png" onerror="this.src='https://via.placeholder.com/300x150'">
+<p>Run 3</p>
+<span>Click to Play</span>
+</div>
+
+<div class="card" data-cat="arcade" onclick="loadGame('https://www.crazygames.com/embed/tunnel-rush')">
+<img src="https://images.crazygames.com/tunnel-rush/cover-1581699869171.png" onerror="this.src='https://via.placeholder.com/300x150'">
+<p>Tunnel Rush</p>
+<span>Click to Play</span>
+</div>
+
+<div class="card" data-cat="fun" onclick="loadGame('https://www.crazygames.com/embed/basket-random')">
+<img src="https://images.crazygames.com/basket-random/cover-1598526430633.png" onerror="this.src='https://via.placeholder.com/300x150'">
+<p>Basket Random</p>
+<span>Click to Play</span>
+</div>
+
+<div class="card" data-cat="action" onclick="loadGame('https://www.crazygames.com/embed/rooftop-snipers')">
+<img src="https://images.crazygames.com/rooftop-snipers/cover-1581699869555.png" onerror="this.src='https://via.placeholder.com/300x150'">
+<p>Rooftop Snipers</p>
+<span>Click to Play</span>
+</div>
+
+</div>
+
+<iframe id="game"></iframe>
+
+</div>
+
+</body>
+</html>
