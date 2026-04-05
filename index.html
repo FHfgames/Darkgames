@@ -11,7 +11,6 @@ body {
   font-family:Arial;
 }
 
-/* Header */
 header {
   display:flex;
   justify-content:space-between;
@@ -21,11 +20,8 @@ header {
   font-size:22px;
 }
 
-.logo {
-  font-weight:bold;
-}
+.logo {font-weight:bold;}
 
-/* Search */
 .search {
   padding:8px;
   border-radius:8px;
@@ -33,12 +29,8 @@ header {
   width:200px;
 }
 
-/* Layout */
-.container {
-  display:flex;
-}
+.container {display:flex;}
 
-/* Sidebar */
 .sidebar {
   width:200px;
   background:#220000;
@@ -52,20 +44,11 @@ header {
   border-radius:8px;
 }
 
-.sidebar div:hover {
-  background:#440000;
-}
+.sidebar div:hover {background:#440000;}
 
-/* Main */
-.main {
-  flex:1;
-  overflow:auto;
-}
+.main {flex:1;}
 
-/* Player */
-.player {
-  padding:10px;
-}
+.player {padding:10px;}
 
 iframe {
   width:100%;
@@ -74,10 +57,7 @@ iframe {
   border-radius:10px;
 }
 
-/* Controls */
-.controls {
-  margin:10px;
-}
+.controls {margin:10px;}
 
 button {
   padding:8px 12px;
@@ -89,7 +69,6 @@ button {
   cursor:pointer;
 }
 
-/* Grid */
 .grid {
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
@@ -105,9 +84,7 @@ button {
   transition:0.2s;
 }
 
-.card:hover {
-  transform:scale(1.05);
-}
+.card:hover {transform:scale(1.05);}
 
 .card img {
   width:100%;
@@ -120,7 +97,6 @@ button {
   padding:6px;
   font-size:14px;
 }
-
 </style>
 
 </head>
@@ -129,7 +105,7 @@ button {
 
 <header>
   <div class="logo">DarkPlay</div>
-  <input class="search" placeholder="Search..." onkeyup="searchGames(this.value)">
+  <input class="search" placeholder="Search games..." onkeyup="searchGames(this.value)">
 </header>
 
 <div class="container">
@@ -155,16 +131,78 @@ button {
 <div class="grid" id="games"></div>
 
 </div>
-
 </div>
 
 <script>
 
 const games = [
 
-/* POPULAR */
+/* Popular */
 ["Drive Mad","popular","https://www.crazygames.com/embed/drive-mad","https://images.crazygames.com/games/drive-mad/cover.png"],
 ["Slope","popular","https://www.crazygames.com/embed/slope","https://images.crazygames.com/games/slope/cover.png"],
 ["Run 3","popular","https://www.crazygames.com/embed/run-3","https://images.crazygames.com/games/run-3/cover.png"],
 ["Moto X3M","popular","https://www.crazygames.com/embed/moto-x3m","https://images.crazygames.com/games/moto-x3m/cover.png"],
-["Tunnel Rush","popular","https://www.crazygames.com/embed/tunnel-rush","https://
+["Tunnel Rush","popular","https://www.crazygames.com/embed/tunnel-rush","https://images.crazygames.com/games/tunnel-rush/cover.png"],
+["Stickman Hook","popular","https://www.crazygames.com/embed/stickman-hook","https://images.crazygames.com/games/stickman-hook/cover.png"],
+
+/* Action */
+["OvO","action","https://www.crazygames.com/embed/ovo","https://images.crazygames.com/games/ovo/cover.png"],
+["Basketball Stars","action","https://www.crazygames.com/embed/basketball-stars","https://images.crazygames.com/games/basketball-stars/cover.png"],
+["1v1.LOL","action","https://www.crazygames.com/embed/1v1-lol","https://images.crazygames.com/games/1v1-lol/cover.png"],
+["Krunker","action","https://www.crazygames.com/embed/krunker","https://images.crazygames.com/games/krunker/cover.png"],
+["Shell Shockers","action","https://www.crazygames.com/embed/shellshockersio","https://images.crazygames.com/games/shellshockersio/cover.png"],
+
+/* Arcade */
+["Smash Karts","arcade","https://www.crazygames.com/embed/smash-karts","https://images.crazygames.com/games/smash-karts/cover.png"],
+["Paper.io 2","arcade","https://www.crazygames.com/embed/paper-io-2","https://images.crazygames.com/games/paper-io-2/cover.png"],
+["Helix Jump","arcade","https://www.crazygames.com/embed/helix-jump","https://images.crazygames.com/games/helix-jump/cover.png"],
+["Color Switch","arcade","https://www.crazygames.com/embed/color-switch","https://images.crazygames.com/games/color-switch/cover.png"],
+["Stack Ball","arcade","https://www.crazygames.com/embed/stack-ball","https://images.crazygames.com/games/stack-ball/cover.png"],
+
+/* Racing */
+["Madalin Stunt Cars","racing","https://www.crazygames.com/embed/madalin-stunt-cars-2","https://images.crazygames.com/games/madalin-stunt-cars-2/cover.png"],
+["Drift Hunters","racing","https://www.crazygames.com/embed/drift-hunters","https://images.crazygames.com/games/drift-hunters/cover.png"],
+["Car Simulator","racing","https://www.crazygames.com/embed/car-simulator-arena","https://images.crazygames.com/games/car-simulator-arena/cover.png"]
+
+];
+
+function load(url){
+document.getElementById("game").src=url;
+}
+
+function fullscreen(){
+let iframe=document.getElementById("game");
+if (iframe.requestFullscreen) iframe.requestFullscreen();
+}
+
+function clearGame(){
+document.getElementById("game").src="";
+}
+
+function display(list){
+let html="";
+list.forEach(g=>{
+html+=`<div class="card" onclick="load('${g[2]}')">
+<img src="${g[3]}">
+<p>${g[0]}</p>
+</div>`;
+});
+document.getElementById("games").innerHTML=html;
+}
+
+function show(type){
+if(type==="all"){display(games);}
+else{display(games.filter(g=>g[1]===type));}
+}
+
+function searchGames(text){
+text=text.toLowerCase();
+display(games.filter(g=>g[0].toLowerCase().includes(text)));
+}
+
+display(games);
+
+</script>
+
+</body>
+</html>
