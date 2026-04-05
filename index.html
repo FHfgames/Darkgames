@@ -4,73 +4,56 @@
 <title>DarkPlay</title>
 
 <style>
-body {
-  margin:0;
-  background:#0f172a;
-  color:#fff;
-  font-family:sans-serif;
-  text-align:center;
-}
-
-header {
-  padding:20px;
-  font-size:30px;
-  background:#020617;
-}
-
-.grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:15px;
-  padding:20px;
-}
-
-.card {
-  background:#1e293b;
-  padding:15px;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-.card:hover {
-  background:#334155;
-}
+body{margin:0;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center}
+header{padding:20px;font-size:30px;background:#020617}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;padding:20px}
+.card{background:#1e293b;padding:10px;border-radius:10px;cursor:pointer}
+.card:hover{background:#334155}
+input{padding:10px;width:80%;margin:10px;border-radius:10px;border:none}
 </style>
 
 </head>
-
 <body>
 
 <header>DarkPlay 🎮</header>
 
-<div class="grid">
+<input placeholder="Search games..." onkeyup="searchGames(this.value)">
 
-<div class="card" onclick="play('https://www.crazygames.com/game/drive-mad')">Drive Mad</div>
-
-<div class="card" onclick="play('https://www.crazygames.com/game/space-waves')">Space Waves</div>
-
-<div class="card" onclick="play('https://www.crazygames.com/game/slope')">Slope</div>
-
-<div class="card" onclick="play('https://www.crazygames.com/game/run-3')">Run 3</div>
-
-<div class="card" onclick="play('https://www.crazygames.com/game/moto-x3m')">Moto X3M</div>
-
-<div class="card" onclick="play('https://www.crazygames.com/game/tunnel-rush')">Tunnel Rush</div>
-
-<div class="card" onclick="play('https://www.crazygames.com/game/ovo')">OvO</div>
-
-<div class="card" onclick="play('https://www.crazygames.com/game/stickman-hook')">Stickman Hook</div>
-
-<div class="card" onclick="play('https://www.crazygames.com/game/basketball-stars')">Basketball Stars</div>
-
-<div class="card" onclick="play('https://www.crazygames.com/game/1v1-lol')">1v1.LOL</div>
-
-</div>
+<div class="grid" id="games"></div>
 
 <script>
-function play(url) {
-  window.open(url, "_blank");
+
+const games = [
+"Drive Mad","Slope","Run 3","Moto X3M","Tunnel Rush","OvO",
+"Stickman Hook","Basketball Stars","1v1.LOL","Krunker",
+"Shell Shockers","Vex 6","Vex 7","Fireboy and Watergirl",
+"Temple Run","Subway Surfers","Retro Bowl","Monkey Mart"
+];
+
+// generate MANY names
+for(let i=0;i<500;i++){
+  games.push("Game "+(i+1));
 }
+
+function play(name){
+  let url = "https://www.google.com/search?q=" + name + " game";
+  window.open(url,"_blank");
+}
+
+function display(list){
+  let html="";
+  list.forEach(g=>{
+    html+=`<div class="card" onclick="play('${g}')">${g}</div>`;
+  });
+  document.getElementById("games").innerHTML=html;
+}
+
+function searchGames(text){
+  display(games.filter(g=>g.toLowerCase().includes(text.toLowerCase())));
+}
+
+display(games);
+
 </script>
 
 </body>
