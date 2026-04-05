@@ -35,20 +35,6 @@ header {
 .card:hover {
   background:#334155;
 }
-
-iframe {
-  width:100%;
-  height:500px;
-  border:none;
-}
-
-.search {
-  padding:10px;
-  width:80%;
-  margin:10px;
-  border-radius:10px;
-  border:none;
-}
 </style>
 
 </head>
@@ -57,50 +43,34 @@ iframe {
 
 <header>DarkPlay 🎮</header>
 
-<input class="search" placeholder="Search games..." onkeyup="searchGames(this.value)">
+<div class="grid">
 
-<div class="grid" id="games"></div>
+<div class="card" onclick="play('https://www.crazygames.com/game/drive-mad')">Drive Mad</div>
 
-<iframe id="gameFrame"></iframe>
+<div class="card" onclick="play('https://www.crazygames.com/game/space-waves')">Space Waves</div>
+
+<div class="card" onclick="play('https://www.crazygames.com/game/slope')">Slope</div>
+
+<div class="card" onclick="play('https://www.crazygames.com/game/run-3')">Run 3</div>
+
+<div class="card" onclick="play('https://www.crazygames.com/game/moto-x3m')">Moto X3M</div>
+
+<div class="card" onclick="play('https://www.crazygames.com/game/tunnel-rush')">Tunnel Rush</div>
+
+<div class="card" onclick="play('https://www.crazygames.com/game/ovo')">OvO</div>
+
+<div class="card" onclick="play('https://www.crazygames.com/game/stickman-hook')">Stickman Hook</div>
+
+<div class="card" onclick="play('https://www.crazygames.com/game/basketball-stars')">Basketball Stars</div>
+
+<div class="card" onclick="play('https://www.crazygames.com/game/1v1-lol')">1v1.LOL</div>
+
+</div>
 
 <script>
-const gameList = [
-  {name:"Drive Mad", url:"https://www.crazygames.com/embed/drive-mad"},
-  {name:"Space Waves", url:"https://www.crazygames.com/embed/space-waves"},
-  {name:"Slope", url:"https://www.crazygames.com/embed/slope"},
-  {name:"Run 3", url:"https://www.crazygames.com/embed/run-3"},
-  {name:"Moto X3M", url:"https://www.crazygames.com/embed/moto-x3m"},
-  {name:"Tunnel Rush", url:"https://www.crazygames.com/embed/tunnel-rush"},
-  {name:"OvO", url:"https://www.crazygames.com/embed/ovo"},
-  {name:"Stickman Hook", url:"https://www.crazygames.com/embed/stickman-hook"},
-  {name:"Basketball Stars", url:"https://www.crazygames.com/embed/basketball-stars"},
-  {name:"Shell Shockers", url:"https://www.crazygames.com/embed/shellshockersio"},
-  {name:"1v1.LOL", url:"https://www.crazygames.com/embed/1v1-lol"},
-  {name:"Krunker", url:"https://www.crazygames.com/embed/krunker"},
-  {name:"Subway Surfers", url:"https://poki.com/en/g/subway-surfers"},
-  {name:"Temple Run 2", url:"https://poki.com/en/g/temple-run-2"},
-  {name:"Retro Bowl", url:"https://poki.com/en/g/retro-bowl"},
-  {name:"Monkey Mart", url:"https://poki.com/en/g/monkey-mart"}
-];
-
-function load(url) {
-  document.getElementById("gameFrame").src = url;
+function play(url) {
+  window.open(url, "_blank");
 }
-
-function displayGames(list) {
-  const container = document.getElementById("games");
-  container.innerHTML = "";
-  list.forEach(g => {
-    container.innerHTML += `<div class="card" onclick="load('${g.url}')">${g.name}</div>`;
-  });
-}
-
-function searchGames(text) {
-  const filtered = gameList.filter(g => g.name.toLowerCase().includes(text.toLowerCase()));
-  displayGames(filtered);
-}
-
-displayGames(gameList);
 </script>
 
 </body>
