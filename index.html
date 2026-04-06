@@ -3,158 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DarkGames X</title>
+<title>PizzaGames 🍕</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
 body{
-background: radial-gradient(circle at 20% 20%, #1a0000, #000);
+background: radial-gradient(circle at center, #2b0000, #000);
 color:white;
-overflow-x:hidden;
 }
 
 /* SIDEBAR */
 .sidebar{
-position:fixed;
-left:0;
-top:0;
-width:220px;
-height:100%;
-background:#050505;
-border-right:2px solid red;
-padding-top:20px;
+position:fixed;left:0;top:0;width:240px;height:100%;
+background:#140000;border-right:3px solid orange;
+padding-top:20px;overflow-y:auto;
 }
 .sidebar h1{
 text-align:center;
-color:red;
+color:orange;
 margin-bottom:20px;
+text-shadow:0 0 20px orange;
 }
 .sidebar a{
 display:block;
 padding:12px;
-color:#ff2a2a;
+color:#ffb347;
 text-decoration:none;
-transition:.2s;
-text-shadow:0 0 8px red;
+font-weight:bold;
+text-shadow:0 0 10px orange;
 }
 .sidebar a:hover{
-background:red;
+background:orange;
 color:black;
 }
 
 /* MAIN */
-.main{
-margin-left:220px;
-padding:20px;
+.main{margin-left:240px;padding:20px}
+
+/* BANNER */
+.banner{
+width:100%;
+height:120px;
+background:linear-gradient(90deg,orange,red);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:32px;
+font-weight:bold;
+margin-bottom:20px;
+text-shadow:0 0 20px black;
 }
 
 /* SEARCH */
 .search{
 width:100%;
-padding:12px;
-border:none;
-outline:none;
-background:#111;
+padding:14px;
+background:#220000;
 color:white;
+border:1px solid orange;
 margin-bottom:20px;
-border:1px solid red;
+font-size:16px;
 }
 
 /* GRID */
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-gap:20px;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:15px;
 }
 
-/* GAME CARD */
+/* CARD */
 .card{
-background:#111;
-border:1px solid #222;
-border-radius:10px;
+background:#1a0000;
+border-radius:12px;
 overflow:hidden;
-transition:.2s;
 cursor:pointer;
+transition:.25s;
+position:relative;
+border:1px solid #ff7b00;
 }
 .card:hover{
 transform:scale(1.05);
-box-shadow:0 0 20px red;
+box-shadow:0 0 25px orange;
 }
 .card img{
 width:100%;
-height:140px;
+height:120px;
 object-fit:cover;
 }
 .card h3{
-padding:10px;
+padding:8px;
+font-size:14px;
 }
 
-/* IFRAME PLAYER */
+/* PIZZA TAG */
+.tag{
+position:absolute;
+top:6px;
+left:6px;
+background:orange;
+color:black;
+font-size:11px;
+padding:3px 6px;
+border-radius:6px;
+}
+
+/* PLAYER */
 .player{
 position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
+top:0;left:0;width:100%;height:100%;
 background:black;
 display:none;
 z-index:999;
 }
-.player iframe{
-width:100%;
-height:100%;
-border:none;
-}
+.player iframe{width:100%;height:100%;border:none}
 .close{
 position:absolute;
 top:10px;
 right:20px;
-font-size:25px;
+font-size:28px;
 cursor:pointer;
 color:white;
 }
 
-/* LOADING */
-.loader{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:1000;
+/* FOOTER */
+.footer{
+margin-top:40px;
+padding:20px;
+text-align:center;
+border-top:1px solid orange;
+opacity:.7;
 }
 </style>
 </head>
 
 <body>
 
-<div class="loader" id="loader">Loading...</div>
-
 <div class="sidebar">
-<h1>DarkGames</h1>
-<a href="#">Home</a>
-<a href="#">Popular</a>
-<a href="#">New</a>
-<a href="#">Horror</a>
-<a href="#">Action</a>
-<a href="#">Racing</a>
-<a href="#">Multiplayer</a>
-<a href="#">Built-in Games</a>
-<a href="#">Retro</a>
-<a href="#">Puzzle</a>
-<a href="#">Shooter</a>
-<a href="#">Favorites</a>
-<a href="#">Settings</a>
+<h1>🍕 PizzaGames</h1>
+<a>🍕 Home</a>
+<a>🔥 Hot Slices</a>
+<a>🆕 Fresh Out</a>
+<a>👻 Spicy Horror</a>
+<a>⚔️ Action Feast</a>
+<a>🏎️ Fast Delivery</a>
+<a>🌐 Multiplayer Party</a>
+<a>🎮 Built-in Oven</a>
+<a>🕹️ Retro Recipes</a>
+<a>🧩 Puzzle Toppings</a>
+<a>🔫 Shooter Sauce</a>
+<a>⭐ Favorites</a>
+<a>⚙️ Settings</a>
 </div>
 
 <div class="main">
+
+<div class="banner">🍕 PIZZAGAMES 🍕</div>
+
 <input class="search" placeholder="Search games..." onkeyup="searchGames(this.value)">
 
 <div class="grid" id="games"></div>
+
+<div class="footer">
+<p>🍕 100+ Games • Extra Cheese • No Ads 🍕</p>
+</div>
+
 </div>
 
 <div class="player" id="player">
@@ -163,28 +176,54 @@ z-index:1000;
 </div>
 
 <script>
-const gameList = [
-{title:"Slope",img:"https://images.crazygames.com/games/slope/cover-16x9.png",url:"https://ubg100.github.io/games/slope/"},
-{title:"Retro Bowl",img:"https://images.crazygames.com/games/retro-bowl/cover-16x9.png",url:"https://ubg100.github.io/games/retro-bowl/"},
-{title:"Run 3",img:"https://images.crazygames.com/games/run-3/cover-16x9.png",url:"https://ubg100.github.io/games/run3/"},
-{title:"Tunnel Rush",img:"https://images.crazygames.com/games/tunnel-rush/cover-16x9.png",url:"https://ubg100.github.io/games/tunnel-rush/"},
-{title:"Drift Boss",img:"https://images.crazygames.com/games/drift-boss/cover-16x9.png",url:"https://ubg100.github.io/games/drift-boss/"},
-{title:"1v1.lol",img:"https://images.crazygames.com/games/1v1-lol/cover-16x9.png",url:"https://ubg100.github.io/games/1v1lol/"},
-{title:"Subway Surfers",img:"https://images.crazygames.com/games/subway-surfers/cover-16x9.png",url:"https://ubg100.github.io/games/subway-surfers/"},
-{title:"Moto X3M",img:"https://images.crazygames.com/games/moto-x3m/cover-16x9.png",url:"https://ubg100.github.io/games/moto-x3m/"},
-{title:"Basket Random",img:"https://images.crazygames.com/games/basket-random/cover-16x9.png",url:"https://ubg100.github.io/games/basket-random/"},
-{title:"Minecraft Classic",img:"https://images.crazygames.com/games/minecraft-classic/cover-16x9.png",url:"https://classic.minecraft.net/"},
-{title:"FNAF",img:"https://images.crazygames.com/games/fnaf/cover-16x9.png",url:"https://ubg100.github.io/games/fnaf/"},
-{title:"Paper.io 2",img:"https://images.crazygames.com/games/paper-io-2/cover-16x9.png",url:"https://ubg100.github.io/games/paperio2/"}
+const fallback="https://picsum.photos/400/250?random=";
+
+const baseGames=[
+["Slope","https://ubg100.github.io/games/slope/"],
+["Run 3","https://ubg100.github.io/games/run3/"],
+["Tunnel Rush","https://ubg100.github.io/games/tunnel-rush/"],
+["Drift Boss","https://ubg100.github.io/games/drift-boss/"],
+["1v1.lol","https://ubg100.github.io/games/1v1lol/"],
+["Moto X3M","https://ubg100.github.io/games/moto-x3m/"],
+["Basket Random","https://ubg100.github.io/games/basket-random/"],
+["Paper.io 2","https://ubg100.github.io/games/paperio2/"],
+["Stickman Hook","https://ubg100.github.io/games/stickman-hook/"],
+["Geometry Dash","https://ubg100.github.io/games/geometry-dash/"],
+["Happy Wheels","https://ubg100.github.io/games/happy-wheels/"],
+["Snow Rider 3D","https://ubg100.github.io/games/snow-rider-3d/"],
+["Temple Run 2","https://ubg100.github.io/games/temple-run-2/"],
+["Crossy Road","https://ubg100.github.io/games/crossy-road/"],
+["Rooftop Snipers","https://ubg100.github.io/games/rooftop-snipers/"],
+["Drive Mad","https://ubg100.github.io/games/drive-mad/"],
+["Shell Shockers","https://shellshock.io/"],
+["Krunker","https://krunker.io/"],
+["Subway Surfers","https://ubg100.github.io/games/subway-surfers/"],
+["Minecraft Classic","https://classic.minecraft.net/"]
 ];
+
+const gameList=[];
+let id=0;
+
+/* 100 GAMES */
+for(let i=0;i<5;i++){
+baseGames.forEach(g=>{
+gameList.push({
+title:"🍕 "+g[0]+" "+(i+1),
+url:g[1],
+tag:"🍕",
+img:"https://picsum.photos/400/250?random="+(id++)
+});
+});
+}
 
 function loadGames(list){
 const grid=document.getElementById("games");
 grid.innerHTML="";
-list.forEach(g=>{
+list.forEach((g,i)=>{
 grid.innerHTML+=`
 <div class="card" onclick="playGame('${g.url}')">
-<img src="${g.img}" loading="lazy">
+<div class="tag">${g.tag}</div>
+<img src="${g.img}" onerror="this.src='${fallback}'+${i}">
 <h3>${g.title}</h3>
 </div>`;
 });
@@ -206,10 +245,7 @@ const filtered=gameList.filter(g=>g.title.toLowerCase().includes(q));
 loadGames(filtered);
 }
 
-window.onload=()=>{
-loadGames(gameList);
-setTimeout(()=>document.getElementById("loader").style.display="none",800);
-};
+window.onload=()=>loadGames(gameList);
 </script>
 
 </body>
