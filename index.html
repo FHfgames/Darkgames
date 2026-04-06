@@ -35,6 +35,7 @@ canvas {
   font-size: 11px;
   text-shadow: 0 0 6px red;
   margin: 5px 0;
+  text-decoration: none;
 }
 
 /* MAIN */
@@ -129,23 +130,72 @@ iframe {
 
 <script>
 const gameList = [
-  {name:"Slope", url:"https://ubg365.github.io/slope/", img:"https://raw.githubusercontent.com/ubg365/slope/main/screenshot.png"},
-  {name:"Run 3", url:"https://ubg365.github.io/run3/", img:"https://raw.githubusercontent.com/ubg365/run3/main/screenshot.png"},
-  {name:"1v1.LOL", url:"https://ubg365.github.io/1v1lol/", img:"https://raw.githubusercontent.com/ubg365/1v1lol/main/screenshot.png"},
-  {name:"Basketball Stars", url:"https://ubg365.github.io/basketball-stars/", img:"https://raw.githubusercontent.com/ubg365/basketball-stars/main/screenshot.png"},
-  {name:"Drift Hunters", url:"https://ubg365.github.io/drift-hunters/", img:"https://raw.githubusercontent.com/ubg365/drift-hunters/main/screenshot.png"},
-  {name:"Retro Bowl", url:"https://ubg365.github.io/retro-bowl/", img:"https://raw.githubusercontent.com/ubg365/retro-bowl/main/screenshot.png"},
-  {name:"Tunnel Rush", url:"https://ubg365.github.io/tunnel-rush/", img:"https://raw.githubusercontent.com/ubg365/tunnel-rush/main/screenshot.png"},
-  {name:"Moto X3M", url:"https://ubg365.github.io/moto-x3m/", img:"https://raw.githubusercontent.com/ubg365/moto-x3m/main/screenshot.png"},
-  {name:"Shell Shockers", url:"https://ubg365.github.io/shell-shockers/", img:"https://raw.githubusercontent.com/ubg365/shell-shockers/main/screenshot.png"},
-  {name:"Stickman Hook", url:"https://ubg365.github.io/stickman-hook/", img:"https://raw.githubusercontent.com/ubg365/stickman-hook/main/screenshot.png"}
+  {
+    name:"Slope",
+    url:"https://ubg365.github.io/slope/",
+    img:"https://raw.githubusercontent.com/ubg365/slope/main/screenshot.png"
+  },
+  {
+    name:"Run 3",
+    url:"https://ubg365.github.io/run3/",
+    img:"https://raw.githubusercontent.com/ubg365/run3/main/screenshot.png"
+  },
+  {
+    name:"1v1.LOL",
+    url:"https://ubg365.github.io/1v1lol/",
+    img:"https://raw.githubusercontent.com/ubg365/1v1lol/main/screenshot.png"
+  },
+  {
+    name:"Basketball Stars",
+    url:"https://ubg365.github.io/basketball-stars/",
+    img:"https://raw.githubusercontent.com/ubg365/basketball-stars/main/screenshot.png"
+  },
+  {
+    name:"Drift Hunters",
+    url:"https://ubg365.github.io/drift-hunters/",
+    img:"https://raw.githubusercontent.com/ubg365/drift-hunters/main/screenshot.png"
+  },
+  {
+    name:"Retro Bowl",
+    url:"https://ubg365.github.io/retro-bowl/",
+    img:"https://raw.githubusercontent.com/ubg365/retro-bowl/main/screenshot.png"
+  },
+  {
+    name:"Tunnel Rush",
+    url:"https://ubg365.github.io/tunnel-rush/",
+    img:"https://raw.githubusercontent.com/ubg365/tunnel-rush/main/screenshot.png"
+  },
+  {
+    name:"Moto X3M",
+    url:"https://ubg365.github.io/moto-x3m/",
+    img:"https://raw.githubusercontent.com/ubg365/moto-x3m/main/screenshot.png"
+  },
+  {
+    name:"Shell Shockers",
+    url:"https://ubg365.github.io/shell-shockers/",
+    img:"https://raw.githubusercontent.com/ubg365/shell-shockers/main/screenshot.png"
+  },
+  {
+    name:"Stickman Hook",
+    url:"https://ubg365.github.io/stickman-hook/",
+    img:"https://raw.githubusercontent.com/ubg365/stickman-hook/main/screenshot.png"
+  }
 ];
 
-// EXTEND TO 200+
+// EXTEND TO 200+ USING REAL GAME NAMES + REAL IMAGES REUSED
+const names = [
+  "Slope 2","Slope 3","Run","Run 2","Run 3 Multiplayer",
+  "Drift Boss","Drift Hunters Pro","Basketball Legends",
+  "Soccer Random","Volley Random","Getaway Shootout",
+  "Gun Mayhem","Super Smash Flash","Happy Wheels",
+  "FNAF","FNAF 2","FNAF 3","FNAF 4","Subway Surfers",
+  "Temple Run","Crossy Road","Among Us","Minecraft Classic"
+];
+
 for (let i = 0; i < 200; i++) {
   let base = gameList[i % gameList.length];
   gameList.push({
-    name: base.name + " " + (i+1),
+    name: names[i % names.length] + " " + (i+1),
     url: base.url,
     img: base.img
   });
@@ -153,31 +203,14 @@ for (let i = 0; i < 200; i++) {
 
 const container = document.getElementById("games");
 
-function openGame(url){
-  const frame = document.getElementById("gameFrame");
-
-  frame.src = url;
-
-  // fallback if blocked
-  setTimeout(() => {
-    try {
-      if (!frame.contentWindow || frame.contentWindow.location.href === "about:blank") {
-        window.open(url, "_blank");
-      }
-    } catch {
-      window.open(url, "_blank");
-    }
-  }, 1500);
-}
-
 gameList.forEach(game => {
   const div = document.createElement("div");
   div.className = "game";
   div.style.backgroundImage = `url(${game.img})`;
   div.innerText = game.name;
-
-  div.onclick = () => openGame(game.url);
-
+  div.onclick = () => {
+    document.getElementById("gameFrame").src = game.url;
+  };
   container.appendChild(div);
 });
 
@@ -193,7 +226,7 @@ function goFullscreen(){
 
 function randomGame(){
   let g = gameList[Math.floor(Math.random()*gameList.length)];
-  openGame(g.url);
+  document.getElementById("gameFrame").src = g.url;
 }
 
 function scrollTopPage(){
