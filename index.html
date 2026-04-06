@@ -164,18 +164,18 @@ z-index:1000;
 
 <script>
 const gameList = [
-{title:"Slope",img:"https://i.imgur.com/1.jpg",url:"https://ubg100.github.io/games/slope/"},
-{title:"Retro Bowl",img:"https://i.imgur.com/2.jpg",url:"https://ubg100.github.io/games/retro-bowl/"},
-{title:"Run 3",img:"https://i.imgur.com/3.jpg",url:"https://ubg100.github.io/games/run3/"},
-{title:"Tunnel Rush",img:"https://i.imgur.com/4.jpg",url:"https://ubg100.github.io/games/tunnel-rush/"},
-{title:"Drift Boss",img:"https://i.imgur.com/5.jpg",url:"https://ubg100.github.io/games/drift-boss/"},
-{title:"1v1.lol",img:"https://i.imgur.com/6.jpg",url:"https://ubg100.github.io/games/1v1lol/"},
-{title:"Subway Surfers",img:"https://i.imgur.com/7.jpg",url:"https://ubg100.github.io/games/subway-surfers/"},
-{title:"Moto X3M",img:"https://i.imgur.com/8.jpg",url:"https://ubg100.github.io/games/moto-x3m/"},
-{title:"Basket Random",img:"https://i.imgur.com/9.jpg",url:"https://ubg100.github.io/games/basket-random/"},
-{title:"Minecraft Classic",img:"https://i.imgur.com/10.jpg",url:"https://classic.minecraft.net/"},
-{title:"FNAF",img:"https://i.imgur.com/11.jpg",url:"https://ubg100.github.io/games/fnaf/"},
-{title:"Paper.io 2",img:"https://i.imgur.com/12.jpg",url:"https://ubg100.github.io/games/paperio2/"}
+{title:"Slope",img:"https://images.crazygames.com/games/slope/cover-16x9.png",url:"https://ubg100.github.io/games/slope/"},
+{title:"Retro Bowl",img:"https://images.crazygames.com/games/retro-bowl/cover-16x9.png",url:"https://ubg100.github.io/games/retro-bowl/"},
+{title:"Run 3",img:"https://images.crazygames.com/games/run-3/cover-16x9.png",url:"https://ubg100.github.io/games/run3/"},
+{title:"Tunnel Rush",img:"https://images.crazygames.com/games/tunnel-rush/cover-16x9.png",url:"https://ubg100.github.io/games/tunnel-rush/"},
+{title:"Drift Boss",img:"https://images.crazygames.com/games/drift-boss/cover-16x9.png",url:"https://ubg100.github.io/games/drift-boss/"},
+{title:"1v1.lol",img:"https://images.crazygames.com/games/1v1-lol/cover-16x9.png",url:"https://ubg100.github.io/games/1v1lol/"},
+{title:"Subway Surfers",img:"https://images.crazygames.com/games/subway-surfers/cover-16x9.png",url:"https://ubg100.github.io/games/subway-surfers/"},
+{title:"Moto X3M",img:"https://images.crazygames.com/games/moto-x3m/cover-16x9.png",url:"https://ubg100.github.io/games/moto-x3m/"},
+{title:"Basket Random",img:"https://images.crazygames.com/games/basket-random/cover-16x9.png",url:"https://ubg100.github.io/games/basket-random/"},
+{title:"Minecraft Classic",img:"https://images.crazygames.com/games/minecraft-classic/cover-16x9.png",url:"https://classic.minecraft.net/"},
+{title:"FNAF",img:"https://images.crazygames.com/games/fnaf/cover-16x9.png",url:"https://ubg100.github.io/games/fnaf/"},
+{title:"Paper.io 2",img:"https://images.crazygames.com/games/paper-io-2/cover-16x9.png",url:"https://ubg100.github.io/games/paperio2/"}
 ];
 
 function loadGames(list){
@@ -184,7 +184,7 @@ grid.innerHTML="";
 list.forEach(g=>{
 grid.innerHTML+=`
 <div class="card" onclick="playGame('${g.url}')">
-<img src="${g.img}">
+<img src="${g.img}" loading="lazy">
 <h3>${g.title}</h3>
 </div>`;
 });
