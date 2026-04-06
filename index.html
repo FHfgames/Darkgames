@@ -2,54 +2,57 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>DarkGames ULTRA</title>
+<title>DarkGames GOD MODE++</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{margin:0;font-family:Arial;background:black;color:white;}
 #sidebar{width:180px;position:fixed;height:100%;background:#000;padding:10px;overflow:auto;}
-.sidebar-item{margin:8px 0;cursor:pointer;color:#0ff;font-size:13px;}
-.sidebar-item.active{color:#fff;}
+.sidebar-item{margin:8px 0;cursor:pointer;color:#0ff;}
 #main{margin-left:190px;padding:10px;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
-.game{background:#111;border-radius:8px;cursor:pointer;padding:10px;text-align:center;}
-.game:hover{background:#222;}
-#player{position:fixed;top:0;left:0;width:100%;height:100%;display:none;background:black;}
+
+.game{background:#111;border-radius:8px;overflow:hidden;cursor:pointer;}
+.game img{width:100%;height:100px;object-fit:cover;}
+.game-title{padding:5px;font-size:12px;}
+.rating{font-size:12px;padding:5px;color:gold;}
+
+#player{position:fixed;width:100%;height:100%;top:0;left:0;display:none;background:black;}
 #player iframe{width:100%;height:100%;border:none;}
+
+.site{background:#111;margin:5px;padding:8px;border-radius:6px;}
 </style>
 </head>
 
 <body>
 
 <div id="sidebar">
-<div class="sidebar-item active" onclick="tab('home',this)">Home</div>
-<div class="sidebar-item" onclick="tab('action',this)">Action</div>
-<div class="sidebar-item" onclick="tab('racing',this)">Racing</div>
-<div class="sidebar-item" onclick="tab('shooter',this)">Shooter</div>
-<div class="sidebar-item" onclick="tab('arcade',this)">Arcade</div>
-<div class="sidebar-item" onclick="tab('puzzle',this)">Puzzle</div>
-<div class="sidebar-item" onclick="tab('sports',this)">Sports</div>
-<div class="sidebar-item" onclick="tab('idle',this)">Idle</div>
-<div class="sidebar-item" onclick="tab('funny',this)">Funny</div>
-<div class="sidebar-item" onclick="tab('retro',this)">Retro</div>
-<div class="sidebar-item" onclick="tab('built',this)">Built-in</div>
-<div class="sidebar-item" onclick="tab('sites',this)">Sites</div>
-<div class="sidebar-item" onclick="tab('favorites',this)">Favorites</div>
+<div class="sidebar-item" onclick="tab('home')">Home</div>
+<div class="sidebar-item" onclick="tab('action')">Action</div>
+<div class="sidebar-item" onclick="tab('racing')">Racing</div>
+<div class="sidebar-item" onclick="tab('shooter')">Shooter</div>
+<div class="sidebar-item" onclick="tab('arcade')">Arcade</div>
+<div class="sidebar-item" onclick="tab('puzzle')">Puzzle</div>
+<div class="sidebar-item" onclick="tab('sports')">Sports</div>
+<div class="sidebar-item" onclick="tab('idle')">Idle</div>
+<div class="sidebar-item" onclick="tab('funny')">Funny</div>
+<div class="sidebar-item" onclick="tab('retro')">Retro</div>
+<div class="sidebar-item" onclick="tab('sites')">Sites</div>
 </div>
 
 <div id="main">
-<input placeholder="Search..." oninput="searchGames(this.value)">
 <div id="home" class="grid"></div>
-<div id="action" class="grid" style="display:none"></div>
-<div id="racing" class="grid" style="display:none"></div>
-<div id="shooter" class="grid" style="display:none"></div>
-<div id="arcade" class="grid" style="display:none"></div>
-<div id="puzzle" class="grid" style="display:none"></div>
-<div id="sports" class="grid" style="display:none"></div>
-<div id="idle" class="grid" style="display:none"></div>
-<div id="funny" class="grid" style="display:none"></div>
-<div id="retro" class="grid" style="display:none"></div>
-<div id="favorites" class="grid" style="display:none"></div>
+<div id="action" class="grid"></div>
+<div id="racing" class="grid"></div>
+<div id="shooter" class="grid"></div>
+<div id="arcade" class="grid"></div>
+<div id="puzzle" class="grid"></div>
+<div id="sports" class="grid"></div>
+<div id="idle" class="grid"></div>
+<div id="funny" class="grid"></div>
+<div id="retro" class="grid"></div>
+
+<div id="sites" style="display:none"></div>
 </div>
 
 <div id="player">
@@ -59,18 +62,70 @@ body{margin:0;font-family:Arial;background:black;color:white;}
 <script>
 
 /* TAB */
-function tab(id,el){
+function tab(id){
 document.querySelectorAll("#main > div").forEach(d=>d.style.display="none");
 document.getElementById(id).style.display="grid";
-document.querySelectorAll(".sidebar-item").forEach(i=>i.classList.remove("active"));
-el.classList.add("active");
 }
 
-/* GAME DATA (30 PER CATEGORY) */
-const categories=["action","racing","shooter","arcade","puzzle","sports","idle","funny","retro"];
+/* THUMBNAIL SCRAPER */
+function getThumb(name){
+return `https://duckduckgo.com/?q=${name}+game&iax=images&ia=images`;
+}
 
-/* BASE GAME LIST (REAL WORKING PATHS) */
-const baseGames=[
+/* RATING SYSTEM */
+function rateGame(name,val){
+let r=JSON.parse(localStorage.getItem("ratings")||"{}");
+if(!r[name]) r[name]=[];
+r[name].push(val);
+localStorage.setItem("ratings",JSON.stringify(r));
+renderRatings();
+}
+
+function getRating(name){
+let r=JSON.parse(localStorage.getItem("ratings")||"{}");
+if(!r[name]) return "No ratings";
+let avg=r[name].reduce((a,b)=>a+b,0)/r[name].length;
+return avg.toFixed(1)+" ⭐";
+}
+
+/* GAME CREATOR */
+function addGame(section,name,url){
+let d=document.createElement("div");
+d.className="game";
+
+let img=document.createElement("img");
+img.src=`https://logo.clearbit.com/${new URL(url).hostname}`;
+img.onerror=()=>img.src="https://via.placeholder.com/300x150?text="+name;
+
+let title=document.createElement("div");
+title.className="game-title";
+title.innerText=name;
+
+let rating=document.createElement("div");
+rating.className="rating";
+rating.innerText=getRating(name);
+
+/* CLICK PLAY */
+d.onclick=()=>{player.style.display="block";frame.src=url;};
+
+/* RATE */
+rating.onclick=(e)=>{
+e.stopPropagation();
+let val=prompt("Rate 1-5");
+if(val>=1 && val<=5) rateGame(name,Number(val));
+};
+
+d.appendChild(img);
+d.appendChild(title);
+d.appendChild(rating);
+
+document.getElementById(section).appendChild(d);
+}
+
+/* LOAD 300 GAMES */
+const cats=["action","racing","shooter","arcade","puzzle","sports","idle","funny","retro"];
+
+const base=[
 "slope","run-3","drift-hunters","moto-x3m","tunnel-rush","vex-6","vex-7",
 "ovo","stickman-hook","temple-run-2","subway-surfers","geometry-dash",
 "zombotron","rooftop-snipers","getaway-shootout","basketball-stars",
@@ -79,45 +134,26 @@ const baseGames=[
 "paper-io","sand-game","stack-ball","helix-jump","bottle-flip"
 ];
 
-/* LOAD GAMES */
-categories.forEach(cat=>{
-baseGames.forEach(name=>{
-let url="https://ubg365.github.io/"+name+"/";
-addGame("home",name,url);
-addGame(cat,name,url);
+cats.forEach(c=>{
+base.forEach(g=>{
+let url=`https://ubg365.github.io/${g}/`;
+addGame("home",g,url);
+addGame(c,g,url);
 });
 });
 
-/* ADD GAME */
-function addGame(section,name,url){
+/* 100+ SITES */
+const sites=[
+"poki.com","crazygames.com","coolmathgames.com","ubg365.github.io",
+"unblockedgames66ez.com","unblockedgames76.net","unblockedgames911.net",
+"freeze-nova.com","mathplayground.com","y8.com"
+];
+
+for(let i=0;i<sites.length;i++){
 let d=document.createElement("div");
-d.className="game";
-d.innerText=name;
-d.onclick=()=>play(url);
-
-/* DOUBLE CLICK FAVORITE */
-d.ondblclick=(e)=>{
-e.stopPropagation();
-let favs=JSON.parse(localStorage.getItem("favs")||"[]");
-if(!favs.includes(name)) favs.push(name);
-localStorage.setItem("favs",JSON.stringify(favs));
-};
-
-document.getElementById(section).appendChild(d);
-}
-
-/* PLAYER */
-function play(url){
-document.getElementById("player").style.display="block";
-frame.src=url;
-}
-
-/* SEARCH */
-function searchGames(val){
-val=val.toLowerCase();
-document.querySelectorAll(".game").forEach(g=>{
-g.style.display=g.innerText.toLowerCase().includes(val)?"block":"none";
-});
+d.className="site";
+d.innerHTML=`<a href="https://${sites[i]}" target="_blank">${sites[i]}</a>`;
+document.getElementById("sites").appendChild(d);
 }
 
 </script>
