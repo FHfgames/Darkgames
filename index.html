@@ -3,137 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <title>DarkGames</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root {
-    --bg:#0a0a0a;
-    --card:#111;
-    --accent:red;
-    --text:white;
+  --bg:#050505;
+  --card:#111;
+  --accent:#ff2e2e;
 }
 
 body {
-    margin:0;
-    font-family:Arial;
-    background:var(--bg);
-    color:var(--text);
+  margin:0;
+  font-family:system-ui;
+  background:var(--bg);
+  color:white;
 }
 
-/* SIDEBAR */
+/* Sidebar */
 .sidebar {
-    position:fixed;
-    width:200px;
-    height:100%;
-    background:#000;
-    box-shadow:0 0 20px var(--accent);
+  position:fixed;
+  width:220px;
+  height:100%;
+  background:#0a0a0a;
 }
 
-.sidebar h2 {
-    text-align:center;
-    color:var(--accent);
+.logo {
+  text-align:center;
+  padding:15px;
+  color:var(--accent);
+  font-size:22px;
+  text-shadow:0 0 10px red;
 }
 
-.sidebar a {
-    display:block;
-    padding:12px;
-    cursor:pointer;
+.user {
+  text-align:center;
+  padding:10px;
+  border-bottom:1px solid #222;
 }
 
-.sidebar a.active,
-.sidebar a:hover {
-    background:var(--accent);
-    color:black;
+.nav a {
+  display:block;
+  padding:12px;
+  color:#ff4d4d;
+  cursor:pointer;
 }
 
-/* HEADER */
-.header {
-    position:fixed;
-    left:200px;
-    right:0;
-    top:0;
-    height:60px;
-    background:#111;
-    display:flex;
-    align-items:center;
-    padding:0 20px;
+.nav a:hover {
+  background:red;
+  color:black;
 }
 
-.header input {
-    padding:10px;
-    width:250px;
-    border:none;
-}
-
-/* MAIN */
+/* Main */
 .main {
-    margin-left:200px;
-    margin-top:70px;
-    padding:20px;
+  margin-left:220px;
+  padding:20px;
 }
 
-/* SECTION */
-.section { margin-bottom:30px; }
+.topbar {
+  display:flex;
+  gap:10px;
+  margin-bottom:15px;
+}
 
-/* GRID */
+input {
+  flex:1;
+  padding:10px;
+  background:#111;
+  border:none;
+  color:white;
+}
+
+/* Grid */
 .grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-    gap:15px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:15px;
 }
 
-/* CARD */
 .card {
-    background:var(--card);
-    border-radius:12px;
-    overflow:hidden;
-    transition:.25s;
-    position:relative;
+  background:var(--card);
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.25s;
 }
 
 .card:hover {
-    transform:translateY(-5px);
-    box-shadow:0 0 20px var(--accent);
+  transform:scale(1.05);
+  box-shadow:0 0 20px red;
 }
 
 .card img {
-    width:100%;
-    height:110px;
-    object-fit:cover;
+  width:100%;
+  height:120px;
+  object-fit:cover;
 }
 
 .card h3 {
-    text-align:center;
-    font-size:14px;
+  padding:10px;
+  font-size:14px;
 }
 
-/* FAVORITE */
-.fav {
-    position:absolute;
-    top:6px;
-    right:8px;
-    cursor:pointer;
-}
-
-/* PLAYER */
+/* Player */
 .player {
-    position:fixed;
-    inset:0;
-    background:black;
-    display:none;
-    z-index:20;
+  position:fixed;
+  inset:0;
+  background:black;
+  display:none;
 }
 
 .player iframe {
-    width:100%;
-    height:100%;
-    border:none;
+  width:100%;
+  height:100%;
+  border:none;
 }
 
-/* MOBILE */
-@media(max-width:700px){
-    .sidebar{display:none;}
-    .header{left:0;}
-    .main{margin-left:0;}
+.close {
+  position:absolute;
+  top:10px;
+  right:20px;
+  font-size:24px;
+  cursor:pointer;
+}
+
+.section {
+  margin:20px 0 10px;
+  font-weight:bold;
 }
 </style>
 </head>
@@ -141,201 +136,135 @@ body {
 <body>
 
 <div class="sidebar">
-<h2>DarkGames</h2>
-<a class="active" onclick="setTab(this,'all')">Home</a>
-<a onclick="setTab(this,'action')">Action</a>
-<a onclick="setTab(this,'racing')">Racing</a>
-<a onclick="setTab(this,'multiplayer')">Multiplayer</a>
-<a onclick="setTab(this,'sports')">Sports</a>
-<a onclick="setTab(this,'puzzle')">Puzzle</a>
-<a onclick="setTab(this,'io')">.IO</a>
-<a onclick="showFavorites()">Favorites</a>
-<a onclick="showRecent()">Continue</a>
-</div>
+  <div class="logo">DarkGames</div>
+  <div class="user" id="user"></div>
 
-<div class="header">
-<input placeholder="Search games..." onkeyup="search(this.value)">
+  <div class="nav">
+    <a onclick="home()">Home</a>
+    <a onclick="trending()">Trending</a>
+    <a onclick="favorites()">Favorites</a>
+    <a onclick="recent()">Continue</a>
+    <a onclick="category('action')">Action</a>
+    <a onclick="category('arcade')">Arcade</a>
+  </div>
 </div>
 
 <div class="main">
-
-<div class="section">
-<h2>🔥 Trending</h2>
-<div class="grid" id="trending"></div>
+  <div class="topbar">
+    <input id="search" placeholder="Search games...">
+  </div>
+  <div id="content"></div>
 </div>
 
-<div class="section">
-<h2>🕓 Continue Playing</h2>
-<div class="grid" id="recent"></div>
-</div>
-
-<div class="section">
-<h2>🎮 All Games</h2>
-<div class="grid" id="games"></div>
-</div>
-
-</div>
-
-<div class="player" id="player" onclick="closeGame()">
-<iframe id="frame"></iframe>
+<div class="player" id="player">
+  <div class="close" onclick="closeGame()">✖</div>
+  <iframe id="frame"></iframe>
 </div>
 
 <script>
+/* 👤 USER */
+let username = localStorage.getItem("user");
+if(!username){
+  username = prompt("Enter username:");
+  localStorage.setItem("user", username);
+}
+document.getElementById("user").innerText = "👤 " + username;
 
-/* FULL GAME LIST */
+/* 🎮 GAMES */
 const games = [
-{title:"Slope",url:"https://ubg44.github.io/Slope/",cat:"action",plays:0},
-{title:"Run 3",url:"https://ubg44.github.io/Run3/",cat:"action",plays:0},
-{title:"Tunnel Rush",url:"https://ubg44.github.io/tunnelrush/",cat:"action",plays:0},
-{title:"Subway Surfers",url:"https://ubg44.github.io/subway-surfers/",cat:"action",plays:0},
-{title:"Temple Run 2",url:"https://ubg44.github.io/temple-run-2/",cat:"action",plays:0},
-
-{title:"Drift Hunters",url:"https://ubg44.github.io/drift-hunters/",cat:"racing",plays:0},
-{title:"Moto X3M",url:"https://ubg44.github.io/motox3m/",cat:"racing",plays:0},
-{title:"Moto X3M Winter",url:"https://ubg44.github.io/motox3m-winter/",cat:"racing",plays:0},
-{title:"Madalin Stunt Cars 2",url:"https://ubg44.github.io/madalin-stunt-cars-2/",cat:"racing",plays:0},
-
-{title:"1v1.LOL",url:"https://ubg44.github.io/1v1lol/",cat:"multiplayer",plays:0},
-{title:"Shell Shockers",url:"https://ubg44.github.io/shellshockers/",cat:"multiplayer",plays:0},
-{title:"Krunker",url:"https://ubg44.github.io/krunker/",cat:"multiplayer",plays:0},
-
-{title:"Basketball Stars",url:"https://ubg44.github.io/basketball-stars/",cat:"sports",plays:0},
-{title:"Basket Random",url:"https://ubg44.github.io/basket-random/",cat:"sports",plays:0},
-{title:"Soccer Random",url:"https://ubg44.github.io/soccer-random/",cat:"sports",plays:0},
-{title:"Retro Bowl",url:"https://ubg44.github.io/retro-bowl/",cat:"sports",plays:0},
-
-{title:"Tetris",url:"https://ubg44.github.io/tetris/",cat:"puzzle",plays:0},
-{title:"2048",url:"https://ubg44.github.io/2048/",cat:"puzzle",plays:0},
-{title:"Wordle",url:"https://ubg44.github.io/wordle/",cat:"puzzle",plays:0},
-
-{title:"Paper.io",url:"https://ubg44.github.io/paper-io/",cat:"io",plays:0},
-{title:"Agar.io",url:"https://ubg44.github.io/agar.io/",cat:"io",plays:0},
-{title:"Slither.io",url:"https://ubg44.github.io/slither.io/",cat:"io",plays:0},
-
-{title:"Pacman",url:"https://ubg44.github.io/pacman/",cat:"classic",plays:0},
-{title:"FNAF",url:"https://ubg44.github.io/fnaf/",cat:"horror",plays:0},
-{title:"Snow Rider 3D",url:"https://ubg44.github.io/snow-rider-3d/",cat:"fun",plays:0},
-
-{title:"Idle Breakout",url:"https://ubg44.github.io/idle-breakout/",cat:"fun",plays:0},
-{title:"Stack",url:"https://ubg44.github.io/stack/",cat:"fun",plays:0},
-{title:"Helix Jump",url:"https://ubg44.github.io/helix-jump/",cat:"action",plays:0},
-{title:"Crossy Road",url:"https://ubg44.github.io/crossy-road/",cat:"action",plays:0},
-
-{title:"Drive Mad",url:"https://ubg44.github.io/drive-mad/",cat:"racing",plays:0},
-{title:"Car Rush",url:"https://ubg44.github.io/car-rush/",cat:"racing",plays:0},
-
-{title:"Stickman Hook",url:"https://ubg44.github.io/stickman-hook/",cat:"action",plays:0},
-{title:"Stickman Fighter",url:"https://ubg44.github.io/stickman-fighter/",cat:"action",plays:0},
-
-{title:"Zombs Royale",url:"https://ubg44.github.io/zombs-royale/",cat:"multiplayer",plays:0},
-
-{title:"Boxing Random",url:"https://ubg44.github.io/boxing-random/",cat:"sports",plays:0},
-
-{title:"BitLife",url:"https://ubg44.github.io/bitlife/",cat:"fun",plays:0},
-
-{title:"Geometry Dash",url:"https://ubg44.github.io/geometry-dash/",cat:"action",plays:0},
-
-{title:"Duck Life",url:"https://ubg44.github.io/duck-life/",cat:"fun",plays:0},
-{title:"Duck Life 2",url:"https://ubg44.github.io/duck-life-2/",cat:"fun",plays:0}
+{name:"Run 3",cat:"arcade",img:"https://i.imgur.com/4AiXzf8.jpeg",url:"https://example.com",plays:0},
+{name:"Slope",cat:"arcade",img:"https://i.imgur.com/Z6XKZzF.jpeg",url:"https://example.com",plays:0},
+{name:"Krunker",cat:"action",img:"https://i.imgur.com/2.jpg",url:"https://example.com",plays:0}
 ];
 
-let fav = JSON.parse(localStorage.getItem("fav")||"[]");
-let recent = JSON.parse(localStorage.getItem("recent")||"[]");
+/* GRID */
+function grid(list){
+return `<div class="grid">` + list.map(g=>`
+<div class="card" onclick="play('${g.name}')"
+oncontextmenu="event.preventDefault();toggleFav('${g.name}')">
+<img src="${g.img}">
+<h3>${g.name}</h3>
+</div>`).join("") + `</div>`;
+}
 
-/* RENDER */
-function render(list,id){
-    let el=document.getElementById(id);
-    el.innerHTML="";
+/* HOME */
+function home(){
+let rec = JSON.parse(localStorage.getItem("rec")||"[]");
 
-    list.forEach(g=>{
-        let isFav=fav.some(f=>f.title===g.title);
+document.getElementById("content").innerHTML = `
+<div class="section">🔥 Trending</div>
+${grid([...games].sort((a,b)=>b.plays-a.plays).slice(0,6))}
 
-        let div=document.createElement("div");
-        div.className="card";
+<div class="section">🎯 Continue Playing</div>
+${grid(games.filter(g=>rec.includes(g.name)))}
 
-        div.innerHTML=`
-        <span class="fav">${isFav?"❤️":"🤍"}</span>
-        <img src="https://source.unsplash.com/300x200/?game,${g.title}">
-        <h3>${g.title}</h3>
-        `;
-
-        div.onclick=()=>play(g);
-
-        div.querySelector(".fav").onclick=(e)=>{
-            e.stopPropagation();
-            toggleFav(g);
-        };
-
-        el.appendChild(div);
-    });
+<div class="section">🎮 All Games</div>
+${grid(games)}
+`;
 }
 
 /* PLAY */
-function play(g){
-    document.getElementById("player").style.display="block";
-    document.getElementById("frame").src=g.url;
+function play(name){
+let g = games.find(x=>x.name===name);
+g.plays++;
 
-    g.plays++;
+document.getElementById("frame").src = g.url;
+document.getElementById("player").style.display="block";
 
-    recent=[g,...recent.filter(r=>r.title!==g.title)].slice(0,10);
-    localStorage.setItem("recent",JSON.stringify(recent));
-
-    updateUI();
+/* Save recent */
+let rec = JSON.parse(localStorage.getItem("rec")||"[]");
+rec.unshift(name);
+rec=[...new Set(rec)].slice(0,10);
+localStorage.setItem("rec",JSON.stringify(rec));
 }
 
-/* CLOSE */
 function closeGame(){
-    document.getElementById("player").style.display="none";
-    document.getElementById("frame").src="";
+document.getElementById("player").style.display="none";
 }
 
 /* FAVORITES */
-function toggleFav(g){
-    if(fav.some(f=>f.title===g.title)){
-        fav=fav.filter(f=>f.title!==g.title);
-    } else {
-        fav.push(g);
-    }
-
-    localStorage.setItem("fav",JSON.stringify(fav));
-    updateUI();
+function toggleFav(name){
+let f = JSON.parse(localStorage.getItem("fav")||"[]");
+if(f.includes(name)){
+  f = f.filter(x=>x!==name);
+}else{
+  f.push(name);
+}
+localStorage.setItem("fav",JSON.stringify(f));
 }
 
-/* FILTER */
-function setTab(el,cat){
-    document.querySelectorAll(".sidebar a").forEach(a=>a.classList.remove("active"));
-    el.classList.add("active");
+function favorites(){
+let f = JSON.parse(localStorage.getItem("fav")||"[]");
+document.getElementById("content").innerHTML = grid(games.filter(g=>f.includes(g.name)));
+}
 
-    if(cat==="all") render(games,"games");
-    else render(games.filter(g=>g.cat===cat),"games");
+/* TRENDING */
+function trending(){
+document.getElementById("content").innerHTML =
+grid([...games].sort((a,b)=>b.plays-a.plays));
+}
+
+/* RECENT */
+function recent(){
+let r = JSON.parse(localStorage.getItem("rec")||"[]");
+document.getElementById("content").innerHTML =
+grid(games.filter(g=>r.includes(g.name)));
+}
+
+/* CATEGORY */
+function category(c){
+document.getElementById("content").innerHTML =
+grid(games.filter(g=>g.cat===c));
 }
 
 /* SEARCH */
-function search(val){
-    val=val.toLowerCase();
-    render(games.filter(g=>g.title.toLowerCase().includes(val)),"games");
-}
+document.getElementById("search").oninput = function(){
+let v=this.value.toLowerCase();
+document.getElementById("content").innerHTML =
+grid(games.filter(g=>g.name.toLowerCase().includes(v)));
+};
 
-/* SPECIAL */
-function showFavorites(){ render(fav,"games"); }
-function showRecent(){ render(recent,"games"); }
-
-/* TRENDING */
-function updateTrending(){
-    let sorted=[...games].sort((a,b)=>b.plays-a.plays);
-    render(sorted.slice(0,6),"trending");
-}
-
-/* UPDATE */
-function updateUI(){
-    render(games,"games");
-    render(recent,"recent");
-    updateTrending();
-}
-
-/* INIT */
-updateUI();
-
+home();
 </script>
 
 </body>
