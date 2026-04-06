@@ -1,192 +1,212 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>DarkGames HYBRID</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DarkGames</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0a0a0a;color:white;}
-#sidebar{width:200px;position:fixed;height:100%;background:#111;padding:10px;}
-.sidebar-item{margin:8px 0;cursor:pointer;color:#0ff;}
-.sidebar-item.active{color:#fff;}
-#main{margin-left:210px;padding:10px;}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-gap:15px;
+body {
+  margin: 0;
+  font-family: Arial;
+  background: radial-gradient(circle, #1a0000, #000);
+  color: white;
 }
 
-.game{
-background:#1a1a1a;
-border-radius:10px;
-overflow:hidden;
-cursor:pointer;
-transition:0.2s;
-}
-.game:hover{transform:scale(1.05);}
-
-.game img{
-width:100%;
-height:110px;
-object-fit:cover;
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  width: 220px;
+  height: 100%;
+  background: #0a0a0a;
+  padding-top: 10px;
 }
 
-.game-title{padding:6px;font-size:13px;}
-
-#player{
-position:fixed;
-top:0;left:0;width:100%;height:100%;
-background:black;
-display:none;
+.sidebar a {
+  display: block;
+  padding: 12px;
+  color: #ff2e2e;
+  text-decoration: none;
+  font-weight: bold;
 }
-#player iframe{width:100%;height:100%;border:none;}
 
-#closeBtn{
-position:absolute;
-top:10px;
-right:10px;
-background:red;
-border:none;
-padding:10px;
-color:white;
-cursor:pointer;
+.sidebar a:hover {
+  color: white;
+  text-shadow: 0 0 10px red;
+}
+
+/* MAIN */
+.main {
+  margin-left: 230px;
+  padding: 20px;
+}
+
+/* SEARCH */
+.search {
+  padding: 10px;
+  width: 300px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: none;
+}
+
+/* GRID */
+.games {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 200px);
+  gap: 20px;
+}
+
+.game-card {
+  height: 120px;
+  border-radius: 10px;
+  background-size: cover;
+  display: flex;
+  align-items: end;
+  padding: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.game-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px red;
+}
+
+/* GAME PLAYER */
+#player {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: none;
+}
+
+#player iframe {
+  width: 100%;
+  height: 90%;
+  border: none;
+}
+
+.controls {
+  text-align: center;
+  padding: 10px;
+}
+button {
+  padding: 10px;
+  margin: 5px;
+  background: red;
+  border: none;
+  color: white;
+  cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div id="sidebar">
-<div class="sidebar-item active" onclick="tab('home',this)">Home</div>
-<div class="sidebar-item" onclick="tab('action',this)">Action</div>
-<div class="sidebar-item" onclick="tab('racing',this)">Racing</div>
-<div class="sidebar-item" onclick="tab('arcade',this)">Arcade</div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <a href="#">Home</a>
+  <a href="#">Popular</a>
+  <a href="#">New</a>
+  <a href="#">Action</a>
+  <a href="#">Shooting</a>
+  <a href="#">Racing</a>
+  <a href="#">Multiplayer</a>
+  <a href="#">Horror</a>
+  <a href="#">Puzzle</a>
+  <a href="#">Sports</a>
+  <a href="#">Built-in Games</a>
+  <a href="#">Favorites</a>
+  <a href="#">Settings</a>
 </div>
 
-<div id="main">
-<div id="home" class="grid"></div>
-<div id="action" class="grid"></div>
-<div id="racing" class="grid"></div>
-<div id="arcade" class="grid"></div>
+<!-- MAIN -->
+<div class="main">
+
+<h2>🔥 DarkGames</h2>
+<p>✔ Safe ✔ No downloads ✔ Works at school ✔ Instant play</p>
+
+<input class="search" placeholder="Search games..." onkeyup="searchGames(this.value)">
+
+<div class="games" id="games">
+
+<!-- GAME CARDS -->
+<div class="game-card" data-name="slope"
+style="background-image:url('https://via.placeholder.com/200x120')"
+onclick="loadGame('https://ubg100.github.io/slope/')">
+<span>Slope</span>
 </div>
 
+<div class="game-card" data-name="run3"
+style="background-image:url('https://via.placeholder.com/200x120')"
+onclick="loadGame('https://ubg100.github.io/run3/')">
+<span>Run 3</span>
+</div>
+
+<div class="game-card" data-name="tetris"
+style="background-image:url('https://via.placeholder.com/200x120')"
+onclick="loadGame('built-in/tetris.html')">
+<span>Tetris (Built-in)</span>
+</div>
+
+</div>
+</div>
+
+<!-- PLAYER -->
 <div id="player">
-<button id="closeBtn" onclick="closeGame()">❌</button>
-<iframe id="frame"></iframe>
+  <iframe id="gameFrame"></iframe>
+
+  <div class="controls">
+    <button onclick="closeGame()">Close</button>
+    <button onclick="fullscreen()">Fullscreen</button>
+    <button onclick="favoriteGame()">⭐ Favorite</button>
+  </div>
 </div>
 
 <script>
+let currentGame = "";
 
-/* TAB */
-function tab(id,el){
-document.querySelectorAll("#main > div").forEach(d=>d.style.display="none");
-document.getElementById(id).style.display="grid";
-document.querySelectorAll(".sidebar-item").forEach(i=>i.classList.remove("active"));
-if(el) el.classList.add("active");
+/* LOAD GAME */
+function loadGame(url) {
+  document.getElementById("player").style.display = "block";
+  document.getElementById("gameFrame").src = url;
+  currentGame = url;
 }
 
 /* CLOSE */
-function closeGame(){
-player.style.display="none";
-frame.src="";
-tab("home",document.querySelector(".sidebar-item"));
+function closeGame() {
+  document.getElementById("player").style.display = "none";
+  document.getElementById("gameFrame").src = "";
 }
 
-/* PERFECT MATCH THUMBNAILS */
-const thumbMap={
-"slope":"https://images.crazygames.com/games/slope/cover-1584478910518.png",
-"run-3":"https://images.crazygames.com/games/run-3/cover-1584478606153.png",
-"drift-hunters":"https://images.crazygames.com/games/drift-hunters/cover-1593791675999.png",
-"moto-x3m":"https://images.crazygames.com/games/moto-x3m/cover-1584479006462.png",
-"crossy-road":"https://images.crazygames.com/games/crossy-road/cover-1584478644688.png"
-};
-
-/* DUCKDUCKGO FETCH */
-async function fetchDuck(name){
-try{
-let res=await fetch(`https://duckduckgo.com/i.js?q=${name} game&iax=images&ia=images`);
-let data=await res.json();
-if(data.results && data.results.length>0){
-return data.results[0].image;
-}
-}catch(e){}
-return null;
+/* FULLSCREEN */
+function fullscreen() {
+  document.getElementById("gameFrame").requestFullscreen();
 }
 
-/* HYBRID THUMB SYSTEM */
-async function getThumbnail(name,url){
+/* SEARCH */
+function searchGames(input) {
+  let games = document.querySelectorAll(".game-card");
+  input = input.toLowerCase();
 
-/* 1. perfect map */
-if(thumbMap[name]) return thumbMap[name];
-
-/* 2. duckduckgo */
-let duck=await fetchDuck(name);
-if(duck) return duck;
-
-/* 3. clearbit fallback */
-try{
-let domain=new URL(url).hostname;
-return `https://logo.clearbit.com/${domain}`;
-}catch(e){}
-
-/* 4. final fallback */
-return `https://via.placeholder.com/300x200?text=${name}`;
+  games.forEach(game => {
+    let name = game.dataset.name;
+    game.style.display = name.includes(input) ? "block" : "none";
+  });
 }
 
-/* ADD GAME */
-async function addGame(section,name){
-
-let d=document.createElement("div");
-d.className="game";
-
-let img=document.createElement("img");
-img.src="https://via.placeholder.com/300x200?text=Loading...";
-
-let url=`https://ubg365.github.io/${name}/`;
-
-/* LOAD THUMB */
-getThumbnail(name,url).then(src=>{
-img.src=src;
-});
-
-/* FAILSAFE */
-img.onerror=()=>{
-img.src=`https://via.placeholder.com/300x200?text=${name}`;
-};
-
-let title=document.createElement("div");
-title.className="game-title";
-title.innerText=name;
-
-/* PLAY */
-d.onclick=()=>{
-player.style.display="block";
-frame.src=url;
-};
-
-d.appendChild(img);
-d.appendChild(title);
-
-document.getElementById(section).appendChild(d);
+/* FAVORITES */
+function favoriteGame() {
+  let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  if (!favorites.includes(currentGame)) {
+    favorites.push(currentGame);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+    alert("Added to favorites ⭐");
+  }
 }
-
-/* DATA */
-const data={
-action:["slope","run-3","vex-6","vex-7","ovo"],
-racing:["drift-hunters","moto-x3m","drive-mad","drift-boss","kart-racing"],
-arcade:["crossy-road","flappy-bird","fruit-ninja","doodle-jump","paper-io"]
-};
-
-/* LOAD */
-Object.keys(data).forEach(cat=>{
-data[cat].forEach(g=>{
-addGame("home",g);
-addGame(cat,g);
-});
-});
-
 </script>
 
 </body>
