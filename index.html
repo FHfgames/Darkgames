@@ -2,78 +2,25 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>DarkGames PRO</title>
+<title>DarkGames AUTO THUMBS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:linear-gradient(135deg,#0a0a0a,#111);
-color:white;
-}
+body{margin:0;font-family:Arial;background:#0a0a0a;color:white;}
+#sidebar{width:200px;position:fixed;height:100%;background:#111;padding:10px;}
+.sidebar-item{margin:8px 0;cursor:pointer;color:#0ff;}
+.sidebar-item.active{color:#fff;}
+#main{margin-left:210px;padding:10px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;}
 
-/* SIDEBAR */
-#sidebar{
-width:200px;
-position:fixed;
-height:100%;
-background:#0d0d0d;
-padding:15px;
-box-shadow:2px 0 10px black;
-}
-
-.sidebar-item{
-margin:10px 0;
-cursor:pointer;
-color:#0ff;
-font-size:14px;
-transition:0.2s;
-}
-
-.sidebar-item:hover{
-color:#fff;
-text-shadow:0 0 8px #0ff;
-}
-
-.sidebar-item.active{
-color:#fff;
-}
-
-/* MAIN */
-#main{
-margin-left:210px;
-padding:15px;
-}
-
-/* SEARCH */
-#search{
-width:100%;
-padding:10px;
-border-radius:10px;
-border:none;
-background:#1a1a1a;
-color:white;
-margin-bottom:15px;
-}
-
-/* GRID */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-gap:15px;
-}
-
-/* GAME CARD */
 .game{
-background:rgba(255,255,255,0.05);
-border-radius:12px;
+background:#1a1a1a;
+border-radius:10px;
 overflow:hidden;
 cursor:pointer;
-transition:0.25s;
-backdrop-filter:blur(6px);
-position:relative;
+transition:0.2s;
 }
+.game:hover{transform:scale(1.05);}
 
 .game img{
 width:100%;
@@ -81,64 +28,25 @@ height:110px;
 object-fit:cover;
 }
 
-.game:hover{
-transform:translateY(-5px) scale(1.03);
-box-shadow:0 10px 20px rgba(0,0,0,0.7);
-}
+.game-title{padding:6px;font-size:13px;}
 
-.game-title{
-padding:8px;
-font-size:13px;
-}
-
-/* FAVORITE STAR */
-.star{
-position:absolute;
-top:5px;
-right:5px;
-color:gold;
-display:none;
-}
-
-.game.fav .star{
-display:block;
-}
-
-/* PLAYER */
 #player{
 position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.9);
-backdrop-filter:blur(5px);
+top:0;left:0;width:100%;height:100%;
+background:black;
 display:none;
 }
-
-#player iframe{
-width:100%;
-height:100%;
-border:none;
-}
+#player iframe{width:100%;height:100%;border:none;}
 
 #closeBtn{
 position:absolute;
-top:15px;
-right:15px;
+top:10px;
+right:10px;
 background:red;
-color:white;
 border:none;
 padding:10px;
-border-radius:8px;
+color:white;
 cursor:pointer;
-}
-
-/* MOBILE */
-@media(max-width:700px){
-#sidebar{width:70px;}
-#main{margin-left:80px;}
-.sidebar-item{font-size:12px;}
 }
 </style>
 </head>
@@ -149,30 +57,14 @@ cursor:pointer;
 <div class="sidebar-item active" onclick="tab('home',this)">Home</div>
 <div class="sidebar-item" onclick="tab('action',this)">Action</div>
 <div class="sidebar-item" onclick="tab('racing',this)">Racing</div>
-<div class="sidebar-item" onclick="tab('shooter',this)">Shooter</div>
 <div class="sidebar-item" onclick="tab('arcade',this)">Arcade</div>
-<div class="sidebar-item" onclick="tab('puzzle',this)">Puzzle</div>
-<div class="sidebar-item" onclick="tab('sports',this)">Sports</div>
-<div class="sidebar-item" onclick="tab('idle',this)">Idle</div>
-<div class="sidebar-item" onclick="tab('funny',this)">Funny</div>
-<div class="sidebar-item" onclick="tab('retro',this)">Retro</div>
-<div class="sidebar-item" onclick="tab('favorites',this)">Favorites</div>
 </div>
 
 <div id="main">
-<input id="search" placeholder="Search games..." oninput="searchGames()">
-
 <div id="home" class="grid"></div>
 <div id="action" class="grid"></div>
 <div id="racing" class="grid"></div>
-<div id="shooter" class="grid"></div>
 <div id="arcade" class="grid"></div>
-<div id="puzzle" class="grid"></div>
-<div id="sports" class="grid"></div>
-<div id="idle" class="grid"></div>
-<div id="funny" class="grid"></div>
-<div id="retro" class="grid"></div>
-<div id="favorites" class="grid"></div>
 </div>
 
 <div id="player">
@@ -197,22 +89,39 @@ frame.src="";
 tab("home",document.querySelector(".sidebar-item"));
 }
 
+/* AUTO THUMBNAIL LOADER */
+async function getThumbnail(name){
+
+try{
+let res = await fetch(`https://duckduckgo.com/i.js?q=${name} game&iax=images&ia=images`);
+let data = await res.json();
+
+if(data.results && data.results.length>0){
+return data.results[0].image;
+}
+
+}catch(e){}
+
+/* fallback */
+return `https://via.placeholder.com/300x200?text=${name}`;
+}
+
 /* ADD GAME */
-function addGame(section,name){
+async function addGame(section,name){
+
 let d=document.createElement("div");
 d.className="game";
 
 let img=document.createElement("img");
-img.src=`https://source.unsplash.com/300x200/?${name},game`;
-img.onerror=()=>img.src=`https://via.placeholder.com/300x200?text=${name}`;
+img.src="https://via.placeholder.com/300x200?text=Loading...";
+
+getThumbnail(name).then(src=>{
+img.src=src;
+});
 
 let title=document.createElement("div");
 title.className="game-title";
 title.innerText=name;
-
-let star=document.createElement("div");
-star.className="star";
-star.innerText="⭐";
 
 let url=`https://ubg365.github.io/${name}/`;
 
@@ -221,30 +130,17 @@ player.style.display="block";
 frame.src=url;
 };
 
-/* FAVORITES */
-d.ondblclick=(e)=>{
-e.stopPropagation();
-d.classList.toggle("fav");
-};
-
 d.appendChild(img);
 d.appendChild(title);
-d.appendChild(star);
 
 document.getElementById(section).appendChild(d);
 }
 
-/* DATA (NO DUPES) */
+/* DATA */
 const data={
-action:["slope","run-3","tunnel-rush","vex-6","vex-7","ovo","stickman-hook","temple-run-2","subway-surfers","geometry-dash"],
-racing:["drift-hunters","moto-x3m","drive-mad","drift-boss","car-rush","parking-fury","traffic-rider","bike-mania","kart-racing","snow-rider"],
-shooter:["rooftop-snipers","getaway-shootout","zombotron","shellshockers","gun-mayhem","sniper-clash","combat-online","war-brokers","mini-shooters","pixel-gun"],
-arcade:["crossy-road","flappy-bird","stack-ball","helix-jump","bottle-flip","fruit-ninja","doodle-jump","paper-io","sand-game","idle-breakout"],
-puzzle:["2048","cut-the-rope","sudoku","tic-tac-toe","maze","brain-test","flow-free","color-match","block-puzzle","connect-4"],
-sports:["basketball-stars","soccer-random","tennis-masters","basket-random","football-legends","golf-battle","8-ball-pool","boxing-random","archery","bowling"],
-idle:["cookie-clicker","idle-breakout","adventure-capitalist","clicker-heroes","mine-clicker","space-idle","factory-idle","money-clicker","tycoon-idle","evolution-idle"],
-funny:["elastic-man","happy-wheels","ragdoll","funny-shooter","weird-clicker","goofy-run","trollface-quest","dumb-ways","meme-run","fun-slap"],
-retro:["pacman","tetris","pong","space-invaders","donkey-kong","frogger","snake","breakout","galaga","asteroids"]
+action:["slope","run-3","vex-6","vex-7","ovo"],
+racing:["drift-hunters","moto-x3m","drive-mad","drift-boss","kart-racing"],
+arcade:["crossy-road","flappy-bird","fruit-ninja","doodle-jump","paper-io"]
 };
 
 /* LOAD */
@@ -254,14 +150,6 @@ addGame("home",g);
 addGame(cat,g);
 });
 });
-
-/* SEARCH */
-function searchGames(){
-let v=search.value.toLowerCase();
-document.querySelectorAll(".game").forEach(g=>{
-g.style.display=g.innerText.toLowerCase().includes(v)?"block":"none";
-});
-}
 
 </script>
 
