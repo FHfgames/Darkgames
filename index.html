@@ -1,122 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>DarkGames Pro</title>
+<title>DarkGames </title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
-  margin: 0;
+  margin:0;
   font-family: Arial;
-  background: black;
-  color: white;
-  overflow-x: hidden;
+  background:black;
+  color:white;
 }
 
 /* RED DOT BACKGROUND */
-body::before {
-  content: "";
-  position: fixed;
-  width: 100%;
-  height: 100%;
+body::before{
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
   background-image: radial-gradient(red 1px, transparent 1px);
-  background-size: 25px 25px;
-  opacity: 0.35;
-  z-index: -1;
+  background-size:25px 25px;
+  opacity:0.35;
+  z-index:-1;
 }
 
 /* SIDEBAR */
-#sidebar {
-  position: fixed;
-  width: 140px;
-  height: 100%;
-  background: #000;
-  padding: 10px;
-  overflow-y: auto;
-  transition: 0.3s;
+#sidebar{
+  width:150px;
+  position:fixed;
+  height:100%;
+  background:#000;
+  padding:10px;
 }
 
-.sidebar-item {
-  font-size: 12px;
-  margin: 8px 0;
-  cursor: pointer;
-  color: #0ff;
-  text-shadow: 0 0 5px #0ff;
+.sidebar-item{
+  font-size:12px;
+  margin:8px 0;
+  cursor:pointer;
+  color:#0ff;
+  text-shadow:0 0 6px #0ff;
 }
 
-.sidebar-item:hover {
-  color: #f0f;
-  text-shadow: 0 0 10px #f0f;
+.sidebar-item.active{
+  color:#f0f;
 }
 
 /* MAIN */
-#main {
-  margin-left: 150px;
-  padding: 10px;
+#main{
+  margin-left:160px;
+  padding:10px;
 }
 
-/* GAME GRID */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
+/* SEARCH */
+#search{
+  width:100%;
+  padding:6px;
+  margin-bottom:10px;
 }
 
-.game {
-  background: #111;
-  border-radius: 8px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: 0.2s;
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:10px;
 }
 
-.game:hover {
-  transform: scale(1.05);
+.game{
+  background:#111;
+  border-radius:8px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.game img {
-  width: 100%;
-  height: 90px;
-  object-fit: cover;
+.game:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 10px red;
 }
 
-.game-title {
-  font-size: 12px;
-  padding: 5px;
+.game img{
+  width:100%;
+  height:90px;
+  object-fit:cover;
+}
+
+.game-title{
+  font-size:12px;
+  padding:5px;
 }
 
 /* PLAYER */
-#player {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: black;
-  display: none;
+#player{
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  background:black;
+  display:none;
 }
 
-#player iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
+#player iframe{
+  width:100%;
+  height:100%;
+  border:none;
 }
 
-/* BUTTONS */
-#topbar {
-  position: fixed;
-  top: 5px;
-  right: 10px;
+/* PLAYER CONTROLS */
+.controls{
+  position:absolute;
+  top:5px;
+  right:10px;
 }
 
-.btn {
-  margin: 3px;
-  padding: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  background: #111;
-  border-radius: 5px;
+.btn{
+  margin:3px;
+  padding:6px;
+  cursor:pointer;
+  background:#111;
+  border-radius:5px;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+  #sidebar{display:none;}
+  #main{margin-left:0;}
 }
 </style>
 </head>
@@ -124,101 +133,117 @@ body::before {
 <body>
 
 <div id="sidebar">
-  <div class="sidebar-item" onclick="showSection('home')">Home</div>
-  <div class="sidebar-item" onclick="showSection('action')">Action</div>
-  <div class="sidebar-item" onclick="showSection('racing')">Racing</div>
-  <div class="sidebar-item" onclick="showSection('shooter')">Shooter</div>
-  <div class="sidebar-item" onclick="showSection('arcade')">Arcade</div>
-  <div class="sidebar-item" onclick="showSection('funny')">Funny</div>
-  <div class="sidebar-item" onclick="showSection('retro')">Retro</div>
-  <div class="sidebar-item" onclick="showSection('puzzle')">Puzzle</div>
-  <div class="sidebar-item" onclick="showSection('sports')">Sports</div>
-  <div class="sidebar-item" onclick="showSection('idle')">Idle</div>
-  <div class="sidebar-item" onclick="showSection('built')">Built in games</div>
-  <div class="sidebar-item" onclick="showSection('sites')">Other websites</div>
-  <div class="sidebar-item" onclick="showSection('settings')">Settings</div>
-</div>
-
-<div id="topbar">
-  <span class="btn" onclick="toggleSidebar()">📂</span>
-  <span class="btn" onclick="document.body.requestFullscreen()">🖥️</span>
-  <span class="btn" onclick="location.reload()">🔄</span>
-  <span class="btn" onclick="alert('DarkGames Pro Loaded')">⭐</span>
+  <div class="sidebar-item active" onclick="switchTab('home',this)">🏠 Home</div>
+  <div class="sidebar-item" onclick="switchTab('action',this)">🎮 Action</div>
+  <div class="sidebar-item" onclick="switchTab('racing',this)">🚗 Racing</div>
+  <div class="sidebar-item" onclick="switchTab('shooter',this)">🔫 Shooter</div>
+  <div class="sidebar-item" onclick="switchTab('arcade',this)">🕹 Arcade</div>
+  <div class="sidebar-item" onclick="switchTab('puzzle',this)">🧩 Puzzle</div>
+  <div class="sidebar-item" onclick="switchTab('sports',this)">⚽ Sports</div>
+  <div class="sidebar-item" onclick="switchTab('idle',this)">⏳ Idle</div>
+  <div class="sidebar-item" onclick="switchTab('funny',this)">😂 Funny</div>
+  <div class="sidebar-item" onclick="switchTab('retro',this)">📼 Retro</div>
+  <div class="sidebar-item" onclick="switchTab('built',this)">🧠 Built in</div>
+  <div class="sidebar-item" onclick="switchTab('sites',this)">🌐 Other Sites</div>
+  <div class="sidebar-item" onclick="switchTab('settings',this)">⚙️ Settings</div>
 </div>
 
 <div id="main">
 
-  <div id="home" class="grid"></div>
-  <div id="action" class="grid" style="display:none;"></div>
-  <div id="racing" class="grid" style="display:none;"></div>
-  <div id="shooter" class="grid" style="display:none;"></div>
-  <div id="arcade" class="grid" style="display:none;"></div>
+<input id="search" placeholder="Search games..." oninput="searchGames()">
 
-  <div id="built" style="display:none;">
-    <h2>Built-in Game</h2>
-    <button onclick="startBuilt()">Play Clicker</button>
-    <div id="builtGame"></div>
-  </div>
+<div id="home" class="grid"></div>
+<div id="action" class="grid" style="display:none"></div>
+<div id="racing" class="grid" style="display:none"></div>
+<div id="shooter" class="grid" style="display:none"></div>
+<div id="arcade" class="grid" style="display:none"></div>
 
-  <div id="sites" style="display:none;">
-    <h2>Other Websites</h2>
-    <div id="sitesList"></div>
-  </div>
+<div id="built" style="display:none">
+  <h2>Built-in Clicker</h2>
+  <button onclick="startBuilt()">Start</button>
+  <div id="builtGame"></div>
+</div>
+
+<div id="sites" style="display:none">
+  <h2>Game Sites</h2>
+  <div id="sitesList"></div>
+</div>
 
 </div>
 
 <div id="player">
   <iframe id="frame"></iframe>
+  <div class="controls">
+    <span class="btn" onclick="closeGame()">❌</span>
+    <span class="btn" onclick="reloadGame()">🔄</span>
+    <span class="btn" onclick="fullscreen()">🖥</span>
+  </div>
 </div>
 
 <script>
-function toggleSidebar() {
-  let s = document.getElementById("sidebar");
-  s.style.display = (s.style.display === "none") ? "block" : "none";
+
+/* SWITCH TAB */
+function switchTab(id,el){
+  document.querySelectorAll(".grid, #built, #sites").forEach(d=>d.style.display="none");
+  document.getElementById(id).style.display="grid";
+
+  document.querySelectorAll(".sidebar-item").forEach(i=>i.classList.remove("active"));
+  el.classList.add("active");
 }
 
-function showSection(id) {
-  document.querySelectorAll("#main > div").forEach(d => d.style.display = "none");
-  document.getElementById(id).style.display = "grid";
-}
-
-/* LOAD GAMES */
-const games = [
-  {name:"Slope", url:"https://ubg365.github.io/slope/", img:"https://i.imgur.com/8Qf4K2P.jpeg"},
-  {name:"Run 3", url:"https://ubg365.github.io/run-3/", img:"https://i.imgur.com/3cXQY6K.jpeg"},
-  {name:"Drift Hunters", url:"https://ubg365.github.io/drift-hunters/", img:"https://i.imgur.com/X9a6F8M.jpeg"},
-  {name:"1v1.lol", url:"https://1v1.lol/", img:"https://i.imgur.com/YpZq9Xt.jpeg"},
-  {name:"Shell Shockers", url:"https://shellshock.io/", img:"https://i.imgur.com/znT9zvL.jpeg"}
+/* GAME DATA */
+const games=[
+{name:"Slope",cat:"action",url:"https://ubg365.github.io/slope/",img:"https://i.imgur.com/8Qf4K2P.jpeg"},
+{name:"Run 3",cat:"action",url:"https://ubg365.github.io/run-3/",img:"https://i.imgur.com/3cXQY6K.jpeg"},
+{name:"Drift Hunters",cat:"racing",url:"https://ubg365.github.io/drift-hunters/",img:"https://i.imgur.com/X9a6F8M.jpeg"},
+{name:"1v1.lol",cat:"shooter",url:"https://1v1.lol/",img:"https://i.imgur.com/YpZq9Xt.jpeg"},
+{name:"Shell Shockers",cat:"shooter",url:"https://shellshock.io/",img:"https://i.imgur.com/znT9zvL.jpeg"}
 ];
 
-/* CLONE TO 100+ */
-for(let i=0;i<25;i++){
+/* GENERATE 100+ UNIQUE FEEL */
+for(let i=0;i<30;i++){
   games.forEach(g=>{
-    addGame("home", g);
+    addGame("home",g);
+    addGame(g.cat,g);
   });
 }
 
-function addGame(section, game){
-  let div = document.createElement("div");
-  div.className="game";
-  div.innerHTML = `
-    <img src="${game.img}">
-    <div class="game-title">${game.name}</div>
-  `;
-  div.onclick=()=>play(game.url);
-  document.getElementById(section).appendChild(div);
+/* ADD GAME */
+function addGame(section,g){
+  let d=document.createElement("div");
+  d.className="game";
+  d.innerHTML=`<img src="${g.img}"><div class="game-title">${g.name}</div>`;
+  d.onclick=()=>play(g.url);
+  document.getElementById(section).appendChild(d);
 }
 
+/* PLAY */
 function play(url){
   document.getElementById("player").style.display="block";
   document.getElementById("frame").src=url;
 }
 
-document.getElementById("player").onclick = ()=>{
+function closeGame(){
   document.getElementById("player").style.display="none";
-};
+}
 
-/* BUILT-IN GAME */
+function reloadGame(){
+  document.getElementById("frame").src=document.getElementById("frame").src;
+}
+
+function fullscreen(){
+  document.getElementById("player").requestFullscreen();
+}
+
+/* SEARCH */
+function searchGames(){
+  let val=document.getElementById("search").value.toLowerCase();
+  document.querySelectorAll(".game").forEach(g=>{
+    g.style.display=g.innerText.toLowerCase().includes(val)?"block":"none";
+  });
+}
+
+/* BUILT GAME */
 function startBuilt(){
   let score=0;
   let div=document.getElementById("builtGame");
@@ -232,12 +257,12 @@ function startBuilt(){
   div.appendChild(btn);
 }
 
-/* OTHER SITES (add more easily) */
-const sites = [
-  "https://ubg365.github.io/",
-  "https://sites.google.com/view/unblockedgames76/",
-  "https://coolmathgames.com",
-  "https://poki.com"
+/* SITES */
+const sites=[
+"https://ubg365.github.io/",
+"https://poki.com/",
+"https://coolmathgames.com/",
+"https://sites.google.com/view/unblockedgames76/"
 ];
 
 sites.forEach(s=>{
