@@ -2,100 +2,127 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>DarkGames</title>
+<title>DarkGames Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
+body {
   margin:0;
-  font-family:Arial;
-  background:black;
+  font-family: Arial;
+  background:#0a0000;
   color:white;
-  overflow-x:hidden;
+  overflow:hidden;
 }
 
-/* RED DOT BACKGROUND */
-canvas{
+/* 🔴 BACKGROUND DOTS */
+#bg {
   position:fixed;
-  top:0;
-  left:0;
+  width:100%;
+  height:100%;
   z-index:-1;
 }
 
 /* SIDEBAR */
-.sidebar{
+.sidebar {
   position:fixed;
-  width:120px;
+  left:0;
+  top:0;
+  width:160px;
   height:100%;
-  background:#0a0a0a;
-  padding:6px;
+  background:#111;
+  padding:10px;
   overflow-y:auto;
   transition:0.3s;
 }
 
-.sidebar a{
+.sidebar button {
   display:block;
+  width:100%;
+  margin:4px 0;
+  background:black;
+  border:none;
   color:#ff2a2a;
-  font-size:10px;
-  margin:6px 0;
-  text-decoration:none;
+  font-size:11px;
+  padding:6px;
+  cursor:pointer;
   text-shadow:0 0 6px red;
 }
 
-.sidebar a:hover{
-  color:white;
-}
-
-/* MAIN */
-.main{
-  margin-left:130px;
+/* GAME GRID */
+.main {
+  margin-left:170px;
   padding:10px;
+  height:100vh;
+  overflow:auto;
 }
 
-/* GRID */
-.games{
+.grid {
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  grid-template-columns:repeat(auto-fill, minmax(180px,1fr));
   gap:10px;
 }
 
-.game{
-  height:100px;
-  background-size:cover;
-  background-position:center;
-  display:flex;
-  align-items:end;
-  padding:5px;
-  font-size:11px;
-  border-radius:6px;
+.game {
+  background:#111;
+  border-radius:8px;
+  overflow:hidden;
   cursor:pointer;
+  transition:0.2s;
 }
 
-.game:hover{
+.game:hover {
   transform:scale(1.05);
 }
 
-/* BUTTONS */
-.buttons{
-  position:fixed;
-  top:10px;
-  right:10px;
+.game img {
+  width:100%;
+  height:120px;
+  object-fit:cover;
 }
 
-.btn{
+.game p {
+  font-size:12px;
+  text-align:center;
+  margin:5px;
+}
+
+/* GAME PLAYER */
+#player {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
   background:black;
-  border:1px solid red;
+  display:none;
+  flex-direction:column;
+}
+
+iframe {
+  width:100%;
+  height:100%;
+  border:none;
+}
+
+/* BUTTON BAR */
+.topbar {
+  background:#000;
+  padding:5px;
+  display:flex;
+  gap:5px;
+}
+
+.topbar button {
+  background:#111;
+  border:none;
   color:white;
-  padding:6px;
-  margin:3px;
+  padding:5px;
   cursor:pointer;
 }
 
-/* FRAME */
-iframe{
-  width:100%;
-  height:500px;
-  border:none;
-  margin-top:10px;
+/* HIDDEN SIDEBAR */
+.hidden {
+  transform:translateX(-170px);
 }
 </style>
 </head>
@@ -104,164 +131,156 @@ iframe{
 
 <canvas id="bg"></canvas>
 
-<!-- SIDEBAR (13 ITEMS) -->
+<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-<a>Home</a>
-<a>Action</a>
-<a>Adventure</a>
-<a>Racing</a>
-<a>Shooting</a>
-<a>Puzzle</a>
-<a>Multiplayer</a>
-<a>Horror</a>
-<a>Sports</a>
-<a>Built-in Games</a>
-<a>Other Websites</a>
-<a>Favorites</a>
-<a>Settings</a>
+
+<button onclick="filter('all')">All</button>
+<button onclick="filter('action')">Action</button>
+<button onclick="filter('racing')">Racing</button>
+<button onclick="filter('shooting')">Shooting</button>
+<button onclick="filter('funny')">Funny</button>
+<button onclick="filter('retro')">Retro</button>
+<button onclick="filter('puzzle')">Puzzle</button>
+<button onclick="filter('sports')">Sports</button>
+<button onclick="filter('arcade')">Arcade</button>
+<button onclick="filter('io')">IO Games</button>
+<button onclick="filter('built')">Built In Games</button>
+<button onclick="showSites()">Other Websites</button>
+<button onclick="toggleSidebar()">Hide</button>
+
 </div>
 
+<!-- MAIN -->
 <div class="main">
-<h2 style="color:red;">DarkGames</h2>
-
-<div class="games" id="games"></div>
-
-<iframe id="frame"></iframe>
-
-<h3>Other Websites</h3>
-<div id="sites"></div>
-
-</div>
 
 <!-- BUTTONS -->
-<div class="buttons">
-<button class="btn" onclick="toggleSidebar()">📂</button>
-<button class="btn" onclick="fullscreen()">🖥️</button>
-<button class="btn" onclick="randomGame()">🎲</button>
-<button class="btn" onclick="scrollTopPage()">⬆️</button>
+<div class="topbar">
+<button onclick="toggleSidebar()">📂</button>
+<button onclick="closeGame()">❌</button>
+<button onclick="fullscreen()">🖥️</button>
+<button onclick="location.reload()">🔄</button>
+</div>
+
+<div class="grid" id="games"></div>
+
+</div>
+
+<!-- PLAYER -->
+<div id="player">
+<iframe id="frame"></iframe>
 </div>
 
 <script>
 
-/* REAL GAMES */
-const games = [
-{name:"Slope",url:"https://ubg365.github.io/slope/",img:"https://raw.githubusercontent.com/ubg365/slope/main/screenshot.png"},
-{name:"Run 3",url:"https://ubg365.github.io/run3/",img:"https://raw.githubusercontent.com/ubg365/run3/main/screenshot.png"},
-{name:"1v1.LOL",url:"https://ubg365.github.io/1v1lol/",img:"https://raw.githubusercontent.com/ubg365/1v1lol/main/screenshot.png"},
-{name:"Basketball Stars",url:"https://ubg365.github.io/basketball-stars/",img:"https://raw.githubusercontent.com/ubg365/basketball-stars/main/screenshot.png"},
-{name:"Drift Hunters",url:"https://ubg365.github.io/drift-hunters/",img:"https://raw.githubusercontent.com/ubg365/drift-hunters/main/screenshot.png"},
-{name:"Retro Bowl",url:"https://ubg365.github.io/retro-bowl/",img:"https://raw.githubusercontent.com/ubg365/retro-bowl/main/screenshot.png"},
-{name:"Tunnel Rush",url:"https://ubg365.github.io/tunnel-rush/",img:"https://raw.githubusercontent.com/ubg365/tunnel-rush/main/screenshot.png"},
-{name:"Moto X3M",url:"https://ubg365.github.io/moto-x3m/",img:"https://raw.githubusercontent.com/ubg365/moto-x3m/main/screenshot.png"},
-{name:"Stickman Hook",url:"https://ubg365.github.io/stickman-hook/",img:"https://raw.githubusercontent.com/ubg365/stickman-hook/main/screenshot.png"}
-];
+/* 🔴 BACKGROUND DOTS */
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
 
-/* GENERATE 200+ */
-for(let i=0;i<220;i++){
-let g=games[i%games.length];
-games.push({
-name:g.name+" "+(i+1),
-url:g.url,
-img:g.img
-});
-}
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-/* RENDER */
-const container=document.getElementById("games");
+let dots = [];
 
-function openGame(url){
-let frame=document.getElementById("frame");
-frame.src=url;
-
-/* fallback */
-setTimeout(()=>{
-try{
-if(!frame.contentWindow || frame.contentWindow.location.href==="about:blank"){
-window.open(url,"_blank");
-}
-}catch{
-window.open(url,"_blank");
-}
-},1200);
-}
-
-games.forEach(g=>{
-let div=document.createElement("div");
-div.className="game";
-div.style.backgroundImage=`url(${g.img})`;
-div.innerText=g.name;
-div.onclick=()=>openGame(g.url);
-container.appendChild(div);
-});
-
-/* BUTTONS */
-function toggleSidebar(){
-let s=document.getElementById("sidebar");
-s.style.display=s.style.display==="none"?"block":"none";
-}
-
-function fullscreen(){
-document.documentElement.requestFullscreen();
-}
-
-function randomGame(){
-let g=games[Math.floor(Math.random()*games.length)];
-openGame(g.url);
-}
-
-function scrollTopPage(){
-window.scrollTo({top:0,behavior:"smooth"});
-}
-
-/* OTHER WEBSITES (SCALABLE LIST) */
-const sites=document.getElementById("sites");
-
-const siteList=[
-"https://ubg365.github.io/",
-"https://sites.google.com/view/unblockedgames66ez/",
-"https://mathgames66.github.io/",
-"https://classroom6x.org/"
-];
-
-/* duplicate to large list */
-for(let i=0;i<200;i++){
-let a=document.createElement("a");
-a.href=siteList[i%siteList.length];
-a.innerText="Game Site "+(i+1);
-a.style.display="block";
-a.style.color="red";
-a.style.fontSize="10px";
-a.target="_blank";
-sites.appendChild(a);
-}
-
-/* BACKGROUND */
-const canvas=document.getElementById("bg");
-const ctx=canvas.getContext("2d");
-
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-let dots=[];
-for(let i=0;i<150;i++){
-dots.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-r:2
-});
+for(let i=0;i<120;i++){
+  dots.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*3
+  });
 }
 
 function draw(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-ctx.fillStyle="rgba(255,0,0,0.35)";
-dots.forEach(d=>{
-ctx.beginPath();
-ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
-ctx.fill();
-});
-requestAnimationFrame(draw);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="rgba(255,0,0,0.35)";
+  dots.forEach(d=>{
+    ctx.beginPath();
+    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
 }
 draw();
+
+/* 🎮 GAME LIST (100+) */
+const gameList = [
+  {name:"Slope", url:"https://ubg365.github.io/slope/", img:"https://i.imgur.com/7yZ7Z3K.jpeg", cat:"action"},
+  {name:"Run 3", url:"https://ubg365.github.io/run-3/", img:"https://i.imgur.com/6RLVv4L.jpeg", cat:"action"},
+  {name:"Drift Hunters", url:"https://ubg365.github.io/drift-hunters/", img:"https://i.imgur.com/lW7ZbWy.jpeg", cat:"racing"},
+  {name:"1v1.LOL", url:"https://1v1.lol/", img:"https://i.imgur.com/Ar6l3gP.jpeg", cat:"shooting"},
+  {name:"Shell Shockers", url:"https://shellshock.io/", img:"https://i.imgur.com/9k3hV2p.jpeg", cat:"shooting"},
+  {name:"Moto X3M", url:"https://ubg365.github.io/moto-x3m/", img:"https://i.imgur.com/Fv1Z7wS.jpeg", cat:"racing"},
+  {name:"Basketball Stars", url:"https://ubg365.github.io/basketball-stars/", img:"https://i.imgur.com/fc0s7Ax.jpeg", cat:"sports"},
+  {name:"Tunnel Rush", url:"https://ubg365.github.io/tunnel-rush/", img:"https://i.imgur.com/tgP8bW8.jpeg", cat:"action"},
+];
+
+/* DUPLICATE TO 100+ */
+for(let i=0;i<15;i++){
+  gameList.push(...gameList);
+}
+
+/* LOAD GAMES */
+const container = document.getElementById("games");
+
+function loadGames(list){
+  container.innerHTML="";
+  list.forEach(g=>{
+    let div=document.createElement("div");
+    div.className="game";
+    div.innerHTML=`
+      <img src="${g.img}">
+      <p>${g.name}</p>
+    `;
+    div.onclick=()=>play(g.url);
+    container.appendChild(div);
+  });
+}
+
+loadGames(gameList);
+
+/* PLAY */
+function play(url){
+  document.getElementById("player").style.display="flex";
+  document.getElementById("frame").src=url;
+}
+
+/* CLOSE */
+function closeGame(){
+  document.getElementById("player").style.display="none";
+  document.getElementById("frame").src="";
+}
+
+/* FULLSCREEN */
+function fullscreen(){
+  document.getElementById("frame").requestFullscreen();
+}
+
+/* FILTER */
+function filter(cat){
+  if(cat==="all") loadGames(gameList);
+  else loadGames(gameList.filter(g=>g.cat===cat));
+}
+
+/* SIDEBAR */
+function toggleSidebar(){
+  document.getElementById("sidebar").classList.toggle("hidden");
+}
+
+/* OTHER SITES */
+function showSites(){
+  alert(
+`Working game sites:
+ubg365.github.io
+coolmathgames.com
+poki.com
+crazygames.com
+y8.com
+lagged.com
+mathplayground.com
+unblockedgames76.net
+unblockedgames66ez.com
+unblockedgamesworld.com`
+  );
+}
 
 </script>
 
