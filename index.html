@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>DarkGames AUTO THUMBS</title>
+<title>DarkGames HYBRID</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -11,7 +11,12 @@ body{margin:0;font-family:Arial;background:#0a0a0a;color:white;}
 .sidebar-item{margin:8px 0;cursor:pointer;color:#0ff;}
 .sidebar-item.active{color:#fff;}
 #main{margin-left:210px;padding:10px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:15px;
+}
 
 .game{
 background:#1a1a1a;
@@ -89,20 +94,44 @@ frame.src="";
 tab("home",document.querySelector(".sidebar-item"));
 }
 
-/* AUTO THUMBNAIL LOADER */
-async function getThumbnail(name){
+/* PERFECT MATCH THUMBNAILS */
+const thumbMap={
+"slope":"https://images.crazygames.com/games/slope/cover-1584478910518.png",
+"run-3":"https://images.crazygames.com/games/run-3/cover-1584478606153.png",
+"drift-hunters":"https://images.crazygames.com/games/drift-hunters/cover-1593791675999.png",
+"moto-x3m":"https://images.crazygames.com/games/moto-x3m/cover-1584479006462.png",
+"crossy-road":"https://images.crazygames.com/games/crossy-road/cover-1584478644688.png"
+};
 
+/* DUCKDUCKGO FETCH */
+async function fetchDuck(name){
 try{
-let res = await fetch(`https://duckduckgo.com/i.js?q=${name} game&iax=images&ia=images`);
-let data = await res.json();
-
+let res=await fetch(`https://duckduckgo.com/i.js?q=${name} game&iax=images&ia=images`);
+let data=await res.json();
 if(data.results && data.results.length>0){
 return data.results[0].image;
 }
+}catch(e){}
+return null;
+}
 
+/* HYBRID THUMB SYSTEM */
+async function getThumbnail(name,url){
+
+/* 1. perfect map */
+if(thumbMap[name]) return thumbMap[name];
+
+/* 2. duckduckgo */
+let duck=await fetchDuck(name);
+if(duck) return duck;
+
+/* 3. clearbit fallback */
+try{
+let domain=new URL(url).hostname;
+return `https://logo.clearbit.com/${domain}`;
 }catch(e){}
 
-/* fallback */
+/* 4. final fallback */
 return `https://via.placeholder.com/300x200?text=${name}`;
 }
 
@@ -115,16 +144,23 @@ d.className="game";
 let img=document.createElement("img");
 img.src="https://via.placeholder.com/300x200?text=Loading...";
 
-getThumbnail(name).then(src=>{
+let url=`https://ubg365.github.io/${name}/`;
+
+/* LOAD THUMB */
+getThumbnail(name,url).then(src=>{
 img.src=src;
 });
+
+/* FAILSAFE */
+img.onerror=()=>{
+img.src=`https://via.placeholder.com/300x200?text=${name}`;
+};
 
 let title=document.createElement("div");
 title.className="game-title";
 title.innerText=name;
 
-let url=`https://ubg365.github.io/${name}/`;
-
+/* PLAY */
 d.onclick=()=>{
 player.style.display="block";
 frame.src=url;
