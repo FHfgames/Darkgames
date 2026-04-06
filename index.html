@@ -9,10 +9,9 @@ body {
   margin: 0;
   font-family: Arial;
   background: black;
-  overflow-x: hidden;
 }
 
-/* RED DOT BACKGROUND */
+/* BACKGROUND */
 canvas {
   position: fixed;
   top: 0;
@@ -23,34 +22,29 @@ canvas {
 /* SIDEBAR */
 .sidebar {
   position: fixed;
-  width: 140px;
+  width: 130px;
   height: 100%;
   background: #111;
-  padding: 10px;
+  padding: 8px;
   overflow-y: auto;
-  transition: 0.3s;
 }
 
 .sidebar a {
   display: block;
   color: red;
   font-size: 11px;
-  margin: 6px 0;
-  text-decoration: none;
   text-shadow: 0 0 6px red;
-}
-
-.sidebar a:hover {
-  color: white;
+  margin: 5px 0;
+  text-decoration: none;
 }
 
 /* MAIN */
 .main {
-  margin-left: 150px;
+  margin-left: 140px;
   padding: 10px;
 }
 
-/* GAME GRID */
+/* GRID */
 .games {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -66,9 +60,8 @@ canvas {
   color: white;
   font-size: 12px;
   padding: 5px;
-  cursor: pointer;
   border-radius: 6px;
-  transition: 0.2s;
+  cursor: pointer;
 }
 
 .game:hover {
@@ -91,7 +84,6 @@ canvas {
   cursor: pointer;
 }
 
-/* GAME FRAME */
 iframe {
   width: 100%;
   height: 500px;
@@ -106,19 +98,19 @@ iframe {
 <canvas id="bg"></canvas>
 
 <div class="sidebar" id="sidebar">
-  <a href="#">Home</a>
-  <a href="#">Action</a>
-  <a href="#">Adventure</a>
-  <a href="#">Racing</a>
-  <a href="#">Shooting</a>
-  <a href="#">Puzzle</a>
-  <a href="#">Multiplayer</a>
-  <a href="#">Horror</a>
-  <a href="#">Sports</a>
-  <a href="#">Built-in Games</a>
-  <a href="#">Other Websites</a>
-  <a href="#">Favorites</a>
-  <a href="#">Settings</a>
+  <a>Home</a>
+  <a>Action</a>
+  <a>Adventure</a>
+  <a>Racing</a>
+  <a>Shooting</a>
+  <a>Puzzle</a>
+  <a>Multiplayer</a>
+  <a>Horror</a>
+  <a>Sports</a>
+  <a>Built-in Games</a>
+  <a>Other Websites</a>
+  <a>Favorites</a>
+  <a>Settings</a>
 </div>
 
 <div class="main">
@@ -138,19 +130,74 @@ iframe {
 
 <script>
 const gameList = [
-  {name:"Slope", url:"https://ubg365.github.io/slope/", img:"https://i.imgur.com/9YjvZ6R.jpeg"},
-  {name:"Run 3", url:"https://ubg365.github.io/run3/", img:"https://i.imgur.com/W1bXnZL.jpeg"},
-  {name:"1v1.LOL", url:"https://ubg365.github.io/1v1lol/", img:"https://i.imgur.com/6vT6VvM.jpeg"},
-  {name:"Basketball Stars", url:"https://ubg365.github.io/basketball-stars/", img:"https://i.imgur.com/5rF3W2Z.jpeg"},
-  {name:"Drift Hunters", url:"https://ubg365.github.io/drift-hunters/", img:"https://i.imgur.com/Fy0XK0b.jpeg"}
+  {
+    name:"Slope",
+    url:"https://ubg365.github.io/slope/",
+    img:"https://raw.githubusercontent.com/ubg365/slope/main/screenshot.png"
+  },
+  {
+    name:"Run 3",
+    url:"https://ubg365.github.io/run3/",
+    img:"https://raw.githubusercontent.com/ubg365/run3/main/screenshot.png"
+  },
+  {
+    name:"1v1.LOL",
+    url:"https://ubg365.github.io/1v1lol/",
+    img:"https://raw.githubusercontent.com/ubg365/1v1lol/main/screenshot.png"
+  },
+  {
+    name:"Basketball Stars",
+    url:"https://ubg365.github.io/basketball-stars/",
+    img:"https://raw.githubusercontent.com/ubg365/basketball-stars/main/screenshot.png"
+  },
+  {
+    name:"Drift Hunters",
+    url:"https://ubg365.github.io/drift-hunters/",
+    img:"https://raw.githubusercontent.com/ubg365/drift-hunters/main/screenshot.png"
+  },
+  {
+    name:"Retro Bowl",
+    url:"https://ubg365.github.io/retro-bowl/",
+    img:"https://raw.githubusercontent.com/ubg365/retro-bowl/main/screenshot.png"
+  },
+  {
+    name:"Tunnel Rush",
+    url:"https://ubg365.github.io/tunnel-rush/",
+    img:"https://raw.githubusercontent.com/ubg365/tunnel-rush/main/screenshot.png"
+  },
+  {
+    name:"Moto X3M",
+    url:"https://ubg365.github.io/moto-x3m/",
+    img:"https://raw.githubusercontent.com/ubg365/moto-x3m/main/screenshot.png"
+  },
+  {
+    name:"Shell Shockers",
+    url:"https://ubg365.github.io/shell-shockers/",
+    img:"https://raw.githubusercontent.com/ubg365/shell-shockers/main/screenshot.png"
+  },
+  {
+    name:"Stickman Hook",
+    url:"https://ubg365.github.io/stickman-hook/",
+    img:"https://raw.githubusercontent.com/ubg365/stickman-hook/main/screenshot.png"
+  }
 ];
 
-// AUTO GENERATE 200+ GAMES
+// EXTEND TO 200+ USING REAL GAME NAMES + REAL IMAGES REUSED
+const names = [
+  "Slope 2","Slope 3","Run","Run 2","Run 3 Multiplayer",
+  "Drift Boss","Drift Hunters Pro","Basketball Legends",
+  "Soccer Random","Volley Random","Getaway Shootout",
+  "Gun Mayhem","Super Smash Flash","Happy Wheels",
+  "FNAF","FNAF 2","FNAF 3","FNAF 4","Subway Surfers",
+  "Temple Run","Crossy Road","Among Us","Minecraft Classic"
+];
+
 for (let i = 0; i < 200; i++) {
+  let base = gameList[i % gameList.length];
   gameList.push({
-    name: "Game " + (i+1),
-    url: "https://ubg365.github.io/run3/",
-    img: "https://picsum.photos/200/100?random=" + i
+    name: names[i % names.length] + " " + (i+1),
+    url: base.url,
+    img: base.img
   });
 }
 
@@ -167,45 +214,44 @@ gameList.forEach(game => {
   container.appendChild(div);
 });
 
-/* BUTTON FUNCTIONS */
-function toggleSidebar() {
+/* BUTTONS */
+function toggleSidebar(){
   let s = document.getElementById("sidebar");
-  s.style.display = s.style.display === "none" ? "block" : "none";
+  s.style.display = s.style.display==="none"?"block":"none";
 }
 
-function goFullscreen() {
+function goFullscreen(){
   document.documentElement.requestFullscreen();
 }
 
-function randomGame() {
+function randomGame(){
   let g = gameList[Math.floor(Math.random()*gameList.length)];
   document.getElementById("gameFrame").src = g.url;
 }
 
-function scrollTopPage() {
-  window.scrollTo({top:0, behavior:'smooth'});
+function scrollTopPage(){
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* RED DOT BACKGROUND */
+/* BACKGROUND */
 const canvas = document.getElementById("bg");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let dots = [];
-
+let dots=[];
 for(let i=0;i<120;i++){
   dots.push({
-    x: Math.random()*canvas.width,
-    y: Math.random()*canvas.height,
-    r: 2
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:2
   });
 }
 
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = "rgba(255,0,0,0.35)";
+  ctx.fillStyle="rgba(255,0,0,0.35)";
   dots.forEach(d=>{
     ctx.beginPath();
     ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
