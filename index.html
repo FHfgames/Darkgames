@@ -3,268 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <title>DarkGames</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root {
-  --bg:#050505;
-  --card:#111;
-  --accent:#ff2e2e;
-}
-
 body {
-  margin:0;
-  font-family:system-ui;
-  background:var(--bg);
-  color:white;
+  margin: 0;
+  font-family: Arial;
+  background: #0a0a0a;
+  color: white;
 }
 
-/* Sidebar */
+/* SIDEBAR */
 .sidebar {
-  position:fixed;
-  width:220px;
-  height:100%;
-  background:#0a0a0a;
+  position: fixed;
+  width: 220px;
+  height: 100%;
+  background: #111;
+  padding-top: 20px;
 }
 
-.logo {
-  text-align:center;
-  padding:15px;
-  color:var(--accent);
-  font-size:22px;
-  text-shadow:0 0 10px red;
+.sidebar h2 {
+  text-align: center;
+  color: red;
 }
 
-.user {
-  text-align:center;
-  padding:10px;
-  border-bottom:1px solid #222;
+.sidebar a {
+  display: block;
+  padding: 12px;
+  color: #aaa;
+  text-decoration: none;
+  transition: 0.2s;
 }
 
-.nav a {
-  display:block;
-  padding:12px;
-  color:#ff4d4d;
-  cursor:pointer;
+.sidebar a:hover {
+  background: red;
+  color: white;
 }
 
-.nav a:hover {
-  background:red;
-  color:black;
-}
-
-/* Main */
-.main {
-  margin-left:220px;
-  padding:20px;
-}
-
+/* TOPBAR */
 .topbar {
-  display:flex;
-  gap:10px;
-  margin-bottom:15px;
+  margin-left: 220px;
+  padding: 15px;
+  background: #111;
 }
 
-input {
-  flex:1;
-  padding:10px;
-  background:#111;
-  border:none;
-  color:white;
+.search {
+  width: 100%;
+  padding: 10px;
+  background: #222;
+  border: none;
+  color: white;
 }
 
-/* Grid */
+/* GRID */
+.container {
+  margin-left: 220px;
+  padding: 20px;
+}
+
 .grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 15px;
 }
 
-.card {
-  background:var(--card);
-  border-radius:12px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:0.25s;
+.game {
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.25s;
 }
 
-.card:hover {
-  transform:scale(1.05);
-  box-shadow:0 0 20px red;
+.game:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px red;
 }
 
-.card img {
-  width:100%;
-  height:120px;
-  object-fit:cover;
+.game img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
 }
 
-.card h3 {
-  padding:10px;
-  font-size:14px;
+.game p {
+  text-align: center;
+  padding: 8px;
+  font-size: 14px;
 }
 
-/* Player */
-.player {
-  position:fixed;
-  inset:0;
-  background:black;
-  display:none;
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 8px;
 }
-
-.player iframe {
-  width:100%;
-  height:100%;
-  border:none;
-}
-
-.close {
-  position:absolute;
-  top:10px;
-  right:20px;
-  font-size:24px;
-  cursor:pointer;
-}
-
-.section {
-  margin:20px 0 10px;
-  font-weight:bold;
+::-webkit-scrollbar-thumb {
+  background: red;
 }
 </style>
 </head>
 
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
-  <div class="logo">DarkGames</div>
-  <div class="user" id="user"></div>
+  <h2>🎮 DarkGames</h2>
 
-  <div class="nav">
-    <a onclick="home()">Home</a>
-    <a onclick="trending()">Trending</a>
-    <a onclick="favorites()">Favorites</a>
-    <a onclick="recent()">Continue</a>
-    <a onclick="category('action')">Action</a>
-    <a onclick="category('arcade')">Arcade</a>
-  </div>
+  <a href="#">Home</a>
+  <a href="#">Popular</a>
+  <a href="#">New</a>
+  <a href="#">Action</a>
+  <a href="#">Shooting</a>
+  <a href="#">Racing</a>
+  <a href="#">Puzzle</a>
+  <a href="#">Sports</a>
+  <a href="#">Multiplayer</a>
+  <a href="#">IO Games</a>
+  <a href="#">Built-in Games</a>
+  <a href="#">Favorites</a>
+  <a href="#">Random</a>
 </div>
 
-<div class="main">
-  <div class="topbar">
-    <input id="search" placeholder="Search games...">
-  </div>
-  <div id="content"></div>
+<!-- TOPBAR -->
+<div class="topbar">
+  <input class="search" id="search" placeholder="Search games...">
 </div>
 
-<div class="player" id="player">
-  <div class="close" onclick="closeGame()">✖</div>
-  <iframe id="frame"></iframe>
+<!-- GAMES -->
+<div class="container">
+  <div class="grid" id="grid"></div>
 </div>
 
 <script>
-/* 👤 USER */
-let username = localStorage.getItem("user");
-if(!username){
-  username = prompt("Enter username:");
-  localStorage.setItem("user", username);
+function openGame(url) {
+  window.location.href = url;
 }
-document.getElementById("user").innerText = "👤 " + username;
 
-/* 🎮 GAMES */
+/* GAME LIST */
 const games = [
-{name:"Run 3",cat:"arcade",img:"https://i.imgur.com/4AiXzf8.jpeg",url:"https://example.com",plays:0},
-{name:"Slope",cat:"arcade",img:"https://i.imgur.com/Z6XKZzF.jpeg",url:"https://example.com",plays:0},
-{name:"Krunker",cat:"action",img:"https://i.imgur.com/2.jpg",url:"https://example.com",plays:0}
+  {name: "Slope", file: "games/slope.html", img: "https://i.imgur.com/1XqQZ6M.jpg"},
+  {name: "Run 3", file: "games/run3.html", img: "https://i.imgur.com/3ZQ3Z6M.jpg"},
+  {name: "1v1.LOL", file: "games/1v1lol.html", img: "https://i.imgur.com/abc123.jpg"},
+  {name: "Drift Hunters", file: "games/drift.html", img: "https://i.imgur.com/xyz123.jpg"},
+  {name: "Basketball Stars", file: "games/basketball.html", img: "https://i.imgur.com/456abc.jpg"},
+  {name: "Retro Bowl", file: "games/retro.html", img: "https://i.imgur.com/retro.jpg"},
+  {name: "Subway Surfers", file: "games/subway.html", img: "https://i.imgur.com/subway.jpg"}
 ];
 
-/* GRID */
-function grid(list){
-return `<div class="grid">` + list.map(g=>`
-<div class="card" onclick="play('${g.name}')"
-oncontextmenu="event.preventDefault();toggleFav('${g.name}')">
-<img src="${g.img}">
-<h3>${g.name}</h3>
-</div>`).join("") + `</div>`;
+/* LOAD GAMES */
+const grid = document.getElementById("grid");
+
+function displayGames(list) {
+  grid.innerHTML = "";
+  list.forEach(game => {
+    grid.innerHTML += `
+      <div class="game" onclick="openGame('${game.file}')">
+        <img src="${game.img}">
+        <p>${game.name}</p>
+      </div>
+    `;
+  });
 }
 
-/* HOME */
-function home(){
-let rec = JSON.parse(localStorage.getItem("rec")||"[]");
+displayGames(games);
 
-document.getElementById("content").innerHTML = `
-<div class="section">🔥 Trending</div>
-${grid([...games].sort((a,b)=>b.plays-a.plays).slice(0,6))}
-
-<div class="section">🎯 Continue Playing</div>
-${grid(games.filter(g=>rec.includes(g.name)))}
-
-<div class="section">🎮 All Games</div>
-${grid(games)}
-`;
-}
-
-/* PLAY */
-function play(name){
-let g = games.find(x=>x.name===name);
-g.plays++;
-
-document.getElementById("frame").src = g.url;
-document.getElementById("player").style.display="block";
-
-/* Save recent */
-let rec = JSON.parse(localStorage.getItem("rec")||"[]");
-rec.unshift(name);
-rec=[...new Set(rec)].slice(0,10);
-localStorage.setItem("rec",JSON.stringify(rec));
-}
-
-function closeGame(){
-document.getElementById("player").style.display="none";
-}
-
-/* FAVORITES */
-function toggleFav(name){
-let f = JSON.parse(localStorage.getItem("fav")||"[]");
-if(f.includes(name)){
-  f = f.filter(x=>x!==name);
-}else{
-  f.push(name);
-}
-localStorage.setItem("fav",JSON.stringify(f));
-}
-
-function favorites(){
-let f = JSON.parse(localStorage.getItem("fav")||"[]");
-document.getElementById("content").innerHTML = grid(games.filter(g=>f.includes(g.name)));
-}
-
-/* TRENDING */
-function trending(){
-document.getElementById("content").innerHTML =
-grid([...games].sort((a,b)=>b.plays-a.plays));
-}
-
-/* RECENT */
-function recent(){
-let r = JSON.parse(localStorage.getItem("rec")||"[]");
-document.getElementById("content").innerHTML =
-grid(games.filter(g=>r.includes(g.name)));
-}
-
-/* CATEGORY */
-function category(c){
-document.getElementById("content").innerHTML =
-grid(games.filter(g=>g.cat===c));
-}
-
-/* SEARCH */
-document.getElementById("search").oninput = function(){
-let v=this.value.toLowerCase();
-document.getElementById("content").innerHTML =
-grid(games.filter(g=>g.name.toLowerCase().includes(v)));
-};
-
-home();
+/* SEARCH SYSTEM */
+document.getElementById("search").addEventListener("input", function() {
+  const value = this.value.toLowerCase();
+  const filtered = games.filter(g =>
+    g.name.toLowerCase().includes(value)
+  );
+  displayGames(filtered);
+});
 </script>
 
 </body>
