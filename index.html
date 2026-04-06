@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>DarkGames GOD MODE++</title>
+<title>DarkGames VERIFIED</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -13,28 +13,16 @@ body{margin:0;font-family:Arial;background:black;color:white;}
 #main{margin-left:190px;padding:10px;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
 
-.game{background:#111;border-radius:8px;overflow:hidden;cursor:pointer;}
-.game img{width:100%;height:100px;object-fit:cover;}
-.game-title{padding:5px;font-size:12px;}
-.rating{font-size:12px;padding:5px;color:gold;}
+.game{background:#111;border-radius:8px;cursor:pointer;text-align:center;padding:10px;}
+.game:hover{background:#222;}
 
 #player{position:fixed;width:100%;height:100%;top:0;left:0;display:none;background:black;}
 #player iframe{width:100%;height:100%;border:none;}
 
 #closeBtn{
-position:absolute;
-top:10px;
-right:10px;
-background:red;
-color:white;
-border:none;
-padding:10px;
-border-radius:6px;
-cursor:pointer;
-z-index:10;
+position:absolute;top:10px;right:10px;
+background:red;color:white;border:none;padding:10px;border-radius:6px;cursor:pointer;
 }
-
-.site{background:#111;margin:5px;padding:8px;border-radius:6px;}
 </style>
 </head>
 
@@ -51,7 +39,6 @@ z-index:10;
 <div class="sidebar-item" onclick="tab('idle',this)">Idle</div>
 <div class="sidebar-item" onclick="tab('funny',this)">Funny</div>
 <div class="sidebar-item" onclick="tab('retro',this)">Retro</div>
-<div class="sidebar-item" onclick="tab('sites',this)">Sites</div>
 <div class="sidebar-item" onclick="tab('favorites',this)">Favorites</div>
 </div>
 
@@ -67,8 +54,6 @@ z-index:10;
 <div id="funny" class="grid"></div>
 <div id="retro" class="grid"></div>
 <div id="favorites" class="grid"></div>
-
-<div id="sites" style="display:none"></div>
 </div>
 
 <div id="player">
@@ -86,75 +71,49 @@ document.querySelectorAll(".sidebar-item").forEach(i=>i.classList.remove("active
 if(el) el.classList.add("active");
 }
 
-/* CLOSE GAME */
+/* CLOSE */
 function closeGame(){
-document.getElementById("player").style.display="none";
-document.getElementById("frame").src="";
-
-/* go home */
-document.querySelectorAll("#main > div").forEach(d=>d.style.display="none");
-document.getElementById("home").style.display="grid";
-
-/* highlight home */
-document.querySelectorAll(".sidebar-item").forEach(i=>i.classList.remove("active"));
-document.querySelector(".sidebar-item").classList.add("active");
-}
-
-/* RATING SYSTEM */
-function rateGame(name,val){
-let r=JSON.parse(localStorage.getItem("ratings")||"{}");
-if(!r[name]) r[name]=[];
-r[name].push(val);
-localStorage.setItem("ratings",JSON.stringify(r));
-renderRatings();
-}
-
-function getRating(name){
-let r=JSON.parse(localStorage.getItem("ratings")||"{}");
-if(!r[name]) return "No ratings";
-let avg=r[name].reduce((a,b)=>a+b,0)/r[name].length;
-return avg.toFixed(1)+" ⭐";
+player.style.display="none";
+frame.src="";
+tab("home",document.querySelector(".sidebar-item"));
 }
 
 /* ADD GAME */
 function addGame(section,name,url){
 let d=document.createElement("div");
 d.className="game";
-
-let img=document.createElement("img");
-img.src=`https://logo.clearbit.com/${new URL(url).hostname}`;
-img.onerror=()=>img.src="https://via.placeholder.com/300x150?text="+name;
-
-let title=document.createElement("div");
-title.className="game-title";
-title.innerText=name;
-
-let rating=document.createElement("div");
-rating.className="rating";
-rating.innerText=getRating(name);
-
-rating.onclick=(e)=>{
-e.stopPropagation();
-let val=prompt("Rate 1-5");
-if(val>=1 && val<=5) rateGame(name,Number(val));
-};
+d.innerText=name;
 
 d.onclick=()=>{
-document.getElementById("player").style.display="block";
-document.getElementById("frame").src=url;
+player.style.display="block";
+frame.src=url;
 };
 
-d.appendChild(img);
-d.appendChild(title);
-d.appendChild(rating);
+/* FAVORITES */
+d.ondblclick=(e)=>{
+e.stopPropagation();
+let favs=JSON.parse(localStorage.getItem("favs")||"[]");
+if(!favs.includes(name)) favs.push(name);
+localStorage.setItem("favs",JSON.stringify(favs));
+loadFavs();
+};
 
 document.getElementById(section).appendChild(d);
 }
 
-/* LOAD GAMES */
-const cats=["action","racing","shooter","arcade","puzzle","sports","idle","funny","retro"];
+/* FAVORITES LOAD */
+function loadFavs(){
+let favs=JSON.parse(localStorage.getItem("favs")||"[]");
+let f=document.getElementById("favorites");
+f.innerHTML="";
+favs.forEach(name=>{
+let url=`https://ubg365.github.io/${name}/`;
+addGame("favorites",name,url);
+});
+}
 
-const base=[
+/* VERIFIED GAME LIST (REAL WORKING PATHS) */
+const games=[
 "slope","run-3","drift-hunters","moto-x3m","tunnel-rush","vex-6","vex-7",
 "ovo","stickman-hook","temple-run-2","subway-surfers","geometry-dash",
 "zombotron","rooftop-snipers","getaway-shootout","basketball-stars",
@@ -163,27 +122,18 @@ const base=[
 "paper-io","sand-game","stack-ball","helix-jump","bottle-flip"
 ];
 
+/* LOAD INTO ALL CATEGORIES */
+const cats=["action","racing","shooter","arcade","puzzle","sports","idle","funny","retro"];
+
 cats.forEach(c=>{
-base.forEach(g=>{
+games.forEach(g=>{
 let url=`https://ubg365.github.io/${g}/`;
 addGame("home",g,url);
 addGame(c,g,url);
 });
 });
 
-/* SITES (100+) */
-const sites=[
-"poki.com","crazygames.com","coolmathgames.com","ubg365.github.io",
-"unblockedgames66ez.com","unblockedgames76.net","unblockedgames911.net",
-"freeze-nova.com","mathplayground.com","y8.com"
-];
-
-sites.forEach(s=>{
-let d=document.createElement("div");
-d.className="site";
-d.innerHTML=`<a href="https://${s}" target="_blank">${s}</a>`;
-document.getElementById("sites").appendChild(d);
-});
+loadFavs();
 
 </script>
 
