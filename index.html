@@ -9,6 +9,7 @@
 body{margin:0;font-family:Arial;background:black;color:white;}
 #sidebar{width:180px;position:fixed;height:100%;background:#000;padding:10px;overflow:auto;}
 .sidebar-item{margin:8px 0;cursor:pointer;color:#0ff;}
+.sidebar-item.active{color:#fff;}
 #main{margin-left:190px;padding:10px;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
 
@@ -20,6 +21,19 @@ body{margin:0;font-family:Arial;background:black;color:white;}
 #player{position:fixed;width:100%;height:100%;top:0;left:0;display:none;background:black;}
 #player iframe{width:100%;height:100%;border:none;}
 
+#closeBtn{
+position:absolute;
+top:10px;
+right:10px;
+background:red;
+color:white;
+border:none;
+padding:10px;
+border-radius:6px;
+cursor:pointer;
+z-index:10;
+}
+
 .site{background:#111;margin:5px;padding:8px;border-radius:6px;}
 </style>
 </head>
@@ -27,17 +41,18 @@ body{margin:0;font-family:Arial;background:black;color:white;}
 <body>
 
 <div id="sidebar">
-<div class="sidebar-item" onclick="tab('home')">Home</div>
-<div class="sidebar-item" onclick="tab('action')">Action</div>
-<div class="sidebar-item" onclick="tab('racing')">Racing</div>
-<div class="sidebar-item" onclick="tab('shooter')">Shooter</div>
-<div class="sidebar-item" onclick="tab('arcade')">Arcade</div>
-<div class="sidebar-item" onclick="tab('puzzle')">Puzzle</div>
-<div class="sidebar-item" onclick="tab('sports')">Sports</div>
-<div class="sidebar-item" onclick="tab('idle')">Idle</div>
-<div class="sidebar-item" onclick="tab('funny')">Funny</div>
-<div class="sidebar-item" onclick="tab('retro')">Retro</div>
-<div class="sidebar-item" onclick="tab('sites')">Sites</div>
+<div class="sidebar-item active" onclick="tab('home',this)">Home</div>
+<div class="sidebar-item" onclick="tab('action',this)">Action</div>
+<div class="sidebar-item" onclick="tab('racing',this)">Racing</div>
+<div class="sidebar-item" onclick="tab('shooter',this)">Shooter</div>
+<div class="sidebar-item" onclick="tab('arcade',this)">Arcade</div>
+<div class="sidebar-item" onclick="tab('puzzle',this)">Puzzle</div>
+<div class="sidebar-item" onclick="tab('sports',this)">Sports</div>
+<div class="sidebar-item" onclick="tab('idle',this)">Idle</div>
+<div class="sidebar-item" onclick="tab('funny',this)">Funny</div>
+<div class="sidebar-item" onclick="tab('retro',this)">Retro</div>
+<div class="sidebar-item" onclick="tab('sites',this)">Sites</div>
+<div class="sidebar-item" onclick="tab('favorites',this)">Favorites</div>
 </div>
 
 <div id="main">
@@ -51,25 +66,38 @@ body{margin:0;font-family:Arial;background:black;color:white;}
 <div id="idle" class="grid"></div>
 <div id="funny" class="grid"></div>
 <div id="retro" class="grid"></div>
+<div id="favorites" class="grid"></div>
 
 <div id="sites" style="display:none"></div>
 </div>
 
 <div id="player">
+<button id="closeBtn" onclick="closeGame()">❌</button>
 <iframe id="frame"></iframe>
 </div>
 
 <script>
 
 /* TAB */
-function tab(id){
+function tab(id,el){
 document.querySelectorAll("#main > div").forEach(d=>d.style.display="none");
 document.getElementById(id).style.display="grid";
+document.querySelectorAll(".sidebar-item").forEach(i=>i.classList.remove("active"));
+if(el) el.classList.add("active");
 }
 
-/* THUMBNAIL SCRAPER */
-function getThumb(name){
-return `https://duckduckgo.com/?q=${name}+game&iax=images&ia=images`;
+/* CLOSE GAME */
+function closeGame(){
+document.getElementById("player").style.display="none";
+document.getElementById("frame").src="";
+
+/* go home */
+document.querySelectorAll("#main > div").forEach(d=>d.style.display="none");
+document.getElementById("home").style.display="grid";
+
+/* highlight home */
+document.querySelectorAll(".sidebar-item").forEach(i=>i.classList.remove("active"));
+document.querySelector(".sidebar-item").classList.add("active");
 }
 
 /* RATING SYSTEM */
@@ -88,7 +116,7 @@ let avg=r[name].reduce((a,b)=>a+b,0)/r[name].length;
 return avg.toFixed(1)+" ⭐";
 }
 
-/* GAME CREATOR */
+/* ADD GAME */
 function addGame(section,name,url){
 let d=document.createElement("div");
 d.className="game";
@@ -105,14 +133,15 @@ let rating=document.createElement("div");
 rating.className="rating";
 rating.innerText=getRating(name);
 
-/* CLICK PLAY */
-d.onclick=()=>{player.style.display="block";frame.src=url;};
-
-/* RATE */
 rating.onclick=(e)=>{
 e.stopPropagation();
 let val=prompt("Rate 1-5");
 if(val>=1 && val<=5) rateGame(name,Number(val));
+};
+
+d.onclick=()=>{
+document.getElementById("player").style.display="block";
+document.getElementById("frame").src=url;
 };
 
 d.appendChild(img);
@@ -122,7 +151,7 @@ d.appendChild(rating);
 document.getElementById(section).appendChild(d);
 }
 
-/* LOAD 300 GAMES */
+/* LOAD GAMES */
 const cats=["action","racing","shooter","arcade","puzzle","sports","idle","funny","retro"];
 
 const base=[
@@ -142,19 +171,19 @@ addGame(c,g,url);
 });
 });
 
-/* 100+ SITES */
+/* SITES (100+) */
 const sites=[
 "poki.com","crazygames.com","coolmathgames.com","ubg365.github.io",
 "unblockedgames66ez.com","unblockedgames76.net","unblockedgames911.net",
 "freeze-nova.com","mathplayground.com","y8.com"
 ];
 
-for(let i=0;i<sites.length;i++){
+sites.forEach(s=>{
 let d=document.createElement("div");
 d.className="site";
-d.innerHTML=`<a href="https://${sites[i]}" target="_blank">${sites[i]}</a>`;
+d.innerHTML=`<a href="https://${s}" target="_blank">${s}</a>`;
 document.getElementById("sites").appendChild(d);
-}
+});
 
 </script>
 
