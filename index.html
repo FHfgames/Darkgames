@@ -13,64 +13,226 @@ background-image: radial-gradient(red 1px, transparent 1px);
 background-size:25px 25px;opacity:0.35;z-index:-1;
 }
 
+/* TOGGLE BUTTON */
+#toggleBtn{
+position:fixed;
+top:10px;
+left:10px;
+z-index:1000;
+background:#111;
+color:white;
+border:none;
+padding:8px;
+cursor:pointer;
+border-radius:6px;
+}
+
 /* SIDEBAR */
-#sidebar{width:150px;position:fixed;height:100%;background:#000;padding:10px;}
-.sidebar-item{font-size:12px;margin:8px 0;cursor:pointer;color:#0ff;text-shadow:0 0 6px #0ff;}
-.sidebar-item.active{color:#f0f;}
+#sidebar{
+position:fixed;
+width:180px;
+height:100%;
+background:#000;
+padding:10px;
+transition:0.3s;
+overflow:hidden;
+}
+
+#sidebar.closed{width:60px;}
+
+.sidebar-item{
+display:flex;
+align-items:center;
+gap:10px;
+font-size:13px;
+margin:10px 0;
+cursor:pointer;
+color:#0ff;
+text-shadow:0 0 6px #0ff;
+transition:0.2s;
+}
+
+.sidebar-item:hover{
+color:#f0f;
+text-shadow:0 0 10px #f0f;
+}
+
+.sidebar-item.active{
+color:#fff;
+text-shadow:0 0 10px red;
+}
+
+.text{transition:0.3s;}
+#sidebar.closed .text{opacity:0;width:0;}
 
 /* MAIN */
-#main{margin-left:160px;padding:10px;}
-#search{width:100%;padding:6px;margin-bottom:10px;}
+#main{
+margin-left:190px;
+padding:10px;
+transition:0.3s;
+}
+
+#sidebar.closed ~ #main{
+margin-left:70px;
+}
+
+/* SEARCH */
+#search{
+width:100%;
+padding:6px;
+margin-bottom:10px;
+}
 
 /* GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;}
-.game{position:relative;border-radius:10px;overflow:hidden;cursor:pointer;}
-.game img{width:100%;height:100px;object-fit:cover;}
-.game:hover{transform:scale(1.05);box-shadow:0 0 12px red;}
-.game-title{position:absolute;bottom:0;width:100%;font-size:12px;padding:5px;background:rgba(0,0,0,0.6);}
-.fav{position:absolute;top:5px;right:5px;font-size:14px;color:gold;display:none;}
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+gap:12px;
+}
+
+.game{
+position:relative;
+border-radius:10px;
+overflow:hidden;
+cursor:pointer;
+}
+
+.game img{
+width:100%;
+height:100px;
+object-fit:cover;
+}
+
+.game:hover{
+transform:scale(1.05);
+box-shadow:0 0 12px red;
+}
+
+.game-title{
+position:absolute;
+bottom:0;
+width:100%;
+font-size:12px;
+padding:5px;
+background:rgba(0,0,0,0.6);
+}
+
+.fav{
+position:absolute;
+top:5px;
+right:5px;
+display:none;
+}
+
 .game.favorited .fav{display:block;}
 
 /* PLAYER */
-#player{position:fixed;width:100%;height:100%;top:0;left:0;background:black;display:none;}
-#player iframe{width:100%;height:100%;border:none;}
-.controls{position:absolute;top:5px;right:10px;}
-.btn{margin:3px;padding:6px;background:#111;border-radius:5px;cursor:pointer;}
+#player{
+position:fixed;
+width:100%;
+height:100%;
+top:0;
+left:0;
+background:black;
+display:none;
+}
+
+#player iframe{
+width:100%;
+height:100%;
+border:none;
+}
+
+.controls{
+position:absolute;
+top:5px;
+right:10px;
+}
+
+.btn{
+margin:3px;
+padding:6px;
+background:#111;
+border-radius:5px;
+cursor:pointer;
+}
 
 /* SITES */
-.site{background:#111;padding:10px;margin:6px;border-radius:6px;}
+.site{
+background:#111;
+padding:10px;
+margin:6px;
+border-radius:6px;
+}
 
 /* MUSIC */
 #musicPanel{
-position:fixed;bottom:10px;right:10px;background:#111;padding:10px;border-radius:8px;
+position:fixed;
+bottom:10px;
+right:10px;
+background:#111;
+padding:10px;
+border-radius:8px;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+#sidebar{width:60px;}
+#main{margin-left:70px;}
+.text{display:none;}
 }
 </style>
 </head>
 
 <body>
 
+<button id="toggleBtn" onclick="toggleSidebar()">📂</button>
+
 <div id="sidebar">
-<div class="sidebar-item active" onclick="tab('home',this)">🏠 Home</div>
-<div class="sidebar-item" onclick="tab('action',this)">🎮 Action</div>
-<div class="sidebar-item" onclick="tab('racing',this)">🚗 Racing</div>
-<div class="sidebar-item" onclick="tab('shooter',this)">🔫 Shooter</div>
-<div class="sidebar-item" onclick="tab('favorites',this)">⭐ Favorites</div>
-<div class="sidebar-item" onclick="tab('sites',this)">🌐 Sites</div>
+
+<div class="sidebar-item active" onclick="tab('home',this)">🏠<span class="text">Home</span></div>
+<div class="sidebar-item" onclick="tab('action',this)">🎮<span class="text">Action</span></div>
+<div class="sidebar-item" onclick="tab('racing',this)">🚗<span class="text">Racing</span></div>
+<div class="sidebar-item" onclick="tab('shooter',this)">🔫<span class="text">Shooter</span></div>
+<div class="sidebar-item" onclick="tab('arcade',this)">🕹<span class="text">Arcade</span></div>
+<div class="sidebar-item" onclick="tab('puzzle',this)">🧩<span class="text">Puzzle</span></div>
+<div class="sidebar-item" onclick="tab('sports',this)">⚽<span class="text">Sports</span></div>
+<div class="sidebar-item" onclick="tab('idle',this)">⏳<span class="text">Idle</span></div>
+<div class="sidebar-item" onclick="tab('funny',this)">😂<span class="text">Funny</span></div>
+<div class="sidebar-item" onclick="tab('retro',this)">📼<span class="text">Retro</span></div>
+<div class="sidebar-item" onclick="tab('built',this)">🧠<span class="text">Built-in</span></div>
+<div class="sidebar-item" onclick="tab('sites',this)">🌐<span class="text">Sites</span></div>
+<div class="sidebar-item" onclick="tab('favorites',this)">⭐<span class="text">Favorites</span></div>
+
 </div>
 
 <div id="main">
+
 <input id="search" placeholder="Search games..." oninput="searchGames()">
 
 <div id="home" class="grid"></div>
 <div id="action" class="grid" style="display:none"></div>
 <div id="racing" class="grid" style="display:none"></div>
 <div id="shooter" class="grid" style="display:none"></div>
+<div id="arcade" class="grid" style="display:none"></div>
+<div id="puzzle" class="grid" style="display:none"></div>
+<div id="sports" class="grid" style="display:none"></div>
+<div id="idle" class="grid" style="display:none"></div>
+<div id="funny" class="grid" style="display:none"></div>
+<div id="retro" class="grid" style="display:none"></div>
 <div id="favorites" class="grid" style="display:none"></div>
 
 <div id="sites" style="display:none">
 <h2>Game Sites</h2>
 <div id="sitesList"></div>
 </div>
+
+<div id="built" style="display:none">
+<h2>Clicker Game</h2>
+<button onclick="clicker()">Start</button>
+<div id="builtGame"></div>
+</div>
+
 </div>
 
 <div id="player">
@@ -82,16 +244,21 @@ position:fixed;bottom:10px;right:10px;background:#111;padding:10px;border-radius
 </div>
 </div>
 
-<!-- MUSIC -->
 <div id="musicPanel">
 <button onclick="toggleMusic()">🎵</button>
 <input type="range" min="0" max="1" step="0.1" onchange="setVol(this.value)">
 </div>
+
 <audio id="music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
 <script>
 
-/* TAB */
+/* SIDEBAR */
+function toggleSidebar(){
+document.getElementById("sidebar").classList.toggle("closed");
+}
+
+/* TABS */
 function tab(id,el){
 document.querySelectorAll("#main > div").forEach(d=>d.style.display="none");
 document.getElementById(id).style.display="grid";
@@ -99,7 +266,7 @@ document.querySelectorAll(".sidebar-item").forEach(i=>i.classList.remove("active
 el.classList.add("active");
 }
 
-/* GAME DATA (EXPAND THIS!) */
+/* GAMES */
 const games=[
 {name:"Slope",cat:"action",url:"https://ubg365.github.io/slope/",img:"https://images.crazygames.com/games/slope/cover-1584478910518.png"},
 {name:"Run 3",cat:"action",url:"https://ubg365.github.io/run-3/",img:"https://images.crazygames.com/games/run-3/cover-1584478606153.png"},
@@ -110,7 +277,7 @@ const games=[
 /* LOAD */
 games.forEach(g=>{
 addGame("home",g);
-addGame(g.cat,g);
+if(document.getElementById(g.cat)) addGame(g.cat,g);
 });
 
 /* ADD GAME */
@@ -129,11 +296,9 @@ d.innerHTML=`
 
 d.onclick=()=>play(g.url);
 
-/* DOUBLE CLICK FAVORITE */
 d.ondblclick=(e)=>{
 e.stopPropagation();
 let favs=JSON.parse(localStorage.getItem("favs")||"[]");
-
 if(favs.includes(g.name)){
 favs=favs.filter(f=>f!==g.name);
 d.classList.remove("favorited");
@@ -141,7 +306,6 @@ d.classList.remove("favorited");
 favs.push(g.name);
 d.classList.add("favorited");
 }
-
 localStorage.setItem("favs",JSON.stringify(favs));
 loadFavs();
 };
@@ -172,6 +336,17 @@ let v=search.value.toLowerCase();
 document.querySelectorAll(".game").forEach(g=>{
 g.style.display=g.innerText.toLowerCase().includes(v)?"block":"none";
 });
+}
+
+/* BUILT GAME */
+function clicker(){
+let s=0;
+let d=document.getElementById("builtGame");
+d.innerHTML="";
+let b=document.createElement("button");
+b.innerText="Click!";
+b.onclick=()=>{s++;b.innerText="Score: "+s};
+d.appendChild(b);
 }
 
 /* MUSIC */
