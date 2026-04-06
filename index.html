@@ -1,203 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DarkPlay - Free Browser Games</title>
-  <style>
-    body { margin:0; font-family: Arial, sans-serif; background: #121212; color: #eee; }
-    .sidebar { position: fixed; top:0; left:0; bottom:0; width: 250px; background: #1e1e1e; padding: 20px; overflow-y: auto; }
-    .sidebar h2 { color: #e63946; margin-top: 0; }
-    .category-list { list-style:none; padding:0; }
-    .category-list li { margin: 10px 0; }
-    .category-list button { background:none; border:none; color:#eee; font-size:1.1em; padding:8px 12px; text-align:left; width:100%; }
-    .category-list button:hover, .category-list button:focus { background: #333; color:#fff; cursor:pointer; outline:none; }
-    .category-list button.active { color: #e63946; font-weight:bold; }
-    .main { margin-left: 270px; padding: 20px; }
-    header { display:flex; align-items:center; margin-bottom: 20px; }
-    header input[type="search"] {
-      flex: 1;
-      padding: 8px 12px;
-      font-size: 1em;
-      background: #1e1e1e;
-      border: 1px solid #333;
-      color: #fff;
-      border-radius: 4px;
-    }
-    header input::placeholder { color: #aaa; }
-    header button.fullscreen-btn {
-      margin-left: 10px;
-      padding: 8px;
-      background: #e63946;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      font-size: 1em;
-      border-radius: 4px;
-    }
-    .game-grid {
-      display: grid;
-      grid-gap: 16px;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    }
-    .game-card { 
-      background: #1e1e1e; border-radius:8px; overflow:hidden; 
-      display:flex; flex-direction:column; 
-      cursor: pointer;
-      transition: transform 0.1s, box-shadow 0.1s;
-    }
-    .game-card:hover, .game-card:focus { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
-    .game-card img { width:100%; height:auto; }
-    .game-card .title { padding: 8px; text-align:center; font-weight:bold; font-size: 0.95em; color: #eee; }
-    .game-player { margin-top: 30px; }
-    .game-player iframe {
-      width: 100%; height: 600px; background: #000; border: none;
-    }
-    .close-game {
-      display: inline-block;
-      margin-bottom: 10px;
-      padding:6px 12px;
-      background: #e63946; color:#fff; border:none; border-radius:4px; cursor:pointer;
-    }
-    /* Responsive adjustments */
-    @media (max-width: 600px) {
-      .sidebar { width: 200px; }
-      .main { margin-left: 220px; padding: 10px; }
-      header { flex-direction: column; }
-      header button.fullscreen-btn { margin: 10px 0 0 0; }
-    }
-  </style>
+<meta charset="UTF-8">
+<title>DarkGames</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: black;
+  overflow-x: hidden;
+}
+
+/* RED DOT BACKGROUND */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  width: 140px;
+  height: 100%;
+  background: #111;
+  padding: 10px;
+  overflow-y: auto;
+  transition: 0.3s;
+}
+
+.sidebar a {
+  display: block;
+  color: red;
+  font-size: 11px;
+  margin: 6px 0;
+  text-decoration: none;
+  text-shadow: 0 0 6px red;
+}
+
+.sidebar a:hover {
+  color: white;
+}
+
+/* MAIN */
+.main {
+  margin-left: 150px;
+  padding: 10px;
+}
+
+/* GAME GRID */
+.games {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.game {
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: end;
+  color: white;
+  font-size: 12px;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.game:hover {
+  transform: scale(1.05);
+}
+
+/* BUTTONS */
+.buttons {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+}
+
+.btn {
+  background: black;
+  color: white;
+  border: 1px solid red;
+  padding: 6px;
+  margin: 4px;
+  cursor: pointer;
+}
+
+/* GAME FRAME */
+iframe {
+  width: 100%;
+  height: 500px;
+  border: none;
+  margin-top: 10px;
+}
+</style>
 </head>
+
 <body>
 
-  <aside class="sidebar" aria-label="Game categories">
-    <h2>Categories</h2>
-    <ul class="category-list">
-      <li><button data-cat="All" class="active">All</button></li>
-      <li><button data-cat="Action">Action</button></li>
-      <li><button data-cat="Driving">Driving</button></li>
-      <li><button data-cat="Arcade">Arcade</button></li>
-      <li><button data-cat="Puzzle">Puzzle</button></li>
-      <li><button data-cat="Multiplayer">Multiplayer</button></li>
-    </ul>
-  </aside>
+<canvas id="bg"></canvas>
 
-  <main class="main">
-    <header>
-      <input type="search" id="searchBar" placeholder="Search games..." aria-label="Search games">
-      <button class="fullscreen-btn" id="fullscreenBtn">⛶ Fullscreen</button>
-    </header>
+<div class="sidebar" id="sidebar">
+  <a href="#">Home</a>
+  <a href="#">Action</a>
+  <a href="#">Adventure</a>
+  <a href="#">Racing</a>
+  <a href="#">Shooting</a>
+  <a href="#">Puzzle</a>
+  <a href="#">Multiplayer</a>
+  <a href="#">Horror</a>
+  <a href="#">Sports</a>
+  <a href="#">Built-in Games</a>
+  <a href="#">Other Websites</a>
+  <a href="#">Favorites</a>
+  <a href="#">Settings</a>
+</div>
 
-    <div class="game-grid" id="gameGrid">
-      <!-- Example game cards -->
-      <div class="game-card" tabindex="0" data-category="Action" data-game="CanvasBall">
-        <img src="https://picsum.photos/200/150?random=1" alt="Canvas Ball Game">
-        <div class="title">Canvas Ball</div>
-      </div>
-      <div class="game-card" tabindex="0" data-category="Driving" data-game="ScratchSpaceInvaders">
-        <img src="https://picsum.photos/200/150?random=2" alt="Space Invaders (embedded)">
-        <div class="title">Space Invaders</div>
-      </div>
-      <!-- Add more game cards here -->
-    </div>
+<div class="main">
+  <h2 style="color:red;">DarkGames</h2>
 
-    <div class="game-player" id="playerContainer" hidden>
-      <button class="close-game" id="closeGameBtn">← Back to Games</button>
-      <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-    </div>
-  </main>
+  <div class="games" id="games"></div>
 
-  <script>
-    // Sample game data (in practice, fetch from a JSON manifest)
-    const games = {
-      'CanvasBall': { type: 'canvas', description: 'A simple bouncing ball demo.' },
-      'ScratchSpaceInvaders': { type: 'iframe', src: 'https://scratch.mit.edu/projects/embed/46553046/' }
-    };
+  <iframe id="gameFrame"></iframe>
+</div>
 
-    // Category filtering and search
-    const categoryButtons = document.querySelectorAll('.category-list button');
-    const searchInput = document.getElementById('searchBar');
-    const gameCards = document.querySelectorAll('.game-card');
-    let activeCategory = 'All';
+<div class="buttons">
+  <button class="btn" onclick="toggleSidebar()">📂</button>
+  <button class="btn" onclick="goFullscreen()">🖥️</button>
+  <button class="btn" onclick="randomGame()">🎲</button>
+  <button class="btn" onclick="scrollTopPage()">⬆️</button>
+</div>
 
-    categoryButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        categoryButtons.forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        activeCategory = btn.dataset.cat;
-        filterGames();
-      });
-    });
-    searchInput.addEventListener('input', filterGames);
+<script>
+const gameList = [
+  {name:"Slope", url:"https://ubg365.github.io/slope/", img:"https://i.imgur.com/9YjvZ6R.jpeg"},
+  {name:"Run 3", url:"https://ubg365.github.io/run3/", img:"https://i.imgur.com/W1bXnZL.jpeg"},
+  {name:"1v1.LOL", url:"https://ubg365.github.io/1v1lol/", img:"https://i.imgur.com/6vT6VvM.jpeg"},
+  {name:"Basketball Stars", url:"https://ubg365.github.io/basketball-stars/", img:"https://i.imgur.com/5rF3W2Z.jpeg"},
+  {name:"Drift Hunters", url:"https://ubg365.github.io/drift-hunters/", img:"https://i.imgur.com/Fy0XK0b.jpeg"}
+];
 
-    function filterGames() {
-      const query = searchInput.value.toLowerCase();
-      gameCards.forEach(card => {
-        const title = card.querySelector('.title').textContent.toLowerCase();
-        const matchesCat = (activeCategory==='All' || card.dataset.category===activeCategory);
-        const matchesText = title.includes(query);
-        card.style.display = (matchesCat && matchesText) ? 'flex' : 'none';
-      });
-    }
+// AUTO GENERATE 200+ GAMES
+for (let i = 0; i < 200; i++) {
+  gameList.push({
+    name: "Game " + (i+1),
+    url: "https://ubg365.github.io/run3/",
+    img: "https://picsum.photos/200/100?random=" + i
+  });
+}
 
-    // Click a game card to load the game
-    const player = document.getElementById('playerContainer');
-    const gameFrame = document.getElementById('gameFrame');
-    gameCards.forEach(card => {
-      card.addEventListener('click', () => openGame(card.dataset.game));
-      card.addEventListener('keypress', (e) => { if(e.key==='Enter') openGame(card.dataset.game); });
-    });
+const container = document.getElementById("games");
 
-    function openGame(gameKey) {
-      const game = games[gameKey];
-      if (!game) return;
-      // Show player container
-      player.hidden = false;
-      // Load game based on type
-      if (game.type === 'iframe') {
-        gameFrame.src = game.src;
-      } else if (game.type === 'canvas') {
-        // Initialize a simple canvas demo
-        const doc = document.implementation.createHTMLDocument("");
-        doc.body.innerHTML = `<canvas id="demoCanvas" width="600" height="400"></canvas>`;
-        gameFrame.srcdoc = doc.documentElement.outerHTML;
-        gameFrame.onload = () => {
-          const canvas = gameFrame.contentWindow.document.getElementById('demoCanvas');
-          const ctx = canvas.getContext('2d');
-          let x=300, y=200, vx=3, vy=2, radius=20;
-          function animate() {
-            ctx.fillStyle = '#000'; ctx.fillRect(0,0,600,400);
-            ctx.beginPath(); ctx.fillStyle = '#e63946';
-            ctx.arc(x, y, radius, 0, 2*Math.PI); ctx.fill();
-            x += vx; y += vy;
-            if(x<radius||x>600-radius) vx = -vx;
-            if(y<radius||y>400-radius) vy = -vy;
-            setTimeout(animate, 16);
-          }
-          animate();
-        };
-      }
-    }
+gameList.forEach(game => {
+  const div = document.createElement("div");
+  div.className = "game";
+  div.style.backgroundImage = `url(${game.img})`;
+  div.innerText = game.name;
+  div.onclick = () => {
+    document.getElementById("gameFrame").src = game.url;
+  };
+  container.appendChild(div);
+});
 
-    // Close game and return to grid
-    document.getElementById('closeGameBtn').addEventListener('click', () => {
-      player.hidden = true;
-      gameFrame.src = '';
-      gameFrame.srcdoc = '';
-    });
+/* BUTTON FUNCTIONS */
+function toggleSidebar() {
+  let s = document.getElementById("sidebar");
+  s.style.display = s.style.display === "none" ? "block" : "none";
+}
 
-    // Fullscreen toggle
-    const fsBtn = document.getElementById('fullscreenBtn');
-    fsBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    });
-    // Also listen for "F" key to toggle fullscreen
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'f' || e.key === 'F') fsBtn.click();
-    });
-  </script>
-```
+function goFullscreen() {
+  document.documentElement.requestFullscreen();
+}
+
+function randomGame() {
+  let g = gameList[Math.floor(Math.random()*gameList.length)];
+  document.getElementById("gameFrame").src = g.url;
+}
+
+function scrollTopPage() {
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* RED DOT BACKGROUND */
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let dots = [];
+
+for(let i=0;i<120;i++){
+  dots.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    r: 2
+  });
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "rgba(255,0,0,0.35)";
+  dots.forEach(d=>{
+    ctx.beginPath();
+    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>
