@@ -1,145 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PizzaGames ULTRA 🍕</title>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background: radial-gradient(circle at center, #2b0000, #000);color:white}
-.sidebar{position:fixed;left:0;top:0;width:250px;height:100%;background:#140000;border-right:3px solid orange;padding-top:20px;overflow-y:auto}
-.sidebar h1{text-align:center;color:orange;margin-bottom:20px;text-shadow:0 0 25px orange;font-size:26px}
-.sidebar a{display:block;padding:13px;color:#ffb347;text-decoration:none;font-weight:bold;text-shadow:0 0 10px orange;cursor:pointer;font-size:15px}
-.sidebar a:hover{background:orange;color:black}
-.main{margin-left:250px;padding:20px}
-.banner{width:100%;height:140px;background:linear-gradient(90deg,orange,red);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:bold;margin-bottom:20px}
-.search{width:100%;padding:16px;background:#220000;color:white;border:1px solid orange;margin-bottom:20px;font-size:17px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
-.card{background:#1a0000;border-radius:14px;overflow:hidden;cursor:pointer;transition:.3s;position:relative;border:1px solid #ff7b00}
-.card:hover{transform:scale(1.06);box-shadow:0 0 30px orange}
-.card img{width:100%;height:120px;object-fit:cover}
-.card h3{padding:8px;font-size:14px}
-.tag{position:absolute;top:6px;left:6px;background:orange;color:black;font-size:11px;padding:4px 7px;border-radius:6px}
-.player{position:fixed;top:0;left:0;width:100%;height:100%;background:black;display:none;z-index:999}
-.player iframe{width:100%;height:100%;border:none}
-.close{position:absolute;top:10px;right:20px;font-size:30px;cursor:pointer;color:white}
-.footer{margin-top:40px;padding:25px;text-align:center;border-top:1px solid orange;opacity:.7;font-size:14px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PizzaGames ULTRA 🍕</title>
+    <!-- Probably minimal or no external CSS/JS -->
+    <style>
+        /* Likely basic CSS for centering, dark/light theme, emoji sizing, etc. */
+        body { font-family: system-ui, sans-serif; text-align: center; background: #000 or dark color; color: white; }
+        h1 { font-size: 3rem; }
+        /* etc. for lists and emojis */
+    </style>
 </head>
-
 <body>
+    <h1>PizzaGames ULTRA 🍕</h1>
+    <h1>🍕 PizzaGames</h1>
+    
+    <p>🍕 100% SELF HOSTED • ALWAYS WORKS 🍕</p>
+    
+    <!-- Navigation / Categories as a big list or grid of links -->
+    <div class="categories">
+        <a href="#">🍕 Home</a>
+        <a href="#">🔥 Hot Slices</a>
+        <a href="#">🆕 Fresh Out</a>
+        <a href="#">👻 Spicy Horror</a>   <!-- Note the "dark" / horror attempt here -->
+        <a href="#">⚔️ Action Feast</a>
+        <a href="#">🏎️ Fast Delivery</a>
+        <a href="#">🌐 Multiplayer Party</a>
+        <a href="#">🎮 Built-in Oven</a>
+        <a href="#">🕹️ Retro Recipes</a>
+        <a href="#">🧩 Puzzle Toppings</a>
+        <a href="#">🔫 Shooter Sauce</a>
+        <a href="#">⭐ Favorites</a>
+        <a href="#">⚙️ Settings</a>
+    </div>
 
-<div class="sidebar">
-<h1>🍕 PizzaGames</h1>
-<a onclick="filterGames('all')">🍕 Home</a>
-<a onclick="filterGames('popular')">🔥 Hot Slices</a>
-<a onclick="filterGames('new')">🆕 Fresh Out</a>
-<a onclick="filterGames('horror')">👻 Spicy Horror</a>
-<a onclick="filterGames('action')">⚔️ Action Feast</a>
-<a onclick="filterGames('racing')">🏎️ Fast Delivery</a>
-<a onclick="filterGames('multiplayer')">🌐 Multiplayer Party</a>
-<a onclick="filterGames('builtin')">🎮 Built-in Oven</a>
-<a onclick="filterGames('retro')">🕹️ Retro Recipes</a>
-<a onclick="filterGames('puzzle')">🧩 Puzzle Toppings</a>
-<a onclick="filterGames('shooter')">🔫 Shooter Sauce</a>
-<a onclick="filterGames('favorites')">⭐ Favorites</a>
-<a onclick="filterGames('all')">⚙️ Settings</a>
-</div>
+    <!-- Possibly a close button in bottom right -->
+    <button style="position: fixed; bottom: 10px; right: 10px;">✖</button>
 
-<div class="main">
-<div class="banner">🍕 PIZZAGAMES ULTRA 🍕</div>
-<input class="search" placeholder="Search games..." onkeyup="searchGames(this.value)">
-<div class="grid" id="games"></div>
-<div class="footer"><p>🍕 100% SELF HOSTED • ALWAYS WORKS 🍕</p></div>
-</div>
-
-<div class="player" id="player">
-<div class="close" onclick="closeGame()">✖</div>
-<iframe id="frame"></iframe>
-</div>
-
-<script>
-const fallback="https://picsum.photos/400/250?random=";
-
-/*
-✅ IMPORTANT (THIS FIXES YOUR 404)
-
-You MUST create these folders in your repo:
-
-/games/slope/index.html
-/games/run3/index.html
-/games/motox3m/index.html
-etc...
-
-👇 THIS CODE NOW MATCHES REAL FOLDERS
-*/
-
-const gameList=[
-{title:"🍕 Slope",categories:["popular"],url:"games/slope/index.html"},
-{title:"🍕 Run 3",categories:["popular"],url:"games/run3/index.html"},
-{title:"🍕 Moto X3M",categories:["racing"],url:"games/motox3m/index.html"},
-{title:"🍕 Drift Boss",categories:["racing"],url:"games/driftboss/index.html"},
-{title:"🍕 Tunnel Rush",categories:["arcade"],url:"games/tunnelrush/index.html"},
-{title:"🍕 Stickman Hook",categories:["arcade"],url:"games/stickmanhook/index.html"},
-{title:"🍕 Happy Wheels",categories:["action"],url:"games/happywheels/index.html"},
-{title:"🍕 Rooftop Snipers",categories:["action"],url:"games/rooftopsnipers/index.html"},
-{title:"🍕 Drive Mad",categories:["racing"],url:"games/drivemad/index.html"},
-{title:"🍕 Minecraft",categories:["builtin"],url:"games/minecraft/index.html"}
-];
-
-/* AUTO EXPAND TO 100 (ALL WILL WORK ONCE FILES EXIST) */
-let id=0;
-const expanded=[];
-for(let i=0;i<10;i++){
-gameList.forEach(g=>{
-expanded.push({
-title:g.title+" "+(i+1),
-categories:g.categories,
-url:g.url,
-img:"https://picsum.photos/400/250?random="+(id++)
-});
-});
-}
-
-/* LOAD */
-function loadGames(list){
-const grid=document.getElementById("games");
-grid.innerHTML="";
-list.forEach((g,i)=>{
-grid.innerHTML+=`
-<div class="card" onclick="playGame('${g.url}')">
-<div class="tag">${g.categories[0]}</div>
-<img src="${g.img}" onerror="this.src='${fallback}'+${i}">
-<h3>${g.title}</h3>
-</div>`;
-});
-}
-
-/* FILTER */
-function filterGames(cat){
-if(cat==="all"){loadGames(expanded);return;}
-loadGames(expanded.filter(g=>g.categories.includes(cat)));
-}
-
-/* SEARCH */
-function searchGames(q){
-q=q.toLowerCase();
-loadGames(expanded.filter(g=>g.title.toLowerCase().includes(q)));
-}
-
-/* PLAYER */
-function playGame(url){
-document.getElementById("frame").src=url;
-document.getElementById("player").style.display="block";
-}
-function closeGame(){
-document.getElementById("player").style.display="none";
-document.getElementById("frame").src="";
-}
-
-window.onload=()=>loadGames(expanded);
-</script>
-
+    <!-- Any embedded games or iframes would be here, but currently none visible on load -->
+    
+    <script>
+        // Minimal JavaScript for navigation, dark mode toggle, or fake "settings"
+        // Probably event listeners for the category links (which may not be fully implemented yet)
+    </script>
 </body>
 </html>
